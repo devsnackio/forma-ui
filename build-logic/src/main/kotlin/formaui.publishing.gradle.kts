@@ -36,7 +36,7 @@ plugins {
     id("signing")
 }
 
-group = "dev.formaui"
+group = "io.github.devsnackio"
 version = "0.1.0"
 
 val javadocJar = tasks.register<Jar>("javadocJar") {
@@ -52,7 +52,7 @@ publishing {
                 "FormaUI — opinionated, Material You-native Compose Multiplatform UI components, " +
                     "built as a themed layer on Material 3.",
             )
-            url.set("https://formaui.dev")
+            url.set("https://github.com/devsnackio/forma-ui")
             licenses {
                 license {
                     name.set("The Apache License, Version 2.0")
@@ -64,13 +64,13 @@ publishing {
                 developer {
                     id.set("devsnack")
                     name.set("Chanbo (DevSnack)")
-                    url.set("https://github.com/formaui")
+                    url.set("https://github.com/devsnackio")
                 }
             }
             scm {
-                connection.set("scm:git:https://github.com/formaui/formaui.git")
-                developerConnection.set("scm:git:ssh://git@github.com:formaui/formaui.git")
-                url.set("https://github.com/formaui/formaui")
+                connection.set("scm:git:https://github.com/devsnackio/forma-ui.git")
+                developerConnection.set("scm:git:ssh://git@github.com:devsnackio/forma-ui.git")
+                url.set("https://github.com/devsnackio/forma-ui")
             }
         }
     }
