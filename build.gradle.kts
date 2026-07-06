@@ -10,5 +10,5 @@ plugins {
     alias(libs.plugins.composeMultiplatform) apply false
 }
 
-group = "dev.formaui"
+group = "io.github.devsnackio"
 version = "0.1.0"
