@@ -1,0 +1,58 @@
+[versions]
+# Toolchain
+kotlin = "2.4.0"
+agp = "9.2.1"
+composeMultiplatform = "1.11.1"
+# Compose Multiplatform Material 3 is versioned independently of the core CMP version.
+composeMaterial3 = "1.9.0"
+
+# Android SDK levels
+android-minSdk = "24"
+android-compileSdk = "37"
+android-targetSdk = "37"
+
+# AndroidX (androidMain only)
+androidx-core = "1.19.0"
+androidx-activityCompose = "1.13.0"
+
+# Testing (androidUnitTest only — never shipped in the published artifact)
+androidx-composeUiTest = "1.11.4"
+robolectric = "4.16.1"
+junit = "4.13.2"
+
+[libraries]
+# AndroidX — used ONLY in androidMain (dynamic color + activity host). Never in commonMain.
+androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "androidx-core" }
+androidx-activity-compose = { group = "androidx.activity", name = "activity-compose", version.ref = "androidx-activityCompose" }
+
+# Test-only — Robolectric-hosted Compose UI tests in androidUnitTest.
+junit = { group = "junit", name = "junit", version.ref = "junit" }
+robolectric = { group = "org.robolectric", name = "robolectric", version.ref = "robolectric" }
+androidx-compose-ui-test-junit4 = { group = "androidx.compose.ui", name = "ui-test-junit4", version.ref = "androidx-composeUiTest" }
+androidx-compose-ui-test-manifest = { group = "androidx.compose.ui", name = "ui-test-manifest", version.ref = "androidx-composeUiTest" }
+
+# Compose Multiplatform runtime dependencies — declared directly (the `compose.*` Gradle DSL
+# accessors are deprecated since CMP 1.11). material3 tracks its own version (composeMaterial3).
+compose-runtime = { group = "org.jetbrains.compose.runtime", name = "runtime", version.ref = "composeMultiplatform" }
+compose-foundation = { group = "org.jetbrains.compose.foundation", name = "foundation", version.ref = "composeMultiplatform" }
+compose-ui = { group = "org.jetbrains.compose.ui", name = "ui", version.ref = "composeMultiplatform" }
+compose-material3 = { group = "org.jetbrains.compose.material3", name = "material3", version.ref = "composeMaterial3" }
+compose-components-resources = { group = "org.jetbrains.compose.components", name = "components-resources", version.ref = "composeMultiplatform" }
+# @Preview annotation — the modern `org.jetbrains.compose.ui:ui-tooling-preview` (provides
+# androidx.compose.ui.tooling.preview.Preview), replacing the deprecated components-ui-tooling-preview.
+compose-ui-toolingPreview = { group = "org.jetbrains.compose.ui", name = "ui-tooling-preview", version.ref = "composeMultiplatform" }
+
+# Gradle plugin artifacts consumed by build-logic convention plugins (as implementation deps).
+build-kotlin-gradlePlugin = { group = "org.jetbrains.kotlin", name = "kotlin-gradle-plugin", version.ref = "kotlin" }
+build-kotlin-composeCompilerGradlePlugin = { group = "org.jetbrains.kotlin", name = "compose-compiler-gradle-plugin", version.ref = "kotlin" }
+build-android-gradlePlugin = { group = "com.android.tools.build", name = "gradle", version.ref = "agp" }
+build-compose-gradlePlugin = { group = "org.jetbrains.compose", name = "compose-gradle-plugin", version.ref = "composeMultiplatform" }
+
+[plugins]
+kotlinMultiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref = "kotlin" }
+kotlinComposeCompiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
+androidLibrary = { id = "com.android.library", version.ref = "agp" }
+composeMultiplatform = { id = "org.jetbrains.compose", version.ref = "composeMultiplatform" }
+# Application-module plugins — used by the runnable :sample app (not the published libraries).
+androidApplication = { id = "com.android.application", version.ref = "agp" }
+kotlinAndroid = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }

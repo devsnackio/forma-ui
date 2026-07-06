@@ -1,0 +1,15 @@
+# Gradle
+.gradle/
+**/build/
+!gradle/wrapper/gradle-wrapper.jar
+
+# Local, machine-specific config
+local.properties
+
+# IDE
+.idea/
+*.iml
+.DS_Store
+
+# Kotlin
+.kotlin/

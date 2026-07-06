@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!--
+      Minimal host theme for the Compose activity. FormaTheme/MaterialTheme drive all in-app
+      styling; this platform theme only provides a no-action-bar window for edge-to-edge Compose.
+    -->
+    <style name="Theme.FormaUISample" parent="@android:style/Theme.Material.Light.NoActionBar" />
+</resources>

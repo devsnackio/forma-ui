@@ -1,0 +1,28 @@
+# FormaUI — publishing credentials template.
+#
+# Copy the properties you need into your machine-global ~/.gradle/gradle.properties
+# (NOT this repo's gradle.properties, which is committed). Alternatively, set the matching
+# environment variables shown in parentheses. Nothing here is required for local development
+# or for `./gradlew publishToMavenLocal`.
+#
+# Publishing goes to Sonatype's Central Portal (https://central.sonatype.com). Legacy OSSRH
+# (s01.oss.sonatype.org) is decommissioned. Because this repo uses only Gradle's built-in
+# maven-publish (works behind restrictive proxies), the Central push is a MANUAL bundle upload:
+#
+#   1. Set the signing key below, then:
+#        ./gradlew publishAllPublicationsToCentralBundleRepository
+#      -> produces a signed Maven-repo tree under build/central-bundle/
+#   2. Zip the CONTENTS of build/central-bundle/ (dev/formaui/... at the zip root).
+#   3. Upload the zip at https://central.sonatype.com -> "Publish Component".
+#      (Your `dev.formaui` namespace must be verified in the Central Portal first.)
+
+# --- GPG signing key (ASCII-armored private key, required by Maven Central) ---
+# Export with:  gpg --armor --export-secret-keys <KEY_ID>
+# Newlines in the key must be escaped as \n on a single line, or use the env var form.
+# signingInMemoryKey=-----BEGIN PGP PRIVATE KEY BLOCK-----\n...\n-----END PGP PRIVATE KEY BLOCK-----   (env: SIGNING_KEY)
+# signingInMemoryKeyPassword=<passphrase>             (env: SIGNING_PASSWORD)
+
+# --- Central Portal account ---
+# No Gradle-level credentials are needed for the manual bundle upload above — you authenticate
+# in the browser at central.sonatype.com. (A user token is only needed if you later automate the
+# upload via the Central Portal Publisher API.)
