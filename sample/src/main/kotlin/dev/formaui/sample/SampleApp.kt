@@ -6,6 +6,7 @@
 package dev.formaui.sample
 
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.FlowRow
@@ -18,26 +19,34 @@ import androidx.compose.foundation.layout.safeDrawingPadding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.selection.selectable
 import androidx.compose.foundation.selection.selectableGroup
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.selection.toggleable
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
+import androidx.compose.material3.TooltipState
+import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.semantics.Role
+import androidx.compose.ui.unit.dp
 import dev.formaui.components.avatar.FormaAvatar
 import dev.formaui.components.avatar.FormaAvatarSize
 import dev.formaui.components.badge.FormaBadge
 import dev.formaui.components.badge.FormaBadgedBox
+import dev.formaui.components.bottomappbar.FormaBottomAppBar
 import dev.formaui.components.bottomsheet.FormaBottomSheet
 import dev.formaui.components.button.FormaButton
 import dev.formaui.components.button.FormaButtonVariant
@@ -58,18 +67,33 @@ import dev.formaui.components.iconbutton.FormaIconButtonVariant
 import dev.formaui.components.listitem.FormaListItem
 import dev.formaui.components.loading.FormaLoadingIndicator
 import dev.formaui.components.loading.FormaLoadingIndicatorVariant
+import dev.formaui.components.menu.FormaDropdownMenu
+import dev.formaui.components.menu.FormaDropdownMenuItem
+import dev.formaui.components.navigation.FormaModalNavigationDrawer
 import dev.formaui.components.navigation.FormaNavigationBar
 import dev.formaui.components.navigation.FormaNavigationBarItem
+import dev.formaui.components.navigation.FormaNavigationDrawerItem
+import dev.formaui.components.navigation.FormaNavigationRail
+import dev.formaui.components.navigation.FormaNavigationRailItem
 import dev.formaui.components.radiobutton.FormaRadioButton
+import dev.formaui.components.search.FormaSearchBar
+import dev.formaui.components.search.FormaSearchBarVariant
+import dev.formaui.components.segmentedbutton.FormaSegmentedButton
+import dev.formaui.components.segmentedbutton.FormaSegmentedButtonRow
 import dev.formaui.components.slider.FormaSlider
 import dev.formaui.components.snackbar.FormaSnackbar
 import dev.formaui.components.switch.FormaSwitch
+import dev.formaui.components.tabs.FormaTab
+import dev.formaui.components.tabs.FormaTabRow
 import dev.formaui.components.textfield.FormaTextField
+import dev.formaui.components.tooltip.FormaTooltip
+import dev.formaui.components.tooltip.FormaTooltipVariant
 import dev.formaui.components.topappbar.FormaTopAppBar
 import dev.formaui.components.topappbar.FormaTopAppBarVariant
 import dev.formaui.components.textfield.FormaTextFieldVariant
 import dev.formaui.core.annotation.ExperimentalFormaUiApi
 import dev.formaui.core.theme.FormaTheme
+import kotlinx.coroutines.launch
 
 /**
  * How the showcase forces its color scheme, independent of the system setting.
@@ -126,7 +150,7 @@ private fun ShowcaseScreen(
     ) {
         Text("FormaUI", style = MaterialTheme.typography.headlineMedium)
         Text(
-            text = "Component showcase — 21 components, live and interactive.",
+            text = "Component showcase — 29 components, live and interactive.",
             style = MaterialTheme.typography.bodyMedium,
             color = MaterialTheme.colorScheme.onSurfaceVariant,
         )
@@ -135,19 +159,27 @@ private fun ShowcaseScreen(
 
         ButtonSection()
         IconButtonSection()
+        TooltipSection()
+        DropdownMenuSection()
+        SearchBarSection()
         FabSection()
         TextFieldSection()
         CardSection()
         ChipSection()
         BadgeSection()
         SelectionSection()
+        SegmentedButtonSection()
         AvatarSection()
         ListItemSection()
         LoadingSection()
         SliderSection()
         SnackbarSection()
         TopAppBarSection()
+        TabsSection()
         NavigationBarSection()
+        NavigationRailSection()
+        NavigationDrawerSection()
+        BottomAppBarSection()
         DialogSection()
         BottomSheetSection()
         EmptyStateSection()
@@ -225,6 +257,115 @@ private fun IconButtonSection() {
             }
         }
         Text("Liked $likes times", style = MaterialTheme.typography.bodySmall)
+    }
+}
+
+@Composable
+private fun TooltipSection() {
+    Section("Tooltip") {
+        Row(
+            horizontalArrangement = Arrangement.spacedBy(FormaTheme.spacing.lg),
+            verticalAlignment = Alignment.CenterVertically,
+        ) {
+            FormaTooltip(text = "Search") {
+                FormaIconButton(onClick = {}) { Text("🔍") }
+            }
+
+            val undoTooltipState = remember { TooltipState() }
+            FormaTooltip(
+                text = "This item was moved to Archive. It'll be permanently deleted in 30 days.",
+                variant = FormaTooltipVariant.Rich,
+                title = { Text("Archived") },
+                action = {
+                    FormaButton(
+                        onClick = { undoTooltipState.dismiss() },
+                        variant = FormaButtonVariant.Text,
+                    ) { Text("Undo") }
+                },
+                state = undoTooltipState,
+            ) {
+                FormaIconButton(onClick = {}) { Text("🗑") }
+            }
+
+            Text("Long-press (or hover) an icon to show its tooltip", style = MaterialTheme.typography.bodySmall)
+        }
+    }
+}
+
+@Composable
+private fun DropdownMenuSection() {
+    Section("DropdownMenu") {
+        var expanded by remember { mutableStateOf(false) }
+        var lastAction by remember { mutableStateOf("none") }
+        Box {
+            FormaButton(onClick = { expanded = true }, variant = FormaButtonVariant.Outlined) {
+                Text("Options")
+            }
+            FormaDropdownMenu(expanded = expanded, onDismissRequest = { expanded = false }) {
+                FormaDropdownMenuItem(
+                    text = "Share",
+                    onClick = {
+                        lastAction = "Share"
+                        expanded = false
+                    },
+                    leadingIcon = { Text("↗") },
+                )
+                FormaDropdownMenuItem(
+                    text = "Rename",
+                    onClick = {
+                        lastAction = "Rename"
+                        expanded = false
+                    },
+                    leadingIcon = { Text("✎") },
+                )
+                FormaDropdownMenuItem(
+                    text = "Delete",
+                    onClick = {
+                        lastAction = "Delete"
+                        expanded = false
+                    },
+                    leadingIcon = { Text("🗑") },
+                )
+            }
+        }
+        Text("Last action: $lastAction", style = MaterialTheme.typography.bodySmall)
+    }
+}
+
+@Composable
+private fun SearchBarSection() {
+    Section("SearchBar") {
+        val contacts = listOf("Ada Lovelace", "Alan Turing", "Grace Hopper", "Katherine Johnson")
+        var query by remember { mutableStateOf("") }
+        var expanded by remember { mutableStateOf(false) }
+        var selected by remember { mutableStateOf("none") }
+        val results = remember(query) {
+            if (query.isBlank()) contacts else contacts.filter { it.contains(query, ignoreCase = true) }
+        }
+
+        FormaSearchBar(
+            query = query,
+            onQueryChange = { query = it },
+            onSearch = { expanded = false },
+            expanded = expanded,
+            onExpandedChange = { expanded = it },
+            modifier = Modifier.fillMaxWidth(),
+            variant = FormaSearchBarVariant.Docked,
+            placeholder = { Text("Search contacts") },
+            leadingIcon = { Text("🔍") },
+        ) {
+            results.forEach { name ->
+                FormaListItem(
+                    headline = name,
+                    onClick = {
+                        selected = name
+                        query = name
+                        expanded = false
+                    },
+                )
+            }
+        }
+        Text("Last selected: $selected", style = MaterialTheme.typography.bodySmall)
     }
 }
 
@@ -409,6 +550,40 @@ private fun SelectionSection() {
 }
 
 @Composable
+private fun SegmentedButtonSection() {
+    Section("SegmentedButton") {
+        val periods = listOf("Day", "Week", "Month")
+        var selectedPeriod by remember { mutableIntStateOf(0) }
+        FormaSegmentedButtonRow(multiSelect = false) {
+            periods.forEachIndexed { index, label ->
+                FormaSegmentedButton(
+                    selected = selectedPeriod == index,
+                    onClick = { selectedPeriod = index },
+                    index = index,
+                    count = periods.size,
+                    label = { Text(label) },
+                )
+            }
+        }
+        Text("Period: ${periods[selectedPeriod]}", style = MaterialTheme.typography.bodySmall)
+
+        val styles = listOf("Bold", "Italic", "Underline")
+        val checkedStyles = remember { mutableStateListOf(false, false, false) }
+        FormaSegmentedButtonRow(multiSelect = true) {
+            styles.forEachIndexed { index, label ->
+                FormaSegmentedButton(
+                    checked = checkedStyles[index],
+                    onCheckedChange = { checkedStyles[index] = it },
+                    index = index,
+                    count = styles.size,
+                    label = { Text(label) },
+                )
+            }
+        }
+    }
+}
+
+@Composable
 private fun AvatarSection() {
     Section("Avatar") {
         Row(
@@ -557,6 +732,24 @@ private fun TopAppBarSection() {
 }
 
 @Composable
+private fun TabsSection() {
+    Section("Tabs") {
+        var selectedTab by remember { mutableIntStateOf(0) }
+        val destinations = listOf("Chat", "Calls", "Contacts")
+        FormaTabRow(selectedTabIndex = selectedTab) {
+            destinations.forEachIndexed { index, label ->
+                FormaTab(
+                    selected = selectedTab == index,
+                    onClick = { selectedTab = index },
+                    text = { Text(label) },
+                )
+            }
+        }
+        Text("Showing: ${destinations[selectedTab]}", style = MaterialTheme.typography.bodySmall)
+    }
+}
+
+@Composable
 private fun NavigationBarSection() {
     Section("NavigationBar") {
         var tab by remember { mutableIntStateOf(0) }
@@ -582,6 +775,123 @@ private fun NavigationBarSection() {
                 showBadgeDot = true,
             )
         }
+    }
+}
+
+@Composable
+private fun NavigationRailSection() {
+    Section("NavigationRail") {
+        var tab by remember { mutableIntStateOf(0) }
+        FormaCard(variant = FormaCardVariant.Outlined, modifier = Modifier.fillMaxWidth()) {
+            FormaNavigationRail(
+                header = {
+                    FormaFloatingActionButton(onClick = {}, size = FormaFabSize.Small) {
+                        Text("+")
+                    }
+                },
+            ) {
+                FormaNavigationRailItem(
+                    selected = tab == 0,
+                    onClick = { tab = 0 },
+                    icon = { Text("🏠") },
+                    label = "Home",
+                )
+                FormaNavigationRailItem(
+                    selected = tab == 1,
+                    onClick = { tab = 1 },
+                    icon = { Text("🔔") },
+                    label = "Alerts",
+                    badgeCount = 5,
+                )
+                FormaNavigationRailItem(
+                    selected = tab == 2,
+                    onClick = { tab = 2 },
+                    icon = { Text("👤") },
+                    label = "Profile",
+                    showBadgeDot = true,
+                )
+            }
+        }
+    }
+}
+
+@Composable
+private fun NavigationDrawerSection() {
+    Section("NavigationDrawer") {
+        val drawerState = rememberDrawerState(DrawerValue.Closed)
+        val scope = rememberCoroutineScope()
+        var selectedItem by remember { mutableStateOf("Inbox") }
+
+        FormaButton(
+            onClick = { scope.launch { drawerState.open() } },
+            variant = FormaButtonVariant.Outlined,
+        ) {
+            Text("Open drawer")
+        }
+
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(240.dp),
+        ) {
+            FormaModalNavigationDrawer(
+                drawerState = drawerState,
+                drawerContent = {
+                    FormaNavigationDrawerItem(
+                        label = "Inbox",
+                        selected = selectedItem == "Inbox",
+                        onClick = {
+                            selectedItem = "Inbox"
+                            scope.launch { drawerState.close() }
+                        },
+                        icon = { Text("📥") },
+                        badge = "24",
+                    )
+                    FormaNavigationDrawerItem(
+                        label = "Sent",
+                        selected = selectedItem == "Sent",
+                        onClick = {
+                            selectedItem = "Sent"
+                            scope.launch { drawerState.close() }
+                        },
+                        icon = { Text("📤") },
+                    )
+                    FormaNavigationDrawerItem(
+                        label = "Trash",
+                        selected = selectedItem == "Trash",
+                        onClick = {
+                            selectedItem = "Trash"
+                            scope.launch { drawerState.close() }
+                        },
+                        icon = { Text("🗑") },
+                    )
+                },
+            ) {
+                FormaCard(variant = FormaCardVariant.Outlined, modifier = Modifier.fillMaxSize()) {
+                    Text("Selected: $selectedItem")
+                }
+            }
+        }
+    }
+}
+
+@Composable
+private fun BottomAppBarSection() {
+    Section("BottomAppBar") {
+        var taps by remember { mutableIntStateOf(0) }
+        FormaCard(variant = FormaCardVariant.Outlined, modifier = Modifier.fillMaxWidth()) {
+            FormaBottomAppBar(
+                modifier = Modifier.fillMaxWidth(),
+                actions = {
+                    FormaIconButton(onClick = { taps++ }) { Text("🔍") }
+                    FormaIconButton(onClick = { taps++ }) { Text("⋮") }
+                },
+                floatingActionButton = {
+                    FormaFloatingActionButton(onClick = { taps++ }) { Text("+") }
+                },
+            )
+        }
+        Text("Tapped $taps times", style = MaterialTheme.typography.bodySmall)
     }
 }
 
