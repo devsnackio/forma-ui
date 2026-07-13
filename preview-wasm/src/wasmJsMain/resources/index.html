@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FormaUI — Button live preview</title>
+    <style>
+        html, body { margin: 0; padding: 0; height: 100%; }
+    </style>
+    <!--
+      The emitted module has one bare npm import (@js-joda/core, transitive of kotlinx-datetime).
+      An import map resolves it locally (see run-preview.sh, which `npm install`s it beside index.html).
+      The Kotlin module output is named after the Gradle project: forma-ui-preview-wasm.mjs.
+    -->
+    <script type="importmap">
+    {
+      "imports": {
+        "@js-joda/core": "./node_modules/@js-joda/core/dist/js-joda.esm.js"
+      }
+    }
+    </script>
+</head>
+<body>
+<script type="module" src="./forma-ui-preview-wasm.mjs"></script>
+</body>
+</html>

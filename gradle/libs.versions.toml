@@ -14,6 +14,8 @@ android-targetSdk = "37"
 # AndroidX (androidMain only)
 androidx-core = "1.19.0"
 androidx-activityCompose = "1.13.0"
+# Material icons — :sample only, for real vector icons in the showcase app (never :core/:components).
+androidx-composeMaterialIcons = "1.7.8"
 
 # Testing (androidUnitTest only — never shipped in the published artifact)
 androidx-composeUiTest = "1.11.4"
@@ -24,6 +26,7 @@ junit = "4.13.2"
 # AndroidX — used ONLY in androidMain (dynamic color + activity host). Never in commonMain.
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "androidx-core" }
 androidx-activity-compose = { group = "androidx.activity", name = "activity-compose", version.ref = "androidx-activityCompose" }
+androidx-material-icons-extended = { group = "androidx.compose.material", name = "material-icons-extended", version.ref = "androidx-composeMaterialIcons" }
 
 # Test-only — Robolectric-hosted Compose UI tests in androidUnitTest.
 junit = { group = "junit", name = "junit", version.ref = "junit" }
