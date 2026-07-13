@@ -48,3 +48,6 @@ dependencyResolutionManagement {
 include(":core")
 include(":components")
 include(":sample")
+// Wasm live-preview harness (spike). Not published — renders real components in the browser
+// to de-risk the docs-site live-preview pipeline. Depends on :core + :components.
+include(":preview-wasm")
