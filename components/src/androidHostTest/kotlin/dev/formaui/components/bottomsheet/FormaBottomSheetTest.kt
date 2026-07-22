@@ -5,9 +5,19 @@
 
 package dev.formaui.components.bottomsheet
 
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Column
 import androidx.compose.material3.Text
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.test.junit4.v2.createComposeRule
+import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
+import androidx.compose.ui.test.performClick
 import dev.formaui.core.annotation.ExperimentalFormaUiApi
 import dev.formaui.core.theme.FormaTheme
 import org.junit.Rule
@@ -41,5 +51,36 @@ class FormaBottomSheetTest {
         }
 
         composeRule.onNodeWithText("Sheet content").assertExists()
+    }
+
+    /**
+     * [FormaBottomSheet] is stateless — per its KDoc, callers drive visibility by conditionally
+     * composing it. This mirrors that documented usage: a hoisted `visible` flag gates the call,
+     * and flipping it removes the sheet (and its content) from composition entirely.
+     */
+    @Test
+    fun bottomSheet_visibleToggle_hidesSheetContent() {
+        composeRule.setContent {
+            FormaTheme {
+                var visible by remember { mutableStateOf(true) }
+                Column {
+                    Text(
+                        "Hide",
+                        modifier = Modifier
+                            .testTag("hide")
+                            .clickable { visible = false },
+                    )
+                    if (visible) {
+                        FormaBottomSheet(onDismissRequest = { visible = false }) {
+                            Text("Sheet content")
+                        }
+                    }
+                }
+            }
+        }
+
+        composeRule.onNodeWithText("Sheet content").assertExists()
+        composeRule.onNodeWithTag("hide").performClick()
+        composeRule.onNodeWithText("Sheet content").assertDoesNotExist()
     }
 }
