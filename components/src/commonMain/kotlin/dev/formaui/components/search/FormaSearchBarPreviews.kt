@@ -67,7 +67,7 @@ private fun FormaSearchBarDockedPreview() {
                                 .fillMaxWidth()
                                 .padding(
                                     horizontal = FormaTheme.spacing.md,
-                                    vertical = FormaTheme.spacing.sm,
+                                    vertical = FormaTheme.spacing.xs,
                                 ),
                         )
                     }
@@ -128,7 +128,7 @@ private fun FormaSearchBarFullScreenExpandedPreview() {
                             .fillMaxWidth()
                             .padding(
                                 horizontal = FormaTheme.spacing.md,
-                                vertical = FormaTheme.spacing.sm,
+                                vertical = FormaTheme.spacing.xs,
                             ),
                     )
                 }

@@ -48,7 +48,7 @@ enum class FormaChipVariant {
  * Chips keep Material 3's compact visual height while still exposing a **48dp touch target**
  * automatically (via M3's minimum interactive component size) — so no explicit height is forced.
  * The corner shape defaults to FormaUI's
- * [small][dev.formaui.core.theme.FormaShapes.small] tier; per-variant container colors use the
+ * [md][dev.formaui.core.theme.FormaShapes.md] tier; per-variant container colors use the
  * M3 defaults (their color types differ across variants, so they are not exposed as one param —
  * restyle via [FormaTheme] instead).
  *
@@ -137,9 +137,9 @@ fun FormaChip(
  */
 @ExperimentalFormaUiApi
 object FormaChipDefaults {
-    /** The default chip [Shape]: FormaUI's small corner tier. */
+    /** The default chip [Shape]: FormaUI's md corner tier. */
     val shape: Shape
         @Composable
         @ReadOnlyComposable
-        get() = FormaTheme.shapes.small
+        get() = FormaTheme.shapes.md
 }

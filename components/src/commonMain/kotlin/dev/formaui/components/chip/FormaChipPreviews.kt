@@ -31,16 +31,16 @@ private fun FormaChipVariantsPreview() {
         Surface {
             Column(
                 modifier = Modifier.padding(FormaTheme.spacing.md),
-                verticalArrangement = Arrangement.spacedBy(FormaTheme.spacing.sm),
+                verticalArrangement = Arrangement.spacedBy(FormaTheme.spacing.xs),
             ) {
                 var filterSelected by remember { mutableStateOf(true) }
                 var inputSelected by remember { mutableStateOf(false) }
 
-                Row(horizontalArrangement = Arrangement.spacedBy(FormaTheme.spacing.sm)) {
+                Row(horizontalArrangement = Arrangement.spacedBy(FormaTheme.spacing.xs)) {
                     FormaChip(label = "Assist", onClick = {}, variant = FormaChipVariant.Assist)
                     FormaChip(label = "Suggestion", onClick = {}, variant = FormaChipVariant.Suggestion)
                 }
-                Row(horizontalArrangement = Arrangement.spacedBy(FormaTheme.spacing.sm)) {
+                Row(horizontalArrangement = Arrangement.spacedBy(FormaTheme.spacing.xs)) {
                     FormaChip(
                         label = "Filter",
                         onClick = { filterSelected = !filterSelected },

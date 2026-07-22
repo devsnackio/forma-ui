@@ -41,7 +41,8 @@ internal val LocalFormaTypography = staticCompositionLocalOf { FormaTypography()
  * enabled: pass your own boolean (e.g. from a settings switch) to override the system default.
  *
  * On the `wasmJs` target dynamic color is never available, so the static [colorScheme] is always
- * used — the previews on the docs site render FormaUI's brand palette.
+ * used — the previews on the docs site render FormaUI's warm-editorial brand palette (cream
+ * canvas, coral primary, Public Sans with an editorial display scale).
  *
  * Spacing is not a parameter: FormaUI's [FormaSpacing] scale is a fixed 4dp-grid contract shared
  * by all components and is always provided. Retune it, if ever needed, by providing
@@ -129,7 +130,10 @@ object FormaTheme {
         dark = FormaDarkColorScheme,
     )
 
-    /** FormaUI's default [FormaTypography] — the M3 scale set in Public Sans + tabular numeric. */
+    /**
+     * FormaUI's default [FormaTypography] — Public Sans with an editorial display scale, plus
+     * the tabular [numeric][FormaTypography.numeric] style.
+     */
     @Composable
     fun defaultTypography(): FormaTypography = rememberBrandTypography()
 

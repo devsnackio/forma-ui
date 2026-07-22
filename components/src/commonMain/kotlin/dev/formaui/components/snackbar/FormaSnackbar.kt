@@ -101,9 +101,9 @@ fun FormaSnackbarHost(
  */
 @ExperimentalFormaUiApi
 object FormaSnackbarDefaults {
-    /** The default snackbar [Shape]: FormaUI's small corner tier. */
+    /** The default snackbar [Shape]: FormaUI's md corner tier. */
     val shape: Shape
         @Composable
         @ReadOnlyComposable
-        get() = FormaTheme.shapes.small
+        get() = FormaTheme.shapes.md
 }

@@ -45,8 +45,8 @@ fun ButtonShowcase() {
         description = "Five emphasis levels, from filled to text-only.",
     ) {
         FlowRow(
-            horizontalArrangement = Arrangement.spacedBy(FormaTheme.spacing.sm),
-            verticalArrangement = Arrangement.spacedBy(FormaTheme.spacing.sm),
+            horizontalArrangement = Arrangement.spacedBy(FormaTheme.spacing.xs),
+            verticalArrangement = Arrangement.spacedBy(FormaTheme.spacing.xs),
         ) {
             FormaButtonVariant.entries.forEach { variant ->
                 FormaButton(onClick = {}, variant = variant) {
@@ -64,8 +64,8 @@ fun IconButtonShowcase() {
         description = "Four emphasis levels, plus a disabled state.",
     ) {
         FlowRow(
-            horizontalArrangement = Arrangement.spacedBy(FormaTheme.spacing.sm),
-            verticalArrangement = Arrangement.spacedBy(FormaTheme.spacing.sm),
+            horizontalArrangement = Arrangement.spacedBy(FormaTheme.spacing.xs),
+            verticalArrangement = Arrangement.spacedBy(FormaTheme.spacing.xs),
         ) {
             FormaIconButtonVariant.entries.forEach { variant ->
                 FormaIconButton(onClick = {}, variant = variant) {
@@ -119,8 +119,8 @@ fun ChipShowcase() {
         var filterOn by remember { mutableStateOf(true) }
         var inputOn by remember { mutableStateOf(false) }
         FlowRow(
-            horizontalArrangement = Arrangement.spacedBy(FormaTheme.spacing.sm),
-            verticalArrangement = Arrangement.spacedBy(FormaTheme.spacing.sm),
+            horizontalArrangement = Arrangement.spacedBy(FormaTheme.spacing.xs),
+            verticalArrangement = Arrangement.spacedBy(FormaTheme.spacing.xs),
         ) {
             FormaChip(label = "Assist", onClick = {}, variant = FormaChipVariant.Assist)
             FormaChip(label = "Suggestion", onClick = {}, variant = FormaChipVariant.Suggestion)
