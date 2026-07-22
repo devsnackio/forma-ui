@@ -35,7 +35,7 @@ private fun FormaCheckboxStatesPreview() {
         Surface {
             Column(
                 modifier = Modifier.padding(FormaTheme.spacing.md),
-                verticalArrangement = Arrangement.spacedBy(FormaTheme.spacing.sm),
+                verticalArrangement = Arrangement.spacedBy(FormaTheme.spacing.xs),
             ) {
                 var checked by remember { mutableStateOf(true) }
                 Row(
@@ -44,7 +44,7 @@ private fun FormaCheckboxStatesPreview() {
                         role = Role.Checkbox,
                         onValueChange = { checked = it },
                     ),
-                    horizontalArrangement = Arrangement.spacedBy(FormaTheme.spacing.sm),
+                    horizontalArrangement = Arrangement.spacedBy(FormaTheme.spacing.xs),
                     verticalAlignment = Alignment.CenterVertically,
                 ) {
                     // Row owns the toggle → the control itself is display-only.
@@ -52,7 +52,7 @@ private fun FormaCheckboxStatesPreview() {
                     Text("Enable notifications")
                 }
                 Row(
-                    horizontalArrangement = Arrangement.spacedBy(FormaTheme.spacing.sm),
+                    horizontalArrangement = Arrangement.spacedBy(FormaTheme.spacing.xs),
                     verticalAlignment = Alignment.CenterVertically,
                 ) {
                     FormaCheckbox(checked = false, onCheckedChange = {}, enabled = false)

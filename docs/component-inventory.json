@@ -78,7 +78,7 @@
       {
         "name": "FormaButtonDefaults",
         "kind": "object",
-        "summary": "Defaults for FormaButton: MinTouchTargetSize (48dp), shape (FormaTheme.shapes.medium), contentPadding (lg horizontal / sm vertical spacing tokens)."
+        "summary": "Defaults for FormaButton: MinTouchTargetSize (48dp), shape (FormaTheme.shapes.md), contentPadding (lg horizontal / xs vertical spacing tokens)."
       }
     ],
     "variants": [
@@ -242,7 +242,7 @@
       {
         "name": "FormaTextFieldDefaults",
         "kind": "object",
-        "summary": "Defaults for FormaTextField: outlinedShape (FormaTheme.shapes.small)."
+        "summary": "Defaults for FormaTextField: outlinedShape (FormaTheme.shapes.md)."
       }
     ],
     "variants": [
@@ -337,7 +337,7 @@
       {
         "name": "FormaCardDefaults",
         "kind": "object",
-        "summary": "Defaults for FormaCard: shape (FormaTheme.shapes.large), contentPadding (FormaTheme.spacing.md on all sides)."
+        "summary": "Defaults for FormaCard: shape (FormaTheme.shapes.lg), contentPadding (FormaTheme.spacing.md on all sides)."
       }
     ],
     "variants": [
@@ -433,7 +433,7 @@
       {
         "name": "FormaChipDefaults",
         "kind": "object",
-        "summary": "Defaults for FormaChip: shape (FormaTheme.shapes.small)."
+        "summary": "Defaults for FormaChip: shape (FormaTheme.shapes.md)."
       }
     ],
     "variants": [
@@ -804,7 +804,7 @@
       {
         "name": "FormaDialogDefaults",
         "kind": "object",
-        "summary": "Default values for FormaUI dialogs; shape returns FormaTheme.shapes.large."
+        "summary": "Default values for FormaUI dialogs; shape returns FormaTheme.shapes.xl."
       }
     ],
     "variants": [
@@ -1396,7 +1396,7 @@
       {
         "name": "FormaSnackbarDefaults",
         "kind": "object",
-        "summary": "Default values used by FormaSnackbar; exposes shape (FormaUI's small corner tier)."
+        "summary": "Default values used by FormaSnackbar; exposes shape (FormaUI's md corner tier)."
       }
     ],
     "variants": [
@@ -1640,7 +1640,7 @@
     "composables": [
       {
         "name": "FormaFloatingActionButton",
-        "summary": "The screen's primary action, in Small/Regular/Large sizes; corners default to FormaUI's large tier for a consistent silhouette across sizes.",
+        "summary": "The screen's primary action, in Small/Regular/Large sizes; corners default to FormaUI's xl tier for a consistent silhouette across sizes.",
         "params": [
           {
             "name": "onClick",
@@ -1762,7 +1762,7 @@
       {
         "name": "FormaFabDefaults",
         "kind": "object",
-        "summary": "Default values used by both FAB composables; exposes shape (FormaUI's large corner tier, used across all sizes)."
+        "summary": "Default values used by both FAB composables; exposes shape (FormaUI's xl corner tier, used across all sizes)."
       }
     ],
     "variants": [

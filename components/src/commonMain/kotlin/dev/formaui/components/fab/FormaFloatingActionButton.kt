@@ -43,7 +43,7 @@ enum class FormaFabSize {
  * important action on a screen and should typically host a single [content] `Icon`. For a FAB with
  * a text label, use [FormaExtendedFloatingActionButton] instead.
  *
- * Corners default to FormaUI's [large][dev.formaui.core.theme.FormaShapes.large] tier
+ * Corners default to FormaUI's [xl][dev.formaui.core.theme.FormaShapes.xl] tier
  * ([FormaFabDefaults.shape]) rather than Material 3's per-size squircle, for a consistent
  * silhouette across sizes.
  *
@@ -153,9 +153,9 @@ fun FormaExtendedFloatingActionButton(
  */
 @ExperimentalFormaUiApi
 object FormaFabDefaults {
-    /** The default FAB [Shape]: FormaUI's large corner tier, used across all sizes. */
+    /** The default FAB [Shape]: FormaUI's xl corner tier, used across all sizes. */
     val shape: Shape
         @Composable
         @ReadOnlyComposable
-        get() = FormaTheme.shapes.large
+        get() = FormaTheme.shapes.xl
 }

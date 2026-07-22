@@ -27,7 +27,7 @@ private fun FormaTopAppBarVariantsPreview() {
         Surface {
             Column(
                 modifier = Modifier.fillMaxWidth(),
-                verticalArrangement = Arrangement.spacedBy(FormaTheme.spacing.sm),
+                verticalArrangement = Arrangement.spacedBy(FormaTheme.spacing.xs),
             ) {
                 FormaTopAppBar(
                     title = "Small",

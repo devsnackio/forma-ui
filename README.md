@@ -19,9 +19,9 @@
 
 FormaUI is a [Compose Multiplatform](https://www.jetbrains.com/lp/compose-multiplatform/) component library built as a **themed layer on top of Material 3** — production-ready components with better defaults, so you can ship fast instead of building a design system from scratch.
 
-**The positioning wedge:** Unlike headless/unstyled toolkits (e.g. Composables UI — "Compose without Material"), FormaUI is deliberately **opinionated and Material 3-native**. Components ship with a distinct brand look — Public Sans + a fintech-adjacent palette — yet still feel like the Material 3 you already know (and Material You dynamic color is one flag away), so anyone productive in Compose Material 3 is productive in FormaUI within minutes.
+**The positioning wedge:** Unlike headless/unstyled toolkits (e.g. Composables UI — "Compose without Material"), FormaUI is deliberately **opinionated and Material 3-native**. Components ship with a distinct brand look — Public Sans with an editorial display scale over a warm-editorial palette — yet still feel like the Material 3 you already know (and Material You dynamic color is one flag away), so anyone productive in Compose Material 3 is productive in FormaUI within minutes.
 
-- **Distinctive out of the box** — ships with the **Public Sans** typeface and a professional fintech-adjacent brand palette (blue / teal / violet) on by default, so components look like *FormaUI*, not stock Material.
+- **Distinctive out of the box** — ships with the **Public Sans** typeface, an editorial display scale (64sp display tier, negative tracking, Medium-weight labels), and a warm-editorial brand palette (cream canvas, coral primary, warm ink text, dark-navy dark scheme) on by default, so components look like *FormaUI*, not stock Material.
 - **Zero-config, fully overridable** — every component works with just its required params, but exposes `modifier`, `colors`, `shape`, and more where it matters.
 - **Material You, one flag away** — the brand palette is the default; opt into wallpaper-based dynamic color with `FormaTheme(dynamicColor = true)` on Android 12+.
 - **Accessibility built in** — 48dp touch targets, correct semantics roles, and content descriptions are not optional.
@@ -98,9 +98,9 @@ fun FormaTheme(
 
 Read tokens anywhere inside the theme via `FormaTheme.colorScheme`, `FormaTheme.typography`, `FormaTheme.shapes`, and `FormaTheme.spacing`. Design tokens:
 
-- **`FormaSpacing`** — a 4dp grid (`xs`/`sm`/`md`/`lg`/`xl`); components use these internally, never hardcoded dp.
-- **`FormaShapes`** — corner tiers `none`/`small`/`medium`/`large`/`full`.
-- **`FormaTypography`** — the M3 type scale plus a tabular-figures `numeric` style for financial/data display.
+- **`FormaSpacing`** — a 4dp grid (`xxs` 4 / `xs` 8 / `sm` 12 / `md` 16 / `lg` 24 / `xl` 32 / `xxl` 48 / `section` 96); components use these internally, never hardcoded dp.
+- **`FormaShapes`** — corner tiers `none` / `xs` 4 / `sm` 6 / `md` 8 / `lg` 12 / `xl` 16 / `pill` / `full`.
+- **`FormaTypography`** — an editorial Public Sans type scale plus a tabular-figures `numeric` style for financial/data display.
 - **`FormaColorScheme`** — light + dark brand palettes, fully overridable.
 
 ## Components

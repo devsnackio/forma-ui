@@ -52,7 +52,7 @@ enum class FormaTextFieldVariant {
  * otherwise [helperText] is shown when present.
  *
  * Opinionated defaults over bare Material 3:
- * - The outlined variant uses FormaUI's [small][dev.formaui.core.theme.FormaShapes.small] corner
+ * - The outlined variant uses FormaUI's [md][dev.formaui.core.theme.FormaShapes.md] corner
  *   tier; the filled variant keeps M3's top-rounded shape. Override via [shape].
  * - Colors fall back to the M3 defaults for the chosen [variant]; override via [colors].
  *
@@ -174,9 +174,9 @@ fun FormaTextField(
  */
 @ExperimentalFormaUiApi
 object FormaTextFieldDefaults {
-    /** The default shape for the outlined variant: FormaUI's small corner tier. */
+    /** The default shape for the outlined variant: FormaUI's md corner tier. */
     val outlinedShape: Shape
         @Composable
         @ReadOnlyComposable
-        get() = FormaTheme.shapes.small
+        get() = FormaTheme.shapes.md
 }

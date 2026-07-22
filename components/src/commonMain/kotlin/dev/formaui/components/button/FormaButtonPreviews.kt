@@ -29,10 +29,10 @@ private fun FormaButtonVariantsPreview() {
         Surface {
             Column(
                 modifier = Modifier.padding(FormaTheme.spacing.md),
-                verticalArrangement = Arrangement.spacedBy(FormaTheme.spacing.sm),
+                verticalArrangement = Arrangement.spacedBy(FormaTheme.spacing.xs),
             ) {
                 FormaButtonVariant.entries.forEach { variant ->
-                    Row(horizontalArrangement = Arrangement.spacedBy(FormaTheme.spacing.sm)) {
+                    Row(horizontalArrangement = Arrangement.spacedBy(FormaTheme.spacing.xs)) {
                         FormaButton(onClick = {}, variant = variant) {
                             Text(variant.name)
                         }

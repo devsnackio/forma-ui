@@ -127,7 +127,7 @@ fun SelectionShowcase() {
         var selected by remember { mutableStateOf(options.first()) }
 
         Row(
-            horizontalArrangement = Arrangement.spacedBy(FormaTheme.spacing.sm),
+            horizontalArrangement = Arrangement.spacedBy(FormaTheme.spacing.xs),
             verticalAlignment = Alignment.CenterVertically,
         ) {
             FormaSwitch(checked = switchOn, onCheckedChange = { switchOn = it })
@@ -140,7 +140,7 @@ fun SelectionShowcase() {
                 role = Role.Checkbox,
                 onValueChange = { checked = it },
             ),
-            horizontalArrangement = Arrangement.spacedBy(FormaTheme.spacing.sm),
+            horizontalArrangement = Arrangement.spacedBy(FormaTheme.spacing.xs),
             verticalAlignment = Alignment.CenterVertically,
         ) {
             FormaCheckbox(checked = checked, onCheckedChange = null)
@@ -157,7 +157,7 @@ fun SelectionShowcase() {
                             role = Role.RadioButton,
                             onClick = { selected = option },
                         ),
-                    horizontalArrangement = Arrangement.spacedBy(FormaTheme.spacing.sm),
+                    horizontalArrangement = Arrangement.spacedBy(FormaTheme.spacing.xs),
                     verticalAlignment = Alignment.CenterVertically,
                 ) {
                     FormaRadioButton(selected = option == selected, onClick = null)
