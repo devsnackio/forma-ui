@@ -1,7 +1,7 @@
 [versions]
 # Toolchain
-kotlin = "2.4.0"
-agp = "9.2.1"
+kotlin = "2.4.10"
+agp = "9.3.0"
 composeMultiplatform = "1.11.1"
 # Compose Multiplatform Material 3 is versioned independently of the core CMP version.
 composeMaterial3 = "1.9.0"
