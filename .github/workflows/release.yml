@@ -40,16 +40,16 @@ jobs:
       VERSION: ${{ inputs.version }}
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Set up JDK 17
-        uses: actions/setup-java@v4
+        uses: actions/setup-java@v5
         with:
           distribution: temurin
           java-version: 17
 
       - name: Set up Gradle
-        uses: gradle/actions/setup-gradle@v4
+        uses: gradle/actions/setup-gradle@v5
 
       # Automates the runbook's "#1 release mistake" check: the dispatched
       # version must equal the version hardcoded in BOTH build files
@@ -99,7 +99,7 @@ jobs:
       # Fallback for a failed/incorrect API step: download this artifact and
       # upload it in the browser per docs/RELEASING.md.
       - name: Upload bundle as workflow artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         with:
           name: central-bundle-${{ inputs.version }}
           path: build/formaui-${{ inputs.version }}-bundle.zip
