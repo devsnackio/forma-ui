@@ -78,8 +78,8 @@ fun TopAppBarShowcase() {
         var variant by remember { mutableStateOf(FormaTopAppBarVariant.Small) }
 
         FlowRow(
-            horizontalArrangement = Arrangement.spacedBy(FormaTheme.spacing.sm),
-            verticalArrangement = Arrangement.spacedBy(FormaTheme.spacing.sm),
+            horizontalArrangement = Arrangement.spacedBy(FormaTheme.spacing.xs),
+            verticalArrangement = Arrangement.spacedBy(FormaTheme.spacing.xs),
         ) {
             FormaTopAppBarVariant.entries.forEach { entry ->
                 FormaChip(

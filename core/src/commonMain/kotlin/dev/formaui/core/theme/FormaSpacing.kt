@@ -17,28 +17,37 @@ import dev.formaui.core.annotation.ExperimentalFormaUiApi
  *
  * Default scale:
  *
- * | Token | Value | Typical use                                   |
- * |-------|-------|-----------------------------------------------|
- * | [xs]  | 4dp   | icon-to-label gaps, tight inset               |
- * | [sm]  | 8dp   | compact padding, chip/badge internal spacing  |
- * | [md]  | 16dp  | default component padding, list item padding  |
- * | [lg]  | 24dp  | section spacing, dialog padding               |
- * | [xl]  | 32dp  | screen margins, large separations             |
+ * | Token      | Value | Typical use                                   |
+ * |------------|-------|-----------------------------------------------|
+ * | [xxs]      | 4dp   | icon-to-label gaps                            |
+ * | [xs]       | 8dp   | compact padding                               |
+ * | [sm]       | 12dp  | intermediate padding                          |
+ * | [md]       | 16dp  | default component padding                    |
+ * | [lg]       | 24dp  | section spacing, dialog padding               |
+ * | [xl]       | 32dp  | screen margins                                |
+ * | [xxl]      | 48dp  | callout/CTA padding                           |
+ * | [section]  | 96dp  | section-band rhythm                           |
  *
  * Every value is overridable; construct a custom [FormaSpacing] to retune the rhythm.
  *
- * @property xs extra-small spacing (default 4dp).
- * @property sm small spacing (default 8dp).
+ * @property xxs extra-extra-small spacing (default 4dp) — icon-to-label gaps.
+ * @property xs extra-small spacing (default 8dp) — compact padding.
+ * @property sm small spacing (default 12dp) — intermediate padding.
  * @property md medium spacing (default 16dp) — the most common component padding.
- * @property lg large spacing (default 24dp).
- * @property xl extra-large spacing (default 32dp).
+ * @property lg large spacing (default 24dp) — section spacing, dialog padding.
+ * @property xl extra-large spacing (default 32dp) — screen margins.
+ * @property xxl extra-extra-large spacing (default 48dp) — callout/CTA padding.
+ * @property section section-band spacing (default 96dp) — section-band rhythm.
  */
 @ExperimentalFormaUiApi
 @Immutable
 class FormaSpacing(
-    val xs: Dp = 4.dp,
-    val sm: Dp = 8.dp,
+    val xxs: Dp = 4.dp,
+    val xs: Dp = 8.dp,
+    val sm: Dp = 12.dp,
     val md: Dp = 16.dp,
     val lg: Dp = 24.dp,
     val xl: Dp = 32.dp,
+    val xxl: Dp = 48.dp,
+    val section: Dp = 96.dp,
 )

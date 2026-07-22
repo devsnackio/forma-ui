@@ -48,7 +48,7 @@ fun DialogShowcase() {
         var showAlert by remember { mutableStateOf(false) }
         var showFullScreen by remember { mutableStateOf(false) }
 
-        Row(horizontalArrangement = Arrangement.spacedBy(FormaTheme.spacing.sm)) {
+        Row(horizontalArrangement = Arrangement.spacedBy(FormaTheme.spacing.xs)) {
             FormaButton(onClick = { showAlert = true }, variant = FormaButtonVariant.Outlined) {
                 Text("Alert dialog")
             }

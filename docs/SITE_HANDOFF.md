@@ -38,8 +38,9 @@ FormaUI is an opinionated, Material You-native Jetpack Compose / Compose Multipl
 library: production-ready components that look great with zero styling work. It is the
 anti-"headless/unstyled" stance — where headless libraries (e.g. Composables UI) give you behavior
 and make you build a design system, FormaUI gives you **M3 with better defaults**: a distinctive
-brand theme (Public Sans, blue/teal palette, SemiBold button labels), 4dp-grid spacing tokens,
-accessibility built in (48dp touch targets, semantics roles), and full override capability
+brand theme (Public Sans with an editorial display scale, warm-editorial cream/coral palette,
+Medium-weight button labels), 4dp-grid spacing tokens, accessibility built in (48dp touch
+targets, semantics roles), and full override capability
 (`modifier`, `colors`, `shape` on everything). Target user: developers who want to ship fast, not
 build a design system. Apache 2.0.
 

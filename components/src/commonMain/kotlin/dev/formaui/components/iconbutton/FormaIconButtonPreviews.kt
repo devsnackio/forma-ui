@@ -26,7 +26,7 @@ private fun FormaIconButtonVariantsPreview() {
         Surface {
             Row(
                 modifier = Modifier.padding(FormaTheme.spacing.md),
-                horizontalArrangement = Arrangement.spacedBy(FormaTheme.spacing.sm),
+                horizontalArrangement = Arrangement.spacedBy(FormaTheme.spacing.xs),
             ) {
                 FormaIconButton(onClick = {}, variant = FormaIconButtonVariant.Standard) {
                     Text("★")

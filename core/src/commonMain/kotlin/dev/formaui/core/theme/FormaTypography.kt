@@ -12,6 +12,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.sp
 import dev.formaui.core.annotation.ExperimentalFormaUiApi
 import dev.formaui.core.generated.resources.Res
 import dev.formaui.core.generated.resources.public_sans_bold
@@ -37,13 +38,13 @@ private val BaseMaterialTypography = Typography()
  *
  * The full M3 scale (`displayLarge` … `labelSmall`) is available through [material], which
  * [FormaTheme] hands to [MaterialTheme][androidx.compose.material3.MaterialTheme]. FormaUI's
- * default ([FormaTheme.defaultTypography]) sets **Public Sans** as the family across the whole
- * scale (a distinctive, brand-defining typeface — see [rememberBrandTypography]); on top of that
- * it adds:
+ * default ([FormaTheme.defaultTypography]) sets **Public Sans** across an editorial display
+ * scale — display/headline styles at weight 400 with negative tracking (see
+ * [rememberBrandTypography]); on top of that it adds:
  *
  * - [numeric] — a body-sized style with **tabular figures** (`tnum`) so digits stay column-aligned.
- *   This is the style to use for balances, prices, quantities, and any financial/data display,
- *   reflecting FormaUI's fintech lineage. Read it via [FormaTheme.typography]`.numeric`.
+ *   This is the style to use for balances, prices, quantities, and any data/numeric display.
+ *   Read it via [FormaTheme.typography]`.numeric`.
  *
  * To customise, pass your own [material] scale and/or [numeric] style. Deriving `numeric` from a
  * custom base is a one-liner: `myBody.copy(fontFeatureSettings = "tnum, lnum")`.
@@ -76,40 +77,130 @@ internal fun rememberPublicSansFamily(): FontFamily {
 }
 
 /**
- * FormaUI's default typography: the Material 3 scale re-set in **Public Sans**, plus the tabular
- * [numeric][FormaTypography.numeric] style. Buttons/other `labelLarge` text is bumped to
- * **SemiBold** — FormaUI's signature, more confident label weight (M3 defaults to Medium).
+ * FormaUI's default typography: an editorial type scale in **Public Sans**, plus the tabular
+ * [numeric][FormaTypography.numeric] style. Display and headline styles stay at weight 400 (never
+ * bold) with negative letter-spacing — the scale's defining move — while titles and labels step
+ * up to Medium (500) for a firmer, more confident hierarchy. `labelLarge` (buttons) is Medium, not
+ * M3's usual SemiBold signature, matching the spec's "labels weight 500."
  */
 @Composable
 internal fun rememberBrandTypography(): FormaTypography {
     val family = rememberPublicSansFamily()
     return remember(family) {
+        val material = brandTypography(family)
         FormaTypography(
-            material = BaseMaterialTypography.withBrandFont(family),
-            numeric = BaseMaterialTypography.bodyLarge.copy(
-                fontFamily = family,
-                fontFeatureSettings = TabularFigureFeatures,
-            ),
+            material = material,
+            numeric = material.bodyLarge.copy(fontFeatureSettings = TabularFigureFeatures),
         )
     }
 }
 
-/** Re-sets every style in this [Typography] to [family]; `labelLarge` also gains SemiBold weight. */
-private fun Typography.withBrandFont(family: FontFamily): Typography = copy(
-    displayLarge = displayLarge.copy(fontFamily = family),
-    displayMedium = displayMedium.copy(fontFamily = family),
-    displaySmall = displaySmall.copy(fontFamily = family),
-    headlineLarge = headlineLarge.copy(fontFamily = family),
-    headlineMedium = headlineMedium.copy(fontFamily = family),
-    headlineSmall = headlineSmall.copy(fontFamily = family),
-    titleLarge = titleLarge.copy(fontFamily = family),
-    titleMedium = titleMedium.copy(fontFamily = family),
-    titleSmall = titleSmall.copy(fontFamily = family),
-    bodyLarge = bodyLarge.copy(fontFamily = family),
-    bodyMedium = bodyMedium.copy(fontFamily = family),
-    bodySmall = bodySmall.copy(fontFamily = family),
-    // Signature: buttons (labelLarge) read in a more confident SemiBold rather than M3's Medium.
-    labelLarge = labelLarge.copy(fontFamily = family, fontWeight = FontWeight.SemiBold),
-    labelMedium = labelMedium.copy(fontFamily = family),
-    labelSmall = labelSmall.copy(fontFamily = family),
+/** Builds FormaUI's editorial [Typography] scale in [family]. */
+private fun brandTypography(family: FontFamily): Typography = Typography(
+    displayLarge = TextStyle(
+        fontFamily = family,
+        fontWeight = FontWeight.Normal,
+        fontSize = 64.sp,
+        lineHeight = 67.sp,
+        letterSpacing = (-1.5).sp,
+    ),
+    displayMedium = TextStyle(
+        fontFamily = family,
+        fontWeight = FontWeight.Normal,
+        fontSize = 48.sp,
+        lineHeight = 53.sp,
+        letterSpacing = (-1.0).sp,
+    ),
+    displaySmall = TextStyle(
+        fontFamily = family,
+        fontWeight = FontWeight.Normal,
+        fontSize = 36.sp,
+        lineHeight = 41.sp,
+        letterSpacing = (-0.5).sp,
+    ),
+    headlineLarge = TextStyle(
+        fontFamily = family,
+        fontWeight = FontWeight.Normal,
+        fontSize = 28.sp,
+        lineHeight = 34.sp,
+        letterSpacing = (-0.3).sp,
+    ),
+    headlineMedium = TextStyle(
+        fontFamily = family,
+        fontWeight = FontWeight.Normal,
+        fontSize = 24.sp,
+        lineHeight = 29.sp,
+        letterSpacing = (-0.25).sp,
+    ),
+    headlineSmall = TextStyle(
+        fontFamily = family,
+        fontWeight = FontWeight.Normal,
+        fontSize = 20.sp,
+        lineHeight = 25.sp,
+        letterSpacing = (-0.2).sp,
+    ),
+    titleLarge = TextStyle(
+        fontFamily = family,
+        fontWeight = FontWeight.Medium,
+        fontSize = 22.sp,
+        lineHeight = 29.sp,
+        letterSpacing = 0.sp,
+    ),
+    titleMedium = TextStyle(
+        fontFamily = family,
+        fontWeight = FontWeight.Medium,
+        fontSize = 18.sp,
+        lineHeight = 25.sp,
+        letterSpacing = 0.sp,
+    ),
+    titleSmall = TextStyle(
+        fontFamily = family,
+        fontWeight = FontWeight.Medium,
+        fontSize = 16.sp,
+        lineHeight = 22.sp,
+        letterSpacing = 0.sp,
+    ),
+    bodyLarge = TextStyle(
+        fontFamily = family,
+        fontWeight = FontWeight.Normal,
+        fontSize = 16.sp,
+        lineHeight = 25.sp,
+        letterSpacing = 0.sp,
+    ),
+    bodyMedium = TextStyle(
+        fontFamily = family,
+        fontWeight = FontWeight.Normal,
+        fontSize = 14.sp,
+        lineHeight = 22.sp,
+        letterSpacing = 0.sp,
+    ),
+    bodySmall = TextStyle(
+        fontFamily = family,
+        fontWeight = FontWeight.Normal,
+        fontSize = 12.sp,
+        lineHeight = 19.sp,
+        letterSpacing = 0.sp,
+    ),
+    // Medium (500), not M3's usual SemiBold — the spec's labels are Medium weight.
+    labelLarge = TextStyle(
+        fontFamily = family,
+        fontWeight = FontWeight.Medium,
+        fontSize = 14.sp,
+        lineHeight = 20.sp,
+        letterSpacing = 0.sp,
+    ),
+    labelMedium = TextStyle(
+        fontFamily = family,
+        fontWeight = FontWeight.Medium,
+        fontSize = 13.sp,
+        lineHeight = 18.sp,
+        letterSpacing = 0.sp,
+    ),
+    labelSmall = TextStyle(
+        fontFamily = family,
+        fontWeight = FontWeight.Medium,
+        fontSize = 12.sp,
+        lineHeight = 17.sp,
+        letterSpacing = 1.5.sp,
+    ),
 )

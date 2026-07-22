@@ -57,7 +57,7 @@ enum class FormaCardVariant {
  * Pass [onClick] to make the whole card a single clickable/focusable target (the underlying M3
  * clickable card handles `Role.Button` semantics and the ripple); leave it `null` for a static
  * container. The card shape defaults to FormaUI's
- * [large][dev.formaui.core.theme.FormaShapes.large] corner tier; colors fall back to the M3
+ * [lg][dev.formaui.core.theme.FormaShapes.lg] corner tier; colors fall back to the M3
  * defaults for the chosen [variant].
  *
  * @param modifier the [Modifier] applied to the card.
@@ -154,11 +154,11 @@ fun FormaCard(
  */
 @ExperimentalFormaUiApi
 object FormaCardDefaults {
-    /** The default card [Shape]: FormaUI's large corner tier. */
+    /** The default card [Shape]: FormaUI's lg corner tier. */
     val shape: Shape
         @Composable
         @ReadOnlyComposable
-        get() = FormaTheme.shapes.large
+        get() = FormaTheme.shapes.lg
 
     /** The default inset between the card edges and its slots: [FormaSpacing.md][dev.formaui.core.theme.FormaSpacing.md] on all sides. */
     val contentPadding: PaddingValues

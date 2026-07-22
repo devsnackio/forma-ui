@@ -36,7 +36,7 @@ private fun FormaRadioButtonGroupPreview() {
         Surface {
             Column(
                 modifier = Modifier.padding(FormaTheme.spacing.md).selectableGroup(),
-                verticalArrangement = Arrangement.spacedBy(FormaTheme.spacing.sm),
+                verticalArrangement = Arrangement.spacedBy(FormaTheme.spacing.xs),
             ) {
                 var selected by remember { mutableStateOf(options.first()) }
                 options.forEach { option ->
@@ -46,7 +46,7 @@ private fun FormaRadioButtonGroupPreview() {
                             role = Role.RadioButton,
                             onClick = { selected = option },
                         ),
-                        horizontalArrangement = Arrangement.spacedBy(FormaTheme.spacing.sm),
+                        horizontalArrangement = Arrangement.spacedBy(FormaTheme.spacing.xs),
                         verticalAlignment = Alignment.CenterVertically,
                     ) {
                         // Row owns the selection → the control itself is display-only.

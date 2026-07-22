@@ -61,16 +61,16 @@ enum class FormaButtonVariant {
  * ```
  * FormaButton(onClick = ::submit) {
  *     Icon(Icons.Default.Check, contentDescription = null)
- *     Spacer(Modifier.width(FormaTheme.spacing.xs))
+ *     Spacer(Modifier.width(FormaTheme.spacing.xxs))
  *     Text("Confirm")
  * }
  * ```
  *
  * Opinionated defaults that differ from bare Material 3:
- * - **Corners** default to [FormaShapes.medium][dev.formaui.core.theme.FormaShapes.medium] (a
- *   modern 12dp) rather than M3's fully-rounded pill.
+ * - **Corners** default to [FormaShapes.md][dev.formaui.core.theme.FormaShapes.md] (a
+ *   modern 8dp) rather than M3's fully-rounded pill.
  * - **Padding** is derived from [FormaSpacing][dev.formaui.core.theme.FormaSpacing] tokens
- *   (`lg` horizontal, `sm` vertical) — no hardcoded values.
+ *   (`lg` horizontal, `xs` vertical) — no hardcoded values.
  * - A **minimum 48dp touch target** ([FormaButtonDefaults.MinTouchTargetSize]) is always
  *   enforced for accessibility.
  *
@@ -179,18 +179,18 @@ object FormaButtonDefaults {
      */
     val MinTouchTargetSize: Dp = 48.dp
 
-    /** The default button [Shape]: FormaUI's medium corner tier. */
+    /** The default button [Shape]: FormaUI's md corner tier. */
     val shape: Shape
         @Composable
         @ReadOnlyComposable
-        get() = FormaTheme.shapes.medium
+        get() = FormaTheme.shapes.md
 
-    /** The default content padding: `lg` horizontal, `sm` vertical, from [FormaSpacing][dev.formaui.core.theme.FormaSpacing]. */
+    /** The default content padding: `lg` horizontal, `xs` vertical, from [FormaSpacing][dev.formaui.core.theme.FormaSpacing]. */
     val contentPadding: PaddingValues
         @Composable
         @ReadOnlyComposable
         get() = PaddingValues(
             horizontal = FormaTheme.spacing.lg,
-            vertical = FormaTheme.spacing.sm,
+            vertical = FormaTheme.spacing.xs,
         )
 }
