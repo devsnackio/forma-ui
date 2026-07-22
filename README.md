@@ -4,7 +4,7 @@
 
 **Opinionated, Material You-native Jetpack Compose components that look great with zero styling work.**
 
-[![Kotlin](https://img.shields.io/badge/Kotlin-2.4.0-7F52FF.svg?logo=kotlin)](https://kotlinlang.org)
+[![Kotlin](https://img.shields.io/badge/Kotlin-2.4.10-7F52FF.svg?logo=kotlin)](https://kotlinlang.org)
 [![Compose Multiplatform](https://img.shields.io/badge/Compose%20Multiplatform-1.11.1-4285F4.svg)](https://www.jetbrains.com/lp/compose-multiplatform/)
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](LICENSE)
 [![Maven Central](https://img.shields.io/badge/Maven%20Central-unreleased-lightgrey.svg)](https://central.sonatype.com/)
@@ -31,17 +31,17 @@ FormaUI is a [Compose Multiplatform](https://www.jetbrains.com/lp/compose-multip
 
 ## Install
 
-FormaUI will publish to Maven Central under the `dev.formaui` group (`0.1.0` release pending). Add it to your version catalog / Gradle build:
+FormaUI will publish to Maven Central under the `io.github.devsnackio` group (`0.1.0` release pending; the `dev.formaui` namespace may be adopted at release time once the domain is verified). Add it to your version catalog / Gradle build:
 
 ```kotlin
 dependencies {
-    implementation("dev.formaui:components:0.1.0") // components transitively brings in :core
+    implementation("io.github.devsnackio:components:0.1.0") // components transitively brings in :core
     // or depend on the theming engine alone:
-    // implementation("dev.formaui:core:0.1.0")
+    // implementation("io.github.devsnackio:core:0.1.0")
 }
 ```
 
-> **Not yet published.** The `0.1.0` artifacts aren't on Maven Central yet — this is the intended coordinate for the pending first release.
+> **Not yet published.** The `0.1.0` artifacts aren't on Maven Central yet — these are the intended coordinates for the pending first release.
 
 **Requirements:** Android `minSdk 24`+, Kotlin 2.4.x, Compose Multiplatform 1.11.x (or AndroidX Compose with a compatible Material 3).
 
@@ -73,7 +73,7 @@ fun App() {
             )
 
             FormaCard(variant = FormaCardVariant.Elevated) {
-                Text("Cards, chips, sheets, and 15 more — all themed to match.")
+                Text("Cards, chips, sheets, and 26 more — all themed to match.")
             }
         }
     }
@@ -105,7 +105,7 @@ Read tokens anywhere inside the theme via `FormaTheme.colorScheme`, `FormaTheme.
 
 ## Components
 
-All 21 Phase 1 components, each with variants/states, KDoc, `@Preview`s, and UI tests:
+All 29 Phase 1 components, each with variants/states, KDoc, `@Preview`s, and UI tests:
 
 | | | |
 |---|---|---|
@@ -116,6 +116,9 @@ All 21 Phase 1 components, each with variants/states, KDoc, `@Preview`s, and UI 
 | **Avatar** — initials/icon/image slot, sized | **Divider** — horizontal/vertical | **LoadingIndicator** — circular/linear, determinate/indeterminate |
 | **EmptyState** — icon + title + description + action | **Snackbar** — standard + action, `FormaSnackbarHost` | **Slider** |
 | **TopAppBar** — small/center-aligned/medium/large | **FloatingActionButton** — small/regular/large + extended | **IconButton** — standard/filled/tonal/outlined |
+| **BottomAppBar** — actions + optional FAB | **DropdownMenu** — items with leading/trailing icons | **NavigationDrawer** — modal, slot-based items |
+| **NavigationRail** — with badges + optional header | **SearchBar** — docked + full-screen | **SegmentedButton** — single/multi-select |
+| **TabRow** — primary/secondary, fixed/scrollable | **Tooltip** — plain + rich | |
 
 ## Try it — sample app
 
@@ -131,7 +134,7 @@ Or open the project in Android Studio and run the **`sample`** configuration. Th
 
 ```
 core/          # Theming engine: FormaTheme, color/typography/spacing/shape tokens (zero FormaUI deps)
-components/    # The 21 components (depends on :core)
+components/    # The 29 components (depends on :core)
 sample/        # Runnable Android showcase app
 build-logic/   # Gradle convention plugins
 ```
