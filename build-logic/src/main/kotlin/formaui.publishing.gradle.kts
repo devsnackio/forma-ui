@@ -50,7 +50,7 @@ publishing {
             name.set("FormaUI :${project.name}")
             description.set(
                 "FormaUI — opinionated, Material You-native Compose Multiplatform UI components, " +
-                    "built as a themed layer on Material 3.",
+                        "built as a themed layer on Material 3.",
             )
             url.set("https://github.com/devsnackio/forma-ui")
             licenses {
@@ -89,6 +89,10 @@ signing {
     val signingKey = providers.gradleProperty("signingInMemoryKey")
         .orElse(providers.environmentVariable("SIGNING_KEY"))
         .orNull
+        // gradle.properties unescapes `\n` sequences to real newlines; env vars (CI secrets) do
+        // not. Tolerate the single-line `\n`-escaped form either way — armored keys contain no
+        // literal backslashes, so this is a no-op for a properly multiline key.
+        ?.replace("\\n", "\n")
     val signingPassword = providers.gradleProperty("signingInMemoryKeyPassword")
         .orElse(providers.environmentVariable("SIGNING_PASSWORD"))
         .orNull
@@ -104,3 +108,4 @@ signing {
         }
     }
 }
+
