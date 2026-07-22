@@ -11,4 +11,4 @@ plugins {
 }
 
 group = "io.github.devsnackio"
-version = "0.1.0-beta01"
+version = "0.1.0-beta02"

@@ -37,7 +37,7 @@ plugins {
 }
 
 group = "io.github.devsnackio"
-version = "0.1.0-beta01"
+version = "0.1.0-beta02"
 
 val javadocJar = tasks.register<Jar>("javadocJar") {
     archiveClassifier.set("javadoc")
