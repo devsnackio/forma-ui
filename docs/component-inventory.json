@@ -1,0 +1,2645 @@
+[
+  {
+    "id": "button",
+    "name": "Button",
+    "package": "dev.formaui.components.button",
+    "sourceFile": "components/src/commonMain/kotlin/dev/formaui/components/button/FormaButton.kt",
+    "prdOrder": 1,
+    "tier": "prd",
+    "description": "A FormaUI button — \"Material 3 with better defaults\" — one entry point covering all five Material 3 button variants via a single variant parameter.",
+    "composables": [
+      {
+        "name": "FormaButton",
+        "summary": "One entry point for all five Material 3 button variants, with FormaUI shape/padding defaults and an enforced 48dp minimum touch target.",
+        "params": [
+          {
+            "name": "onClick",
+            "type": "() -> Unit",
+            "default": null,
+            "description": "Called when the button is clicked. Not invoked while enabled is false."
+          },
+          {
+            "name": "modifier",
+            "type": "Modifier",
+            "default": "Modifier",
+            "description": "The Modifier applied to the button. A minimum height of FormaButtonDefaults.MinTouchTargetSize is always merged in."
+          },
+          {
+            "name": "variant",
+            "type": "FormaButtonVariant",
+            "default": "FormaButtonVariant.Filled",
+            "description": "The visual emphasis (defaults to FormaButtonVariant.Filled)."
+          },
+          {
+            "name": "enabled",
+            "type": "Boolean",
+            "default": "true",
+            "description": "Whether the button is interactive. When false it is visually de-emphasised and does not respond to input."
+          },
+          {
+            "name": "shape",
+            "type": "Shape",
+            "default": "FormaButtonDefaults.shape",
+            "description": "The button's container shape (defaults to FormaButtonDefaults.shape)."
+          },
+          {
+            "name": "colors",
+            "type": "ButtonColors?",
+            "default": "null",
+            "description": "The container/content colors. When null, the Material 3 default colors for the chosen variant are used."
+          },
+          {
+            "name": "contentPadding",
+            "type": "PaddingValues",
+            "default": "FormaButtonDefaults.contentPadding",
+            "description": "Padding between the container edges and the content (defaults to FormaButtonDefaults.contentPadding)."
+          },
+          {
+            "name": "interactionSource",
+            "type": "MutableInteractionSource?",
+            "default": "null",
+            "description": "The MutableInteractionSource for observing/emitting interactions. When null, one is remembered internally."
+          },
+          {
+            "name": "content",
+            "type": "@Composable RowScope.() -> Unit",
+            "default": null,
+            "description": "The button's content, laid out in a RowScope (typically a Text, optionally with a leading/trailing Icon)."
+          }
+        ]
+      }
+    ],
+    "supportingApi": [
+      {
+        "name": "FormaButtonVariant",
+        "kind": "enum",
+        "summary": "Visual emphasis of a FormaButton, listed highest to lowest: Filled, Tonal, Elevated, Outlined, Text."
+      },
+      {
+        "name": "FormaButtonDefaults",
+        "kind": "object",
+        "summary": "Defaults for FormaButton: MinTouchTargetSize (48dp), shape (FormaTheme.shapes.medium), contentPadding (lg horizontal / sm vertical spacing tokens)."
+      }
+    ],
+    "variants": [
+      "filled",
+      "tonal",
+      "elevated",
+      "outlined",
+      "text"
+    ],
+    "codeSample": "FormaButton(onClick = { /* submit */ }) {\n    Text(\"Confirm\")\n}\n\nFormaButton(onClick = { }, variant = FormaButtonVariant.Outlined, enabled = false) {\n    Text(\"Disabled\")\n}",
+    "accessibility": "A minimum 48dp touch target (FormaButtonDefaults.MinTouchTargetSize) is always enforced; Role.Button semantics and disabled state are inherited from the underlying Material 3 button."
+  },
+  {
+    "id": "text-field",
+    "name": "TextField",
+    "package": "dev.formaui.components.textfield",
+    "sourceFile": "components/src/commonMain/kotlin/dev/formaui/components/textfield/FormaTextField.kt",
+    "prdOrder": 2,
+    "tier": "prd",
+    "description": "A FormaUI text field — \"Material 3 with better defaults\" — one entry point covering both Material 3 text-field families via variant, with fully hoisted state.",
+    "composables": [
+      {
+        "name": "FormaTextField",
+        "summary": "One entry point for both Material 3 text-field families (outlined and filled), with hoisted value state and helper/error supporting text on one line below the field.",
+        "params": [
+          {
+            "name": "value",
+            "type": "String",
+            "default": null,
+            "description": "The current text to display."
+          },
+          {
+            "name": "onValueChange",
+            "type": "(String) -> Unit",
+            "default": null,
+            "description": "Called with the updated text as the user edits. The caller must hoist and persist the new value for it to appear."
+          },
+          {
+            "name": "modifier",
+            "type": "Modifier",
+            "default": "Modifier",
+            "description": "The Modifier applied to the field."
+          },
+          {
+            "name": "variant",
+            "type": "FormaTextFieldVariant",
+            "default": "FormaTextFieldVariant.Outlined",
+            "description": "The container style (defaults to FormaTextFieldVariant.Outlined)."
+          },
+          {
+            "name": "enabled",
+            "type": "Boolean",
+            "default": "true",
+            "description": "Whether the field is editable and focusable. When false it is visually de-emphasised and ignores input."
+          },
+          {
+            "name": "readOnly",
+            "type": "Boolean",
+            "default": "false",
+            "description": "Whether the field is read-only: it shows value and is focusable/selectable but not editable."
+          },
+          {
+            "name": "label",
+            "type": "String?",
+            "default": "null",
+            "description": "Optional floating label describing the field."
+          },
+          {
+            "name": "placeholder",
+            "type": "String?",
+            "default": "null",
+            "description": "Optional placeholder shown while the field is empty."
+          },
+          {
+            "name": "leadingIcon",
+            "type": "@Composable (() -> Unit)?",
+            "default": "null",
+            "description": "Optional slot rendered at the start of the field."
+          },
+          {
+            "name": "trailingIcon",
+            "type": "@Composable (() -> Unit)?",
+            "default": "null",
+            "description": "Optional slot rendered at the end of the field."
+          },
+          {
+            "name": "isError",
+            "type": "Boolean",
+            "default": "false",
+            "description": "Whether the field is in the error state (error styling + accessibility signal)."
+          },
+          {
+            "name": "helperText",
+            "type": "String?",
+            "default": "null",
+            "description": "Optional supporting text shown below the field when not in error."
+          },
+          {
+            "name": "errorText",
+            "type": "String?",
+            "default": "null",
+            "description": "Optional supporting text shown below the field while isError is true; takes precedence over helperText."
+          },
+          {
+            "name": "singleLine",
+            "type": "Boolean",
+            "default": "false",
+            "description": "Whether the field is constrained to a single line."
+          },
+          {
+            "name": "textStyle",
+            "type": "TextStyle",
+            "default": "LocalTextStyle.current",
+            "description": "The TextStyle applied to the input text (defaults to the ambient text style; pass FormaTheme.typography.numeric for tabular numeric entry)."
+          },
+          {
+            "name": "visualTransformation",
+            "type": "VisualTransformation",
+            "default": "VisualTransformation.None",
+            "description": "Transforms the visual representation of value (e.g. password dots)."
+          },
+          {
+            "name": "keyboardOptions",
+            "type": "KeyboardOptions",
+            "default": "KeyboardOptions.Default",
+            "description": "Software-keyboard configuration (type, IME action, capitalization)."
+          },
+          {
+            "name": "keyboardActions",
+            "type": "KeyboardActions",
+            "default": "KeyboardActions.Default",
+            "description": "Callbacks for IME actions."
+          },
+          {
+            "name": "shape",
+            "type": "Shape?",
+            "default": "null",
+            "description": "The container shape. When null, the variant's sensible default is used (FormaTextFieldDefaults.outlinedShape for outlined, M3's shape for filled)."
+          },
+          {
+            "name": "colors",
+            "type": "TextFieldColors?",
+            "default": "null",
+            "description": "The field colors. When null, the M3 default colors for the variant are used."
+          },
+          {
+            "name": "interactionSource",
+            "type": "MutableInteractionSource?",
+            "default": "null",
+            "description": "The MutableInteractionSource for observing/emitting interactions (focus, press). When null, one is remembered internally."
+          }
+        ]
+      }
+    ],
+    "supportingApi": [
+      {
+        "name": "FormaTextFieldVariant",
+        "kind": "enum",
+        "summary": "Container style of a FormaTextField: Outlined (default), Filled."
+      },
+      {
+        "name": "FormaTextFieldDefaults",
+        "kind": "object",
+        "summary": "Defaults for FormaTextField: outlinedShape (FormaTheme.shapes.small)."
+      }
+    ],
+    "variants": [
+      "outlined",
+      "filled"
+    ],
+    "codeSample": "var amount by remember { mutableStateOf(\"\") }\nFormaTextField(\n    value = amount,\n    onValueChange = { amount = it },\n    label = \"Amount\",\n    helperText = \"Available balance: $5,000.00\",\n    singleLine = true,\n)",
+    "accessibility": "isError applies error styling and surfaces the error state to accessibility services via the underlying M3 field; supply a contentDescription on any leading/trailing icon that conveys meaning."
+  },
+  {
+    "id": "card",
+    "name": "Card",
+    "package": "dev.formaui.components.card",
+    "sourceFile": "components/src/commonMain/kotlin/dev/formaui/components/card/FormaCard.kt",
+    "prdOrder": 3,
+    "tier": "prd",
+    "description": "A FormaUI card — a themed container with an opinionated header / content / footer slot API covering all three Material 3 card families via variant.",
+    "composables": [
+      {
+        "name": "FormaCard",
+        "summary": "A themed container with header / content / footer slots stacked vertically, optionally clickable via onClick, covering all three M3 card families.",
+        "params": [
+          {
+            "name": "modifier",
+            "type": "Modifier",
+            "default": "Modifier",
+            "description": "The Modifier applied to the card."
+          },
+          {
+            "name": "variant",
+            "type": "FormaCardVariant",
+            "default": "FormaCardVariant.Elevated",
+            "description": "The surface style (defaults to FormaCardVariant.Elevated)."
+          },
+          {
+            "name": "onClick",
+            "type": "(() -> Unit)?",
+            "default": "null",
+            "description": "Optional click handler. When non-null the entire card becomes clickable and focusable; when null the card is a static container."
+          },
+          {
+            "name": "enabled",
+            "type": "Boolean",
+            "default": "true",
+            "description": "Whether the card responds to clicks. Only meaningful when onClick is non-null."
+          },
+          {
+            "name": "shape",
+            "type": "Shape",
+            "default": "FormaCardDefaults.shape",
+            "description": "The card's container shape (defaults to FormaCardDefaults.shape)."
+          },
+          {
+            "name": "colors",
+            "type": "CardColors?",
+            "default": "null",
+            "description": "The card colors. When null, the M3 default colors for the variant are used."
+          },
+          {
+            "name": "contentPadding",
+            "type": "PaddingValues",
+            "default": "FormaCardDefaults.contentPadding",
+            "description": "Padding between the card edges and its slots (defaults to FormaCardDefaults.contentPadding)."
+          },
+          {
+            "name": "header",
+            "type": "(@Composable () -> Unit)?",
+            "default": "null",
+            "description": "Optional slot rendered above content (e.g. a title row)."
+          },
+          {
+            "name": "footer",
+            "type": "(@Composable () -> Unit)?",
+            "default": "null",
+            "description": "Optional slot rendered below content (e.g. an action row)."
+          },
+          {
+            "name": "content",
+            "type": "@Composable ColumnScope.() -> Unit",
+            "default": null,
+            "description": "The card's main content, laid out in a ColumnScope."
+          }
+        ]
+      }
+    ],
+    "supportingApi": [
+      {
+        "name": "FormaCardVariant",
+        "kind": "enum",
+        "summary": "Surface style of a FormaCard: Elevated (default), Outlined, Filled."
+      },
+      {
+        "name": "FormaCardDefaults",
+        "kind": "object",
+        "summary": "Defaults for FormaCard: shape (FormaTheme.shapes.large), contentPadding (FormaTheme.spacing.md on all sides)."
+      }
+    ],
+    "variants": [
+      "elevated",
+      "outlined",
+      "filled"
+    ],
+    "codeSample": "FormaCard(\n    header = { Text(\"Account\", style = MaterialTheme.typography.titleMedium) },\n    footer = {\n        FormaButton(onClick = { }, variant = FormaButtonVariant.Text) {\n            Text(\"View details\")\n        }\n    },\n) {\n    Text(\"Balance\")\n    Text(\"$1,240.00\", style = FormaTheme.typography.numeric)\n}",
+    "accessibility": "When onClick is non-null the entire card is a single clickable/focusable target; Role.Button semantics and the ripple are handled by the underlying M3 clickable card."
+  },
+  {
+    "id": "chip",
+    "name": "Chip",
+    "package": "dev.formaui.components.chip",
+    "sourceFile": "components/src/commonMain/kotlin/dev/formaui/components/chip/FormaChip.kt",
+    "prdOrder": 4,
+    "tier": "prd",
+    "description": "A FormaUI chip — \"Material 3 with better defaults\" — one entry point covering all four Material 3 chip types via variant.",
+    "composables": [
+      {
+        "name": "FormaChip",
+        "summary": "One entry point for all four Material 3 chip types; selected is honored only by the Filter and Input variants, and trailingIcon is ignored for Suggestion.",
+        "params": [
+          {
+            "name": "label",
+            "type": "String",
+            "default": null,
+            "description": "The chip's text label."
+          },
+          {
+            "name": "onClick",
+            "type": "() -> Unit",
+            "default": null,
+            "description": "Called when the chip is clicked. For selectable variants, toggle selected in response."
+          },
+          {
+            "name": "modifier",
+            "type": "Modifier",
+            "default": "Modifier",
+            "description": "The Modifier applied to the chip."
+          },
+          {
+            "name": "variant",
+            "type": "FormaChipVariant",
+            "default": "FormaChipVariant.Assist",
+            "description": "The chip kind (defaults to FormaChipVariant.Assist)."
+          },
+          {
+            "name": "selected",
+            "type": "Boolean",
+            "default": "false",
+            "description": "Whether the chip is selected. Only meaningful for FormaChipVariant.Filter and FormaChipVariant.Input."
+          },
+          {
+            "name": "enabled",
+            "type": "Boolean",
+            "default": "true",
+            "description": "Whether the chip is interactive."
+          },
+          {
+            "name": "leadingIcon",
+            "type": "@Composable (() -> Unit)?",
+            "default": "null",
+            "description": "Optional slot at the start of the chip (for FormaChipVariant.Suggestion this is the chip's single icon)."
+          },
+          {
+            "name": "trailingIcon",
+            "type": "@Composable (() -> Unit)?",
+            "default": "null",
+            "description": "Optional slot at the end of the chip. Ignored for FormaChipVariant.Suggestion."
+          },
+          {
+            "name": "shape",
+            "type": "Shape?",
+            "default": "null",
+            "description": "The chip's container shape (defaults to FormaChipDefaults.shape)."
+          },
+          {
+            "name": "interactionSource",
+            "type": "MutableInteractionSource?",
+            "default": "null",
+            "description": "The MutableInteractionSource for observing/emitting interactions. When null, one is remembered internally."
+          }
+        ]
+      }
+    ],
+    "supportingApi": [
+      {
+        "name": "FormaChipVariant",
+        "kind": "enum",
+        "summary": "Kind of a FormaChip: Assist, Filter, Input, Suggestion."
+      },
+      {
+        "name": "FormaChipDefaults",
+        "kind": "object",
+        "summary": "Defaults for FormaChip: shape (FormaTheme.shapes.small)."
+      }
+    ],
+    "variants": [
+      "assist",
+      "filter",
+      "input",
+      "suggestion"
+    ],
+    "codeSample": "var selected by remember { mutableStateOf(false) }\nFormaChip(\n    label = \"Filter\",\n    onClick = { selected = !selected },\n    variant = FormaChipVariant.Filter,\n    selected = selected,\n)\nFormaChip(label = \"Assist\", onClick = { })",
+    "accessibility": "Chips keep Material 3's compact visual height while automatically exposing a 48dp touch target via M3's minimum interactive component size — no explicit height is forced."
+  },
+  {
+    "id": "badge",
+    "name": "Badge",
+    "package": "dev.formaui.components.badge",
+    "sourceFile": "components/src/commonMain/kotlin/dev/formaui/components/badge/FormaBadge.kt",
+    "prdOrder": 5,
+    "tier": "prd",
+    "description": "A FormaUI badge — a small status marker for indicating unread counts or presence.",
+    "composables": [
+      {
+        "name": "FormaBadge",
+        "summary": "A small status marker: a dot badge when count is null, otherwise a numeric badge capped at maxCount with a trailing + (e.g. 99+).",
+        "params": [
+          {
+            "name": "modifier",
+            "type": "Modifier",
+            "default": "Modifier",
+            "description": "The Modifier applied to the badge."
+          },
+          {
+            "name": "count",
+            "type": "Int?",
+            "default": "null",
+            "description": "The number to display, or null for a dot badge."
+          },
+          {
+            "name": "maxCount",
+            "type": "Int",
+            "default": "DefaultMaxCount",
+            "description": "The largest number shown verbatim; above it the badge shows \"$maxCount+\" (defaults to 99). Ignored for dot badges."
+          },
+          {
+            "name": "containerColor",
+            "type": "Color",
+            "default": "MaterialTheme.colorScheme.error",
+            "description": "The badge background color (defaults to the M3 error color)."
+          },
+          {
+            "name": "contentColor",
+            "type": "Color",
+            "default": "contentColorFor(containerColor)",
+            "description": "The badge text color (defaults to the content color for containerColor)."
+          }
+        ]
+      },
+      {
+        "name": "FormaBadgedBox",
+        "summary": "Anchors a badge to the top-end corner of some content — the FormaUI wrapper over Material 3's BadgedBox.",
+        "params": [
+          {
+            "name": "badge",
+            "type": "@Composable BoxScope.() -> Unit",
+            "default": null,
+            "description": "The badge to draw at the content's top-end corner (typically a FormaBadge)."
+          },
+          {
+            "name": "modifier",
+            "type": "Modifier",
+            "default": "Modifier",
+            "description": "The Modifier applied to the box."
+          },
+          {
+            "name": "content",
+            "type": "@Composable BoxScope.() -> Unit",
+            "default": null,
+            "description": "The element the badge is anchored to."
+          }
+        ]
+      }
+    ],
+    "supportingApi": [],
+    "variants": [
+      "dot",
+      "numeric"
+    ],
+    "codeSample": "FormaBadgedBox(badge = { FormaBadge(count = 5) }) {\n    Text(\"Inbox\")\n}\nFormaBadgedBox(badge = { FormaBadge() }) {\n    Text(\"Updates\")\n}",
+    "accessibility": "The badge is decorative; put the meaningful description (including any count) on the annotated element's contentDescription (e.g. \"Messages, 5 unread\") — not on the badge — so screen readers announce it in context."
+  },
+  {
+    "id": "switch",
+    "name": "Switch",
+    "package": "dev.formaui.components.switch",
+    "sourceFile": "components/src/commonMain/kotlin/dev/formaui/components/switch/FormaSwitch.kt",
+    "prdOrder": 6,
+    "tier": "prd",
+    "description": "A FormaUI switch — a themed on/off toggle for a single setting.",
+    "composables": [
+      {
+        "name": "FormaSwitch",
+        "summary": "A stateless on/off toggle with hoisted checked state; pass onCheckedChange = null for a display-only switch toggled elsewhere.",
+        "params": [
+          {
+            "name": "checked",
+            "type": "Boolean",
+            "default": null,
+            "description": "Whether the switch is on."
+          },
+          {
+            "name": "onCheckedChange",
+            "type": "((Boolean) -> Unit)?",
+            "default": null,
+            "description": "Called with the new value when the user toggles the switch, or null to make the switch non-interactive."
+          },
+          {
+            "name": "modifier",
+            "type": "Modifier",
+            "default": "Modifier",
+            "description": "The Modifier applied to the switch."
+          },
+          {
+            "name": "enabled",
+            "type": "Boolean",
+            "default": "true",
+            "description": "Whether the switch is interactive."
+          },
+          {
+            "name": "thumbContent",
+            "type": "(@Composable () -> Unit)?",
+            "default": "null",
+            "description": "Optional slot drawn inside the thumb (e.g. a check icon when checked)."
+          },
+          {
+            "name": "colors",
+            "type": "SwitchColors?",
+            "default": "null",
+            "description": "The switch colors (defaults to the M3 defaults, themed by FormaTheme)."
+          },
+          {
+            "name": "interactionSource",
+            "type": "MutableInteractionSource?",
+            "default": "null",
+            "description": "The MutableInteractionSource for observing/emitting interactions. When null, one is remembered internally."
+          }
+        ]
+      }
+    ],
+    "supportingApi": [],
+    "variants": [],
+    "codeSample": "var on by remember { mutableStateOf(false) }\nFormaSwitch(\n    checked = on,\n    onCheckedChange = { on = it },\n)",
+    "accessibility": "The interactive control exposes a 48dp touch target via Material 3's minimum interactive component size; pass onCheckedChange = null to render a display-only switch whose toggling is handled elsewhere (e.g. by a click on an enclosing row)."
+  },
+  {
+    "id": "checkbox",
+    "name": "Checkbox",
+    "package": "dev.formaui.components.checkbox",
+    "sourceFile": "components/src/commonMain/kotlin/dev/formaui/components/checkbox/FormaCheckbox.kt",
+    "prdOrder": 7,
+    "tier": "prd",
+    "description": "A FormaUI checkbox — a themed binary selection control.",
+    "composables": [
+      {
+        "name": "FormaCheckbox",
+        "summary": "A stateless binary selection control with hoisted checked state; pass onCheckedChange = null when an enclosing toggleable row owns the toggle.",
+        "params": [
+          {
+            "name": "checked",
+            "type": "Boolean",
+            "default": null,
+            "description": "Whether the box is checked."
+          },
+          {
+            "name": "onCheckedChange",
+            "type": "((Boolean) -> Unit)?",
+            "default": null,
+            "description": "Called with the new value when toggled, or null to make the checkbox non-interactive."
+          },
+          {
+            "name": "modifier",
+            "type": "Modifier",
+            "default": "Modifier",
+            "description": "The Modifier applied to the checkbox."
+          },
+          {
+            "name": "enabled",
+            "type": "Boolean",
+            "default": "true",
+            "description": "Whether the checkbox is interactive."
+          },
+          {
+            "name": "colors",
+            "type": "CheckboxColors?",
+            "default": "null",
+            "description": "The checkbox colors (defaults to the M3 defaults, themed by FormaTheme)."
+          },
+          {
+            "name": "interactionSource",
+            "type": "MutableInteractionSource?",
+            "default": "null",
+            "description": "The MutableInteractionSource for observing/emitting interactions. When null, one is remembered internally."
+          }
+        ]
+      }
+    ],
+    "supportingApi": [],
+    "variants": [],
+    "codeSample": "var checked by remember { mutableStateOf(true) }\nRow(Modifier.toggleable(\n    value = checked,\n    role = Role.Checkbox,\n    onValueChange = { checked = it },\n)) {\n    FormaCheckbox(checked = checked, onCheckedChange = null)\n    Text(\"Enable notifications\")\n}",
+    "accessibility": "48dp touch target via Material 3's minimum interactive component size; when placing next to a label, prefer toggling from the row (Modifier.toggleable with Role.Checkbox) and pass onCheckedChange = null so the whole row is one accessible target."
+  },
+  {
+    "id": "radio-button",
+    "name": "RadioButton",
+    "package": "dev.formaui.components.radiobutton",
+    "sourceFile": "components/src/commonMain/kotlin/dev/formaui/components/radiobutton/FormaRadioButton.kt",
+    "prdOrder": 8,
+    "tier": "prd",
+    "description": "A FormaUI radio button — a themed control for choosing one option from a set.",
+    "composables": [
+      {
+        "name": "FormaRadioButton",
+        "summary": "A stateless single-choice control with hoisted selected state; group several with Modifier.selectableGroup() and pass onClick = null when the row owns selection.",
+        "params": [
+          {
+            "name": "selected",
+            "type": "Boolean",
+            "default": null,
+            "description": "Whether this option is the selected one in its group."
+          },
+          {
+            "name": "onClick",
+            "type": "(() -> Unit)?",
+            "default": null,
+            "description": "Called when this option is clicked, or null to make the radio button non-interactive."
+          },
+          {
+            "name": "modifier",
+            "type": "Modifier",
+            "default": "Modifier",
+            "description": "The Modifier applied to the radio button."
+          },
+          {
+            "name": "enabled",
+            "type": "Boolean",
+            "default": "true",
+            "description": "Whether the radio button is interactive."
+          },
+          {
+            "name": "colors",
+            "type": "RadioButtonColors?",
+            "default": "null",
+            "description": "The radio button colors (defaults to the M3 defaults, themed by FormaTheme)."
+          },
+          {
+            "name": "interactionSource",
+            "type": "MutableInteractionSource?",
+            "default": "null",
+            "description": "The MutableInteractionSource for observing/emitting interactions. When null, one is remembered internally."
+          }
+        ]
+      }
+    ],
+    "supportingApi": [],
+    "variants": [],
+    "codeSample": "val options = listOf(\"Standard\", \"Priority\", \"Overnight\")\nvar selected by remember { mutableStateOf(options.first()) }\nColumn(Modifier.selectableGroup()) {\n    options.forEach { option ->\n        Row(Modifier.selectable(\n            selected = option == selected,\n            role = Role.RadioButton,\n            onClick = { selected = option },\n        )) {\n            FormaRadioButton(selected = option == selected, onClick = null)\n            Text(option)\n        }\n    }\n}",
+    "accessibility": "48dp touch target via Material 3's minimum interactive component size; apply Modifier.selectableGroup() to the container so screen readers announce the set and position (e.g. \"2 of 4\"), and prefer row-level Modifier.selectable with onClick = null so the whole row is one accessible target."
+  },
+  {
+    "id": "dialog",
+    "name": "Dialog",
+    "package": "dev.formaui.components.dialog",
+    "sourceFile": "components/src/commonMain/kotlin/dev/formaui/components/dialog/FormaDialog.kt",
+    "prdOrder": 9,
+    "tier": "prd",
+    "description": "A FormaUI alert dialog — a modal that interrupts the user for a decision or acknowledgement, delegating to Material 3's AlertDialog.",
+    "composables": [
+      {
+        "name": "FormaAlertDialog",
+        "summary": "Modal alert dialog for a decision or acknowledgement; shown while composed, with hoisted visibility state.",
+        "params": [
+          {
+            "name": "onDismissRequest",
+            "type": "() -> Unit",
+            "default": null,
+            "description": "called when the dialog is dismissed by tapping outside or pressing back."
+          },
+          {
+            "name": "confirmButton",
+            "type": "@Composable () -> Unit",
+            "default": null,
+            "description": "the primary action (required)."
+          },
+          {
+            "name": "modifier",
+            "type": "Modifier",
+            "default": "Modifier",
+            "description": "the Modifier applied to the dialog surface."
+          },
+          {
+            "name": "dismissButton",
+            "type": "(@Composable () -> Unit)?",
+            "default": "null",
+            "description": "the optional secondary/cancel action."
+          },
+          {
+            "name": "icon",
+            "type": "(@Composable () -> Unit)?",
+            "default": "null",
+            "description": "optional icon shown above the title."
+          },
+          {
+            "name": "title",
+            "type": "String?",
+            "default": "null",
+            "description": "optional dialog title."
+          },
+          {
+            "name": "text",
+            "type": "String?",
+            "default": "null",
+            "description": "optional supporting body text."
+          },
+          {
+            "name": "shape",
+            "type": "Shape",
+            "default": "FormaDialogDefaults.shape",
+            "description": "the dialog container shape (defaults to FormaDialogDefaults.shape)."
+          }
+        ]
+      },
+      {
+        "name": "FormaFullScreenDialog",
+        "summary": "Full-screen modal dialog for a focused multi-step task, with a top bar hosting Close, the title, and an optional confirm action.",
+        "params": [
+          {
+            "name": "onDismissRequest",
+            "type": "() -> Unit",
+            "default": null,
+            "description": "called when the user closes the dialog (Close button or back press)."
+          },
+          {
+            "name": "title",
+            "type": "String",
+            "default": null,
+            "description": "the dialog's title, shown in the top bar."
+          },
+          {
+            "name": "modifier",
+            "type": "Modifier",
+            "default": "Modifier",
+            "description": "the Modifier applied to the dialog surface."
+          },
+          {
+            "name": "confirmAction",
+            "type": "(@Composable () -> Unit)?",
+            "default": "null",
+            "description": "optional top-bar action slot at the end (e.g. a \"Save\" FormaButton)."
+          },
+          {
+            "name": "content",
+            "type": "@Composable ColumnScope.() -> Unit",
+            "default": null,
+            "description": "the dialog body, laid out in a scrollable ColumnScope."
+          }
+        ]
+      }
+    ],
+    "supportingApi": [
+      {
+        "name": "FormaDialogDefaults",
+        "kind": "object",
+        "summary": "Default values for FormaUI dialogs; shape returns FormaTheme.shapes.large."
+      }
+    ],
+    "variants": [
+      "Alert",
+      "Full-screen"
+    ],
+    "codeSample": "var showDialog by remember { mutableStateOf(true) }\nif (showDialog) {\n    FormaAlertDialog(\n        onDismissRequest = { showDialog = false },\n        title = \"Delete payment?\",\n        text = \"This action can't be undone.\",\n        confirmButton = {\n            FormaButton(onClick = {}) { Text(\"Delete\") }\n        },\n        dismissButton = {\n            FormaButton(onClick = { showDialog = false }, variant = FormaButtonVariant.Text) { Text(\"Cancel\") }\n        },\n    )\n}",
+    "accessibility": null
+  },
+  {
+    "id": "bottom-sheet",
+    "name": "BottomSheet",
+    "package": "dev.formaui.components.bottomsheet",
+    "sourceFile": "components/src/commonMain/kotlin/dev/formaui/components/bottomsheet/FormaBottomSheet.kt",
+    "prdOrder": 10,
+    "tier": "prd",
+    "description": "A FormaUI modal bottom sheet — content that slides up from the bottom over a scrim, delegating to Material 3's ModalBottomSheet.",
+    "composables": [
+      {
+        "name": "FormaBottomSheet",
+        "summary": "Modal bottom sheet shown while composed; the Material 3 SheetState is managed internally so callers only need FormaUI's opt-in.",
+        "params": [
+          {
+            "name": "onDismissRequest",
+            "type": "() -> Unit",
+            "default": null,
+            "description": "called when the sheet is dismissed."
+          },
+          {
+            "name": "modifier",
+            "type": "Modifier",
+            "default": "Modifier",
+            "description": "the Modifier applied to the sheet."
+          },
+          {
+            "name": "skipPartiallyExpanded",
+            "type": "Boolean",
+            "default": "false",
+            "description": "when true, the sheet has no half-expanded state and opens fully."
+          },
+          {
+            "name": "shape",
+            "type": "Shape?",
+            "default": "null",
+            "description": "the sheet container shape. When null, Material 3's top-rounded default is used."
+          },
+          {
+            "name": "content",
+            "type": "@Composable ColumnScope.() -> Unit",
+            "default": null,
+            "description": "the sheet's content, laid out in a ColumnScope."
+          }
+        ]
+      }
+    ],
+    "supportingApi": [],
+    "variants": [
+      "Modal",
+      "Modal (skipPartiallyExpanded)"
+    ],
+    "codeSample": "var open by remember { mutableStateOf(false) }\nFormaButton(onClick = { open = true }) { Text(\"Show sheet\") }\nif (open) {\n    FormaBottomSheet(onDismissRequest = { open = false }) {\n        Text(\"Payment options\", style = MaterialTheme.typography.titleMedium)\n        Text(\"Choose how you'd like to pay.\")\n        FormaButton(onClick = {}, modifier = Modifier.fillMaxWidth()) { Text(\"Continue\") }\n    }\n}",
+    "accessibility": null
+  },
+  {
+    "id": "navigation-bar",
+    "name": "NavigationBar",
+    "package": "dev.formaui.components.navigation",
+    "sourceFile": "components/src/commonMain/kotlin/dev/formaui/components/navigation/FormaNavigationBar.kt",
+    "prdOrder": 11,
+    "tier": "prd",
+    "description": "A FormaUI bottom navigation bar — top-level destination switching, delegating to Material 3's NavigationBar.",
+    "composables": [
+      {
+        "name": "FormaNavigationBar",
+        "summary": "Bottom navigation bar container; populate its RowScope content with FormaNavigationBarItems.",
+        "params": [
+          {
+            "name": "modifier",
+            "type": "Modifier",
+            "default": "Modifier",
+            "description": "the Modifier applied to the bar."
+          },
+          {
+            "name": "content",
+            "type": "@Composable RowScope.() -> Unit",
+            "default": null,
+            "description": "the bar's items, laid out in a RowScope (typically FormaNavigationBarItems)."
+          }
+        ]
+      },
+      {
+        "name": "FormaNavigationBarItem",
+        "summary": "A single destination in a FormaNavigationBar (RowScope extension) with built-in numeric or dot badge support on the icon.",
+        "params": [
+          {
+            "name": "selected",
+            "type": "Boolean",
+            "default": null,
+            "description": "whether this item is the current destination."
+          },
+          {
+            "name": "onClick",
+            "type": "() -> Unit",
+            "default": null,
+            "description": "called when the item is tapped."
+          },
+          {
+            "name": "icon",
+            "type": "@Composable () -> Unit",
+            "default": null,
+            "description": "the item's icon (supply a contentDescription on it for accessibility)."
+          },
+          {
+            "name": "modifier",
+            "type": "Modifier",
+            "default": "Modifier",
+            "description": "the Modifier applied to the item."
+          },
+          {
+            "name": "label",
+            "type": "String?",
+            "default": "null",
+            "description": "optional text label shown under the icon."
+          },
+          {
+            "name": "enabled",
+            "type": "Boolean",
+            "default": "true",
+            "description": "whether the item is interactive."
+          },
+          {
+            "name": "badgeCount",
+            "type": "Int?",
+            "default": "null",
+            "description": "optional unread count to show as a numeric badge on the icon."
+          },
+          {
+            "name": "showBadgeDot",
+            "type": "Boolean",
+            "default": "false",
+            "description": "when true and badgeCount is null, shows a dot badge on the icon."
+          },
+          {
+            "name": "alwaysShowLabel",
+            "type": "Boolean",
+            "default": "true",
+            "description": "whether the label is shown even when the item is unselected."
+          }
+        ]
+      }
+    ],
+    "supportingApi": [],
+    "variants": [
+      "No badge",
+      "Numeric badge",
+      "Dot badge"
+    ],
+    "codeSample": "var selected by remember { mutableIntStateOf(0) }\nFormaNavigationBar {\n    FormaNavigationBarItem(\n        selected = selected == 0, onClick = { selected = 0 },\n        icon = { Icon(Icons.Default.Home, contentDescription = \"Home\") },\n        label = \"Home\",\n    )\n    FormaNavigationBarItem(\n        selected = selected == 1, onClick = { selected = 1 },\n        icon = { Icon(Icons.Default.Notifications, contentDescription = \"Alerts\") },\n        label = \"Alerts\", badgeCount = 3,\n    )\n}",
+    "accessibility": "48dp touch target and selection semantics come from Material 3's NavigationBarItem; supply a contentDescription on each item's icon for accessibility."
+  },
+  {
+    "id": "list-item",
+    "name": "ListItem",
+    "package": "dev.formaui.components.listitem",
+    "sourceFile": "components/src/commonMain/kotlin/dev/formaui/components/listitem/FormaListItem.kt",
+    "prdOrder": 12,
+    "tier": "prd",
+    "description": "A FormaUI list item — a single row for lists, menus, and settings, delegating to Material 3's ListItem.",
+    "composables": [
+      {
+        "name": "FormaListItem",
+        "summary": "List row whose single-/two-/three-line layout is derived automatically from which of headline/overline/supporting are supplied, with optional leading/trailing slots and click handling.",
+        "params": [
+          {
+            "name": "headline",
+            "type": "String",
+            "default": null,
+            "description": "the primary text of the row."
+          },
+          {
+            "name": "modifier",
+            "type": "Modifier",
+            "default": "Modifier",
+            "description": "the Modifier applied to the row."
+          },
+          {
+            "name": "overline",
+            "type": "String?",
+            "default": "null",
+            "description": "optional label shown above headline."
+          },
+          {
+            "name": "supporting",
+            "type": "String?",
+            "default": "null",
+            "description": "optional secondary text shown below headline."
+          },
+          {
+            "name": "leading",
+            "type": "@Composable (() -> Unit)?",
+            "default": "null",
+            "description": "optional slot at the start of the row."
+          },
+          {
+            "name": "trailing",
+            "type": "@Composable (() -> Unit)?",
+            "default": "null",
+            "description": "optional slot at the end of the row."
+          },
+          {
+            "name": "onClick",
+            "type": "(() -> Unit)?",
+            "default": "null",
+            "description": "optional click handler; when non-null the whole row becomes clickable."
+          },
+          {
+            "name": "enabled",
+            "type": "Boolean",
+            "default": "true",
+            "description": "whether the row responds to clicks. Only meaningful when onClick is non-null."
+          },
+          {
+            "name": "colors",
+            "type": "ListItemColors?",
+            "default": "null",
+            "description": "the row colors (defaults to the M3 defaults, themed by FormaTheme)."
+          }
+        ]
+      }
+    ],
+    "supportingApi": [],
+    "variants": [
+      "Single-line",
+      "Two-line",
+      "Three-line",
+      "Clickable"
+    ],
+    "codeSample": "Column {\n    FormaListItem(\n        headline = \"Single line\",\n        trailing = { Text(\"›\") },\n        onClick = {},\n    )\n    FormaDivider()\n    FormaListItem(\n        headline = \"Ada Lovelace\",\n        supporting = \"ada@example.com\",\n        leading = { FormaAvatar(initials = \"AL\", size = FormaAvatarSize.Small) },\n        onClick = {},\n    )\n}",
+    "accessibility": "Passing onClick makes the whole row a single clickable/focusable target with Role.Button semantics; M3 list items already meet the 48dp minimum height."
+  },
+  {
+    "id": "avatar",
+    "name": "Avatar",
+    "package": "dev.formaui.components.avatar",
+    "sourceFile": "components/src/commonMain/kotlin/dev/formaui/components/avatar/FormaAvatar.kt",
+    "prdOrder": 13,
+    "tier": "prd",
+    "description": "A FormaUI avatar container — a circular (by default) tinted surface that centers its content.",
+    "composables": [
+      {
+        "name": "FormaAvatar",
+        "summary": "Base avatar container (slot overload): fill content with an Image, Icon, or text, centered on a circular tinted surface.",
+        "params": [
+          {
+            "name": "modifier",
+            "type": "Modifier",
+            "default": "Modifier",
+            "description": "the Modifier applied to the avatar."
+          },
+          {
+            "name": "size",
+            "type": "FormaAvatarSize",
+            "default": "FormaAvatarSize.Medium",
+            "description": "the avatar diameter (defaults to FormaAvatarSize.Medium)."
+          },
+          {
+            "name": "shape",
+            "type": "Shape",
+            "default": "FormaAvatarDefaults.shape",
+            "description": "the clip shape (defaults to FormaAvatarDefaults.shape, a full circle)."
+          },
+          {
+            "name": "containerColor",
+            "type": "Color",
+            "default": "MaterialTheme.colorScheme.primaryContainer",
+            "description": "the background color (defaults to the M3 primaryContainer)."
+          },
+          {
+            "name": "contentColor",
+            "type": "Color",
+            "default": "MaterialTheme.colorScheme.onPrimaryContainer",
+            "description": "the color applied to icon/text content (defaults to M3 onPrimaryContainer)."
+          },
+          {
+            "name": "content",
+            "type": "@Composable BoxScope.() -> Unit",
+            "default": null,
+            "description": "the centered content (an Image, Icon, or text)."
+          }
+        ]
+      },
+      {
+        "name": "FormaAvatar",
+        "summary": "Initials overload — the standard fallback when a user has no profile image.",
+        "params": [
+          {
+            "name": "initials",
+            "type": "String",
+            "default": null,
+            "description": "the initials to display (typically 1–2 characters)."
+          },
+          {
+            "name": "modifier",
+            "type": "Modifier",
+            "default": "Modifier",
+            "description": "the Modifier applied to the avatar."
+          },
+          {
+            "name": "size",
+            "type": "FormaAvatarSize",
+            "default": "FormaAvatarSize.Medium",
+            "description": "the avatar diameter (defaults to FormaAvatarSize.Medium)."
+          },
+          {
+            "name": "shape",
+            "type": "Shape",
+            "default": "FormaAvatarDefaults.shape",
+            "description": "the clip shape (defaults to FormaAvatarDefaults.shape, a full circle)."
+          },
+          {
+            "name": "containerColor",
+            "type": "Color",
+            "default": "MaterialTheme.colorScheme.primaryContainer",
+            "description": "the background color (defaults to the M3 primaryContainer)."
+          },
+          {
+            "name": "contentColor",
+            "type": "Color",
+            "default": "MaterialTheme.colorScheme.onPrimaryContainer",
+            "description": "the initials color (defaults to M3 onPrimaryContainer)."
+          }
+        ]
+      }
+    ],
+    "supportingApi": [
+      {
+        "name": "FormaAvatarSize",
+        "kind": "enum",
+        "summary": "Avatar diameter: Small (32dp), Medium (40dp), Large (56dp); exposes a dp property."
+      },
+      {
+        "name": "FormaAvatarDefaults",
+        "kind": "object",
+        "summary": "Default values for FormaAvatar; shape returns FormaTheme.shapes.full (circular)."
+      }
+    ],
+    "variants": [
+      "Initials",
+      "Icon",
+      "Image",
+      "Small",
+      "Medium",
+      "Large"
+    ],
+    "codeSample": "Row(horizontalArrangement = Arrangement.spacedBy(FormaTheme.spacing.md)) {\n    FormaAvatar(initials = \"AB\", size = FormaAvatarSize.Small)\n    FormaAvatar(initials = \"CD\")\n    FormaAvatar(initials = \"EF\", size = FormaAvatarSize.Large)\n    // Slot content: any composable can fill the avatar container.\n    FormaAvatar { Text(\"★\") }\n}",
+    "accessibility": "The container is decorative and non-interactive; wrap it in a clickable/Modifier.semantics parent (with the person's name as the description) when it represents a tappable user."
+  },
+  {
+    "id": "divider",
+    "name": "Divider",
+    "package": "dev.formaui.components.divider",
+    "sourceFile": "components/src/commonMain/kotlin/dev/formaui/components/divider/FormaDivider.kt",
+    "prdOrder": 14,
+    "tier": "prd",
+    "description": "A FormaUI divider — a thin rule for separating content, delegating to Material 3's HorizontalDivider / VerticalDivider.",
+    "composables": [
+      {
+        "name": "FormaDivider",
+        "summary": "Thin horizontal or vertical rule for separating content, chosen by the orientation parameter.",
+        "params": [
+          {
+            "name": "modifier",
+            "type": "Modifier",
+            "default": "Modifier",
+            "description": "the Modifier applied to the divider."
+          },
+          {
+            "name": "orientation",
+            "type": "FormaDividerOrientation",
+            "default": "FormaDividerOrientation.Horizontal",
+            "description": "whether the rule runs horizontally or vertically (defaults to FormaDividerOrientation.Horizontal)."
+          },
+          {
+            "name": "thickness",
+            "type": "Dp",
+            "default": "DividerDefaults.Thickness",
+            "description": "the stroke thickness (defaults to Material 3's hairline DividerDefaults.Thickness)."
+          },
+          {
+            "name": "color",
+            "type": "Color",
+            "default": "DividerDefaults.color",
+            "description": "the stroke color (defaults to Material 3's DividerDefaults.color)."
+          }
+        ]
+      }
+    ],
+    "supportingApi": [
+      {
+        "name": "FormaDividerOrientation",
+        "kind": "enum",
+        "summary": "The direction the divider runs: Horizontal, Vertical."
+      }
+    ],
+    "variants": [
+      "Horizontal",
+      "Vertical"
+    ],
+    "codeSample": "Column(verticalArrangement = Arrangement.spacedBy(FormaTheme.spacing.md)) {\n    Text(\"Above\")\n    FormaDivider()\n    Text(\"Below\")\n    Row(modifier = Modifier.height(FormaTheme.spacing.xl)) {\n        Text(\"Left\")\n        FormaDivider(orientation = FormaDividerOrientation.Vertical)\n        Text(\"Right\")\n    }\n}",
+    "accessibility": "Purely decorative: a divider carries no semantics and does not need a content description."
+  },
+  {
+    "id": "loading-indicator",
+    "name": "LoadingIndicator",
+    "package": "dev.formaui.components.loading",
+    "sourceFile": "components/src/commonMain/kotlin/dev/formaui/components/loading/FormaLoadingIndicator.kt",
+    "prdOrder": 15,
+    "tier": "prd",
+    "description": "A FormaUI loading indicator — circular or linear, determinate or indeterminate — delegating to Material 3's progress indicators.",
+    "composables": [
+      {
+        "name": "FormaLoadingIndicator",
+        "summary": "Circular or linear progress indicator; indeterminate when progress is null, determinate for a 0f..1f fraction.",
+        "params": [
+          {
+            "name": "modifier",
+            "type": "Modifier",
+            "default": "Modifier",
+            "description": "the Modifier applied to the indicator."
+          },
+          {
+            "name": "variant",
+            "type": "FormaLoadingIndicatorVariant",
+            "default": "FormaLoadingIndicatorVariant.Circular",
+            "description": "circular or linear (defaults to FormaLoadingIndicatorVariant.Circular)."
+          },
+          {
+            "name": "progress",
+            "type": "Float?",
+            "default": "null",
+            "description": "the completion fraction 0f..1f, or null for an indeterminate indicator."
+          },
+          {
+            "name": "contentDescription",
+            "type": "String?",
+            "default": "null",
+            "description": "optional accessibility description of what is loading."
+          }
+        ]
+      }
+    ],
+    "supportingApi": [
+      {
+        "name": "FormaLoadingIndicatorVariant",
+        "kind": "enum",
+        "summary": "The indicator's shape: Circular, Linear."
+      }
+    ],
+    "variants": [
+      "Circular indeterminate",
+      "Circular determinate",
+      "Linear indeterminate",
+      "Linear determinate"
+    ],
+    "codeSample": "Column(verticalArrangement = Arrangement.spacedBy(FormaTheme.spacing.md)) {\n    FormaLoadingIndicator(contentDescription = \"Loading\")\n    FormaLoadingIndicator(progress = 0.6f, contentDescription = \"60 percent loaded\")\n    FormaLoadingIndicator(\n        modifier = Modifier.fillMaxWidth(),\n        variant = FormaLoadingIndicatorVariant.Linear,\n        contentDescription = \"Loading\",\n    )\n}",
+    "accessibility": "Supply contentDescription (e.g. \"Loading transactions\") so screen readers announce the busy state; a bare indicator is otherwise silent."
+  },
+  {
+    "id": "empty-state",
+    "name": "EmptyState",
+    "package": "dev.formaui.components.emptystate",
+    "sourceFile": "components/src/commonMain/kotlin/dev/formaui/components/emptystate/FormaEmptyState.kt",
+    "prdOrder": 16,
+    "tier": "prd",
+    "description": "A FormaUI empty state — the centered \"nothing here yet / no results\" placeholder with an optional illustration, a title, a description, and an optional action.",
+    "composables": [
+      {
+        "name": "FormaEmptyState",
+        "summary": "Centered empty-state placeholder composed from FormaUI tokens (no Material 3 equivalent); only title is required.",
+        "params": [
+          {
+            "name": "title",
+            "type": "String",
+            "default": null,
+            "description": "the primary message (required)."
+          },
+          {
+            "name": "modifier",
+            "type": "Modifier",
+            "default": "Modifier",
+            "description": "the Modifier applied to the empty state."
+          },
+          {
+            "name": "description",
+            "type": "String?",
+            "default": "null",
+            "description": "optional secondary explanatory text."
+          },
+          {
+            "name": "icon",
+            "type": "@Composable (() -> Unit)?",
+            "default": "null",
+            "description": "optional illustration/icon slot shown above the title."
+          },
+          {
+            "name": "action",
+            "type": "@Composable (() -> Unit)?",
+            "default": "null",
+            "description": "optional action slot shown below the text (typically a FormaButton)."
+          }
+        ]
+      }
+    ],
+    "supportingApi": [],
+    "variants": [
+      "Title only",
+      "With description",
+      "With icon",
+      "With action"
+    ],
+    "codeSample": "FormaEmptyState(\n    title = \"No transactions yet\",\n    description = \"Your transactions will appear here once you make your first payment.\",\n    icon = { Icon(Icons.Outlined.Receipt, contentDescription = null) },\n    action = { FormaButton(onClick = { /* add payment */ }) { Text(\"Add payment\") } },\n)",
+    "accessibility": null
+  },
+  {
+    "id": "snackbar",
+    "name": "Snackbar",
+    "package": "dev.formaui.components.snackbar",
+    "sourceFile": "components/src/commonMain/kotlin/dev/formaui/components/snackbar/FormaSnackbar.kt",
+    "prdOrder": 17,
+    "tier": "prd",
+    "description": "A FormaUI snackbar — a brief, transient message at the bottom of the screen, delegating to Material 3's Snackbar, with a standard (message-only) and an action variant.",
+    "composables": [
+      {
+        "name": "FormaSnackbar",
+        "summary": "Renders the snackbar visual directly; the action button is shown only when both actionLabel and onAction are provided.",
+        "params": [
+          {
+            "name": "message",
+            "type": "String",
+            "default": null,
+            "description": "the text to display."
+          },
+          {
+            "name": "modifier",
+            "type": "Modifier",
+            "default": "Modifier",
+            "description": "the Modifier applied to the snackbar."
+          },
+          {
+            "name": "actionLabel",
+            "type": "String?",
+            "default": "null",
+            "description": "optional action button label; the action is shown only when both this and onAction are provided."
+          },
+          {
+            "name": "onAction",
+            "type": "(() -> Unit)?",
+            "default": "null",
+            "description": "optional action callback."
+          },
+          {
+            "name": "shape",
+            "type": "Shape",
+            "default": "FormaSnackbarDefaults.shape",
+            "description": "the snackbar container shape (defaults to FormaSnackbarDefaults.shape)."
+          }
+        ]
+      },
+      {
+        "name": "FormaSnackbarHost",
+        "summary": "Hosts snackbars queued through a SnackbarHostState, rendering each as a FormaUI-styled FormaSnackbar (including its action button); place it in a Scaffold's snackbarHost slot.",
+        "params": [
+          {
+            "name": "hostState",
+            "type": "SnackbarHostState",
+            "default": null,
+            "description": "the SnackbarHostState whose current message is displayed."
+          },
+          {
+            "name": "modifier",
+            "type": "Modifier",
+            "default": "Modifier",
+            "description": "the Modifier applied to the host."
+          }
+        ]
+      }
+    ],
+    "supportingApi": [
+      {
+        "name": "FormaSnackbarDefaults",
+        "kind": "object",
+        "summary": "Default values used by FormaSnackbar; exposes shape (FormaUI's small corner tier)."
+      }
+    ],
+    "variants": [
+      "Standard",
+      "Action"
+    ],
+    "codeSample": "FormaSnackbar(\n    message = \"Message deleted.\",\n    actionLabel = \"Undo\",\n    onAction = { /* undo */ },\n)\n\n// To surface transient messages, host queued snackbars:\nval hostState = remember { SnackbarHostState() }\nScaffold(snackbarHost = { FormaSnackbarHost(hostState) }) { /* ... */ }\n// elsewhere: scope.launch { hostState.showSnackbar(\"Saved.\", actionLabel = \"Undo\") }",
+    "accessibility": null
+  },
+  {
+    "id": "slider",
+    "name": "Slider",
+    "package": "dev.formaui.components.slider",
+    "sourceFile": "components/src/commonMain/kotlin/dev/formaui/components/slider/FormaSlider.kt",
+    "prdOrder": 18,
+    "tier": "prd",
+    "description": "A FormaUI slider — lets the user select a value from a continuous or stepped range, delegating to Material 3's Slider.",
+    "composables": [
+      {
+        "name": "FormaSlider",
+        "summary": "Stateless slider with hoisted state: the caller owns value and updates it in onValueChange; set steps to snap to discrete stops within valueRange.",
+        "params": [
+          {
+            "name": "value",
+            "type": "Float",
+            "default": null,
+            "description": "the current value; should sit within valueRange."
+          },
+          {
+            "name": "onValueChange",
+            "type": "(Float) -> Unit",
+            "default": null,
+            "description": "called continuously with the new value as the user drags."
+          },
+          {
+            "name": "modifier",
+            "type": "Modifier",
+            "default": "Modifier",
+            "description": "the Modifier applied to the slider."
+          },
+          {
+            "name": "enabled",
+            "type": "Boolean",
+            "default": "true",
+            "description": "whether the slider is interactive."
+          },
+          {
+            "name": "valueRange",
+            "type": "ClosedFloatingPointRange<Float>",
+            "default": "0f..1f",
+            "description": "the inclusive range of selectable values (defaults to 0f..1f)."
+          },
+          {
+            "name": "steps",
+            "type": "Int",
+            "default": "0",
+            "description": "the number of discrete intermediate stops (0 = continuous)."
+          },
+          {
+            "name": "onValueChangeFinished",
+            "type": "(() -> Unit)?",
+            "default": "null",
+            "description": "called once when the user finishes changing the value."
+          },
+          {
+            "name": "colors",
+            "type": "SliderColors?",
+            "default": "null",
+            "description": "the slider colors (defaults to the M3 defaults, themed by FormaTheme)."
+          }
+        ]
+      }
+    ],
+    "supportingApi": [],
+    "variants": [
+      "Continuous",
+      "Stepped"
+    ],
+    "codeSample": "var value by remember { mutableFloatStateOf(0.4f) }\nFormaSlider(\n    value = value,\n    onValueChange = { value = it },\n    modifier = Modifier.fillMaxWidth(),\n)\n\n// Stepped (discrete) slider:\nvar stepped by remember { mutableFloatStateOf(2f) }\nFormaSlider(\n    value = stepped,\n    onValueChange = { stepped = it },\n    valueRange = 0f..4f,\n    steps = 3,\n)",
+    "accessibility": "Exposes a 48dp touch target via Material 3's minimum interactive component size."
+  },
+  {
+    "id": "bottom-app-bar",
+    "name": "BottomAppBar",
+    "package": "dev.formaui.components.bottomappbar",
+    "sourceFile": "components/src/commonMain/kotlin/dev/formaui/components/bottomappbar/FormaBottomAppBar.kt",
+    "prdOrder": null,
+    "tier": "extra",
+    "description": "A FormaUI bottom app bar — navigation and key actions anchored to the bottom of small screens, delegating to Material 3's BottomAppBar.",
+    "composables": [
+      {
+        "name": "FormaBottomAppBar",
+        "summary": "Bottom bar of icon actions with an optional embedded FAB at the end.",
+        "params": [
+          {
+            "name": "actions",
+            "type": "@Composable RowScope.() -> Unit",
+            "default": null,
+            "description": "the bar's icon content, laid out in a RowScope (typically IconButtons)."
+          },
+          {
+            "name": "modifier",
+            "type": "Modifier",
+            "default": "Modifier",
+            "description": "the Modifier applied to the bar."
+          },
+          {
+            "name": "floatingActionButton",
+            "type": "(@Composable () -> Unit)?",
+            "default": "null",
+            "description": "optional FAB embedded at the end of the bar (typically a FormaFloatingActionButton)."
+          },
+          {
+            "name": "containerColor",
+            "type": "Color",
+            "default": "FormaBottomAppBarDefaults.containerColor",
+            "description": "the background color of the bar."
+          },
+          {
+            "name": "contentColor",
+            "type": "Color",
+            "default": "contentColorFor(containerColor)",
+            "description": "the preferred content color, derived from containerColor by default."
+          }
+        ]
+      }
+    ],
+    "supportingApi": [
+      {
+        "name": "FormaBottomAppBarDefaults",
+        "kind": "object",
+        "summary": "Default values used by FormaBottomAppBar; exposes the default containerColor."
+      }
+    ],
+    "variants": [
+      "actions only",
+      "with embedded FAB"
+    ],
+    "codeSample": "FormaBottomAppBar(\n    actions = {\n        FormaIconButton(onClick = { }) { Text(\"🔍\") }\n        FormaIconButton(onClick = { }) { Text(\"⋮\") }\n    },\n    floatingActionButton = {\n        FormaFloatingActionButton(onClick = { }) { Text(\"+\") }\n    },\n)",
+    "accessibility": null
+  },
+  {
+    "id": "dropdown-menu",
+    "name": "DropdownMenu",
+    "package": "dev.formaui.components.menu",
+    "sourceFile": "components/src/commonMain/kotlin/dev/formaui/components/menu/FormaDropdownMenu.kt",
+    "prdOrder": null,
+    "tier": "extra",
+    "description": "A FormaUI dropdown menu — a transient surface of choices anchored to a control, delegating to Material 3's DropdownMenu.",
+    "composables": [
+      {
+        "name": "FormaDropdownMenu",
+        "summary": "Popup menu anchored to a sibling control; visibility is hoisted via expanded/onDismissRequest.",
+        "params": [
+          {
+            "name": "expanded",
+            "type": "Boolean",
+            "default": null,
+            "description": "whether the menu is currently shown."
+          },
+          {
+            "name": "onDismissRequest",
+            "type": "() -> Unit",
+            "default": null,
+            "description": "called when the user requests to dismiss the menu — an outside tap or the back gesture."
+          },
+          {
+            "name": "modifier",
+            "type": "Modifier",
+            "default": "Modifier",
+            "description": "the Modifier applied to the menu's content."
+          },
+          {
+            "name": "content",
+            "type": "@Composable ColumnScope.() -> Unit",
+            "default": null,
+            "description": "the menu's items, laid out in a scrollable ColumnScope (typically FormaDropdownMenuItems)."
+          }
+        ]
+      },
+      {
+        "name": "FormaDropdownMenuItem",
+        "summary": "A single choice in a FormaDropdownMenu, delegating to Material 3's DropdownMenuItem.",
+        "params": [
+          {
+            "name": "text",
+            "type": "String",
+            "default": null,
+            "description": "the item's label."
+          },
+          {
+            "name": "onClick",
+            "type": "() -> Unit",
+            "default": null,
+            "description": "called when the item is clicked. Not invoked while enabled is false. Callers typically also dismiss the menu from here."
+          },
+          {
+            "name": "modifier",
+            "type": "Modifier",
+            "default": "Modifier",
+            "description": "the Modifier applied to the item."
+          },
+          {
+            "name": "leadingIcon",
+            "type": "@Composable (() -> Unit)?",
+            "default": "null",
+            "description": "optional slot at the start of the item."
+          },
+          {
+            "name": "trailingIcon",
+            "type": "@Composable (() -> Unit)?",
+            "default": "null",
+            "description": "optional slot at the end of the item (can also hold Text for a keyboard shortcut hint)."
+          },
+          {
+            "name": "enabled",
+            "type": "Boolean",
+            "default": "true",
+            "description": "whether the item is interactive."
+          }
+        ]
+      }
+    ],
+    "supportingApi": [],
+    "variants": [
+      "item with leading icon",
+      "item with trailing shortcut hint",
+      "disabled item"
+    ],
+    "codeSample": "var expanded by remember { mutableStateOf(false) }\nBox {\n    FormaIconButton(onClick = { expanded = true }) { Text(\"⋮\") }\n    FormaDropdownMenu(expanded = expanded, onDismissRequest = { expanded = false }) {\n        FormaDropdownMenuItem(text = \"Share\", onClick = { expanded = false })\n        FormaDropdownMenuItem(text = \"Delete\", onClick = { expanded = false })\n    }\n}",
+    "accessibility": null
+  },
+  {
+    "id": "floating-action-button",
+    "name": "FloatingActionButton",
+    "package": "dev.formaui.components.fab",
+    "sourceFile": "components/src/commonMain/kotlin/dev/formaui/components/fab/FormaFloatingActionButton.kt",
+    "prdOrder": null,
+    "tier": "extra",
+    "description": "A FormaUI floating action button — \"Material 3 with better defaults\"; one entry point covers all three Material 3 FAB sizes via size.",
+    "composables": [
+      {
+        "name": "FormaFloatingActionButton",
+        "summary": "The screen's primary action, in Small/Regular/Large sizes; corners default to FormaUI's large tier for a consistent silhouette across sizes.",
+        "params": [
+          {
+            "name": "onClick",
+            "type": "() -> Unit",
+            "default": null,
+            "description": "called when the FAB is clicked."
+          },
+          {
+            "name": "modifier",
+            "type": "Modifier",
+            "default": "Modifier",
+            "description": "the Modifier applied to the FAB."
+          },
+          {
+            "name": "size",
+            "type": "FormaFabSize",
+            "default": "FormaFabSize.Regular",
+            "description": "the FAB's size (defaults to FormaFabSize.Regular)."
+          },
+          {
+            "name": "shape",
+            "type": "Shape?",
+            "default": "null",
+            "description": "the FAB's container shape (defaults to FormaFabDefaults.shape)."
+          },
+          {
+            "name": "containerColor",
+            "type": "Color",
+            "default": "FloatingActionButtonDefaults.containerColor",
+            "description": "the background color of the FAB."
+          },
+          {
+            "name": "contentColor",
+            "type": "Color",
+            "default": "contentColorFor(containerColor)",
+            "description": "the preferred content color, derived from containerColor by default."
+          },
+          {
+            "name": "interactionSource",
+            "type": "MutableInteractionSource?",
+            "default": "null",
+            "description": "the MutableInteractionSource for observing/emitting interactions. When null, one is remembered internally."
+          },
+          {
+            "name": "content",
+            "type": "@Composable () -> Unit",
+            "default": null,
+            "description": "the FAB's content, typically a single Icon."
+          }
+        ]
+      },
+      {
+        "name": "FormaExtendedFloatingActionButton",
+        "summary": "A wider FAB pairing an icon with a text label; set expanded = false to collapse down to just the icon, with the width animating between states.",
+        "params": [
+          {
+            "name": "text",
+            "type": "String",
+            "default": null,
+            "description": "the FAB's text label."
+          },
+          {
+            "name": "icon",
+            "type": "@Composable () -> Unit",
+            "default": null,
+            "description": "the FAB's leading icon."
+          },
+          {
+            "name": "onClick",
+            "type": "() -> Unit",
+            "default": null,
+            "description": "called when the FAB is clicked."
+          },
+          {
+            "name": "modifier",
+            "type": "Modifier",
+            "default": "Modifier",
+            "description": "the Modifier applied to the FAB."
+          },
+          {
+            "name": "expanded",
+            "type": "Boolean",
+            "default": "true",
+            "description": "whether the FAB shows both icon and text (true) or collapses to just icon (false)."
+          },
+          {
+            "name": "shape",
+            "type": "Shape?",
+            "default": "null",
+            "description": "the FAB's container shape (defaults to FormaFabDefaults.shape)."
+          },
+          {
+            "name": "containerColor",
+            "type": "Color",
+            "default": "FloatingActionButtonDefaults.containerColor",
+            "description": "the background color of the FAB."
+          },
+          {
+            "name": "contentColor",
+            "type": "Color",
+            "default": "contentColorFor(containerColor)",
+            "description": "the preferred content color, derived from containerColor by default."
+          },
+          {
+            "name": "interactionSource",
+            "type": "MutableInteractionSource?",
+            "default": "null",
+            "description": "the MutableInteractionSource for observing/emitting interactions. When null, one is remembered internally."
+          }
+        ]
+      }
+    ],
+    "supportingApi": [
+      {
+        "name": "FormaFabSize",
+        "kind": "enum",
+        "summary": "The size of a FormaFloatingActionButton, mirroring Material 3's three FAB sizes: Small, Regular, Large."
+      },
+      {
+        "name": "FormaFabDefaults",
+        "kind": "object",
+        "summary": "Default values used by both FAB composables; exposes shape (FormaUI's large corner tier, used across all sizes)."
+      }
+    ],
+    "variants": [
+      "Small",
+      "Regular",
+      "Large",
+      "Extended"
+    ],
+    "codeSample": "FormaFloatingActionButton(onClick = { /* create */ }) {\n    Icon(Icons.Default.Add, contentDescription = \"Add\")\n}\n\n// Extended FAB with a label that can collapse on scroll:\nvar expanded by remember { mutableStateOf(true) }\nFormaExtendedFloatingActionButton(\n    text = \"Compose\",\n    icon = { Icon(Icons.Default.Add, contentDescription = null) },\n    onClick = { /* compose */ },\n    expanded = expanded,\n)",
+    "accessibility": null
+  },
+  {
+    "id": "icon-button",
+    "name": "IconButton",
+    "package": "dev.formaui.components.iconbutton",
+    "sourceFile": "components/src/commonMain/kotlin/dev/formaui/components/iconbutton/FormaIconButton.kt",
+    "prdOrder": null,
+    "tier": "extra",
+    "description": "A FormaUI icon button — \"Material 3 with better defaults\"; one entry point covers all four Material 3 icon button variants via variant.",
+    "composables": [
+      {
+        "name": "FormaIconButton",
+        "summary": "One entry point for all four M3 icon button variants via variant; supply the content slot yourself, typically an Icon with a contentDescription.",
+        "params": [
+          {
+            "name": "onClick",
+            "type": "() -> Unit",
+            "default": null,
+            "description": "called when the button is clicked. Not invoked while enabled is false."
+          },
+          {
+            "name": "modifier",
+            "type": "Modifier",
+            "default": "Modifier",
+            "description": "the Modifier applied to the button."
+          },
+          {
+            "name": "variant",
+            "type": "FormaIconButtonVariant",
+            "default": "FormaIconButtonVariant.Standard",
+            "description": "the visual emphasis (defaults to FormaIconButtonVariant.Standard)."
+          },
+          {
+            "name": "enabled",
+            "type": "Boolean",
+            "default": "true",
+            "description": "whether the button is interactive."
+          },
+          {
+            "name": "colors",
+            "type": "IconButtonColors?",
+            "default": "null",
+            "description": "the container/content colors. When null, the Material 3 default colors for the chosen variant are used."
+          },
+          {
+            "name": "interactionSource",
+            "type": "MutableInteractionSource?",
+            "default": "null",
+            "description": "the MutableInteractionSource for observing/emitting interactions. When null, one is remembered internally."
+          },
+          {
+            "name": "content",
+            "type": "@Composable () -> Unit",
+            "default": null,
+            "description": "the button's content — typically a single Icon with a contentDescription."
+          }
+        ]
+      }
+    ],
+    "supportingApi": [
+      {
+        "name": "FormaIconButtonVariant",
+        "kind": "enum",
+        "summary": "The visual emphasis of a FormaIconButton, mirroring Material 3's four icon button variants: Standard, Filled, Tonal, Outlined."
+      }
+    ],
+    "variants": [
+      "Standard",
+      "Filled",
+      "Tonal",
+      "Outlined"
+    ],
+    "codeSample": "FormaIconButton(onClick = { /* favorite */ }) {\n    Icon(Icons.Default.Star, contentDescription = \"Favorite\")\n}\n\nFormaIconButton(onClick = { /* menu */ }, variant = FormaIconButtonVariant.Filled) {\n    Icon(Icons.Default.Menu, contentDescription = \"Open menu\")\n}",
+    "accessibility": "48dp minimum touch target and Role.Button semantics inherited from the underlying Material 3 icon button; content should be an Icon with a contentDescription since the button carries no text label of its own."
+  },
+  {
+    "id": "navigation-drawer",
+    "name": "NavigationDrawer",
+    "package": "dev.formaui.components.navigation",
+    "sourceFile": "components/src/commonMain/kotlin/dev/formaui/components/navigation/FormaNavigationDrawer.kt",
+    "prdOrder": null,
+    "tier": "extra",
+    "description": "A FormaUI modal navigation drawer — an off-canvas panel of destinations that slides in over content and is dismissed with a scrim tap, delegating to Material 3's ModalNavigationDrawer.",
+    "composables": [
+      {
+        "name": "FormaModalNavigationDrawer",
+        "summary": "Modal drawer that auto-wraps drawerContent in a ModalDrawerSheet; open/closed state is hoisted via DrawerState.",
+        "params": [
+          {
+            "name": "drawerState",
+            "type": "DrawerState",
+            "default": null,
+            "description": "the drawer's hoisted open/closed state (e.g. rememberDrawerState(DrawerValue.Closed))."
+          },
+          {
+            "name": "drawerContent",
+            "type": "@Composable ColumnScope.() -> Unit",
+            "default": null,
+            "description": "the drawer's items, laid out in a ColumnScope inside a ModalDrawerSheet (typically FormaNavigationDrawerItems)."
+          },
+          {
+            "name": "modifier",
+            "type": "Modifier",
+            "default": "Modifier",
+            "description": "the Modifier applied to the drawer."
+          },
+          {
+            "name": "gesturesEnabled",
+            "type": "Boolean",
+            "default": "true",
+            "description": "whether the drawer can be opened/closed by a swipe gesture."
+          },
+          {
+            "name": "content",
+            "type": "@Composable () -> Unit",
+            "default": null,
+            "description": "the screen content behind the drawer."
+          }
+        ]
+      },
+      {
+        "name": "FormaNavigationDrawerItem",
+        "summary": "A single destination row in the drawer, with optional leading icon and trailing text badge (e.g. an unread count).",
+        "params": [
+          {
+            "name": "label",
+            "type": "String",
+            "default": null,
+            "description": "the item's text label."
+          },
+          {
+            "name": "selected",
+            "type": "Boolean",
+            "default": null,
+            "description": "whether this item is the current destination."
+          },
+          {
+            "name": "onClick",
+            "type": "() -> Unit",
+            "default": null,
+            "description": "called when the item is tapped."
+          },
+          {
+            "name": "modifier",
+            "type": "Modifier",
+            "default": "Modifier",
+            "description": "the Modifier applied to the item."
+          },
+          {
+            "name": "icon",
+            "type": "@Composable (() -> Unit)?",
+            "default": "null",
+            "description": "optional leading icon (supply a contentDescription on it for accessibility)."
+          },
+          {
+            "name": "badge",
+            "type": "String?",
+            "default": "null",
+            "description": "optional trailing text (e.g. an unread count) shown at the item's end."
+          }
+        ]
+      }
+    ],
+    "supportingApi": [],
+    "variants": [
+      "modal"
+    ],
+    "codeSample": "val drawerState = rememberDrawerState(DrawerValue.Open)\nvar selected by remember { mutableIntStateOf(0) }\nFormaModalNavigationDrawer(\n    drawerState = drawerState,\n    drawerContent = {\n        FormaNavigationDrawerItem(label = \"Inbox\", selected = selected == 0, onClick = { selected = 0 }, badge = \"24\")\n        FormaNavigationDrawerItem(label = \"Sent\", selected = selected == 1, onClick = { selected = 1 })\n    },\n) {\n    Text(\"Mail content behind the drawer\")\n}",
+    "accessibility": "Item icons should carry a contentDescription for accessibility (noted on the icon param); dismissible via scrim tap and (when gesturesEnabled) swipe."
+  },
+  {
+    "id": "navigation-rail",
+    "name": "NavigationRail",
+    "package": "dev.formaui.components.navigation",
+    "sourceFile": "components/src/commonMain/kotlin/dev/formaui/components/navigation/FormaNavigationRail.kt",
+    "prdOrder": null,
+    "tier": "extra",
+    "description": "A FormaUI navigation rail — top-level destination switching for tablet/desktop-width screens, delegating to Material 3's NavigationRail.",
+    "composables": [
+      {
+        "name": "FormaNavigationRail",
+        "summary": "Vertical rail pinned to the start edge, with an optional header slot (typically a FAB or logo) above the items.",
+        "params": [
+          {
+            "name": "modifier",
+            "type": "Modifier",
+            "default": "Modifier",
+            "description": "the Modifier applied to the rail."
+          },
+          {
+            "name": "header",
+            "type": "@Composable (ColumnScope.() -> Unit)?",
+            "default": "null",
+            "description": "optional content shown above the items (typically a FAB or a logo)."
+          },
+          {
+            "name": "content",
+            "type": "@Composable ColumnScope.() -> Unit",
+            "default": null,
+            "description": "the rail's items, laid out in a ColumnScope (typically 3-7 FormaNavigationRailItems)."
+          }
+        ]
+      },
+      {
+        "name": "FormaNavigationRailItem",
+        "summary": "A single rail destination with built-in per-item badge support (numeric badgeCount or dot via showBadgeDot); takes no scope receiver.",
+        "params": [
+          {
+            "name": "selected",
+            "type": "Boolean",
+            "default": null,
+            "description": "whether this item is the current destination."
+          },
+          {
+            "name": "onClick",
+            "type": "() -> Unit",
+            "default": null,
+            "description": "called when the item is tapped."
+          },
+          {
+            "name": "icon",
+            "type": "@Composable () -> Unit",
+            "default": null,
+            "description": "the item's icon (supply a contentDescription on it for accessibility)."
+          },
+          {
+            "name": "modifier",
+            "type": "Modifier",
+            "default": "Modifier",
+            "description": "the Modifier applied to the item."
+          },
+          {
+            "name": "label",
+            "type": "String?",
+            "default": "null",
+            "description": "optional text label shown under the icon."
+          },
+          {
+            "name": "enabled",
+            "type": "Boolean",
+            "default": "true",
+            "description": "whether the item is interactive."
+          },
+          {
+            "name": "badgeCount",
+            "type": "Int?",
+            "default": "null",
+            "description": "optional unread count to show as a numeric badge on the icon."
+          },
+          {
+            "name": "showBadgeDot",
+            "type": "Boolean",
+            "default": "false",
+            "description": "when true and badgeCount is null, shows a dot badge on the icon."
+          },
+          {
+            "name": "alwaysShowLabel",
+            "type": "Boolean",
+            "default": "true",
+            "description": "whether the label is shown even when the item is unselected."
+          }
+        ]
+      }
+    ],
+    "supportingApi": [],
+    "variants": [
+      "with header",
+      "item with numeric badge",
+      "item with dot badge"
+    ],
+    "codeSample": "var selected by remember { mutableIntStateOf(0) }\nFormaNavigationRail(\n    header = { Text(\"+\") },\n) {\n    FormaNavigationRailItem(selected = selected == 0, onClick = { selected = 0 }, icon = { Text(\"🏠\") }, label = \"Home\")\n    FormaNavigationRailItem(selected = selected == 1, onClick = { selected = 1 }, icon = { Text(\"🔔\") }, label = \"Alerts\", badgeCount = 12)\n    FormaNavigationRailItem(selected = selected == 2, onClick = { selected = 2 }, icon = { Text(\"👤\") }, label = \"Profile\", showBadgeDot = true)\n}",
+    "accessibility": "48dp touch target and selection semantics come from Material 3's NavigationRailItem; supply a contentDescription on each item's icon."
+  },
+  {
+    "id": "search-bar",
+    "name": "SearchBar",
+    "package": "dev.formaui.components.search",
+    "sourceFile": "components/src/commonMain/kotlin/dev/formaui/components/search/FormaSearchBar.kt",
+    "prdOrder": null,
+    "tier": "extra",
+    "description": "A FormaUI search bar — \"Material 3 with better defaults\", wrapping Material 3's SearchBar/DockedSearchBar behind one entry point whose variant switches between the docked and full-screen expansion surfaces.",
+    "composables": [
+      {
+        "name": "FormaSearchBar",
+        "summary": "Search input that expands into a Docked results panel or a FullScreen overlay; query and expansion state are both hoisted.",
+        "params": [
+          {
+            "name": "query",
+            "type": "String",
+            "default": null,
+            "description": "the current query text shown in the input field."
+          },
+          {
+            "name": "onQueryChange",
+            "type": "(String) -> Unit",
+            "default": null,
+            "description": "called with the updated text as the user types."
+          },
+          {
+            "name": "onSearch",
+            "type": "(String) -> Unit",
+            "default": null,
+            "description": "called with the current query when the input service triggers the search (IME) action."
+          },
+          {
+            "name": "expanded",
+            "type": "Boolean",
+            "default": null,
+            "description": "whether the search bar is expanded and showing content."
+          },
+          {
+            "name": "onExpandedChange",
+            "type": "(Boolean) -> Unit",
+            "default": null,
+            "description": "called with the requested new expanded state — e.g. true when the input field gains focus, false on dismiss request or back navigation."
+          },
+          {
+            "name": "modifier",
+            "type": "Modifier",
+            "default": "Modifier",
+            "description": "the Modifier applied to the search bar in its collapsed layout position."
+          },
+          {
+            "name": "variant",
+            "type": "FormaSearchBarVariant",
+            "default": "FormaSearchBarVariant.Docked",
+            "description": "which Material 3 surface to expand into (defaults to FormaSearchBarVariant.Docked)."
+          },
+          {
+            "name": "enabled",
+            "type": "Boolean",
+            "default": "true",
+            "description": "whether the input field is interactive."
+          },
+          {
+            "name": "placeholder",
+            "type": "@Composable (() -> Unit)?",
+            "default": "null",
+            "description": "the placeholder shown in the input field when query is empty."
+          },
+          {
+            "name": "leadingIcon",
+            "type": "@Composable (() -> Unit)?",
+            "default": "null",
+            "description": "the input field's leading icon slot, typically a search glyph."
+          },
+          {
+            "name": "trailingIcon",
+            "type": "@Composable (() -> Unit)?",
+            "default": "null",
+            "description": "the input field's trailing icon slot, e.g. a clear button shown when query is not empty."
+          },
+          {
+            "name": "shape",
+            "type": "Shape?",
+            "default": "null",
+            "description": "the collapsed search bar's container shape. When null, the Material 3 default for the chosen variant is used (FormaSearchBarDefaults.dockedShape or FormaSearchBarDefaults.fullScreenCollapsedShape)."
+          },
+          {
+            "name": "colors",
+            "type": "SearchBarColors?",
+            "default": "null",
+            "description": "the container/divider/input-field colors. When null, the Material 3 default colors are used."
+          },
+          {
+            "name": "tonalElevation",
+            "type": "Dp",
+            "default": "FormaSearchBarDefaults.TonalElevation",
+            "description": "the tonal elevation applied when colors' container color is the surface color (defaults to FormaSearchBarDefaults.TonalElevation)."
+          },
+          {
+            "name": "shadowElevation",
+            "type": "Dp",
+            "default": "FormaSearchBarDefaults.ShadowElevation",
+            "description": "the shadow elevation below the collapsed search bar (defaults to FormaSearchBarDefaults.ShadowElevation)."
+          },
+          {
+            "name": "interactionSource",
+            "type": "MutableInteractionSource?",
+            "default": "null",
+            "description": "the MutableInteractionSource for observing/emitting interactions on the input field. When null, one is remembered internally."
+          },
+          {
+            "name": "content",
+            "type": "@Composable ColumnScope.() -> Unit",
+            "default": "{}",
+            "description": "the search results (or suggestions) shown below the input field while expanded, laid out in a ColumnScope."
+          }
+        ]
+      }
+    ],
+    "supportingApi": [
+      {
+        "name": "FormaSearchBarVariant",
+        "kind": "enum",
+        "summary": "The surface the search bar expands into; values: Docked, FullScreen."
+      },
+      {
+        "name": "FormaSearchBarDefaults",
+        "kind": "object",
+        "summary": "Default values: dockedShape, fullScreenCollapsedShape, TonalElevation, ShadowElevation."
+      }
+    ],
+    "variants": [
+      "Docked",
+      "FullScreen"
+    ],
+    "codeSample": "var query by remember { mutableStateOf(\"\") }\nvar expanded by remember { mutableStateOf(false) }\nFormaSearchBar(\n    query = query,\n    onQueryChange = { query = it },\n    onSearch = { expanded = false },\n    expanded = expanded,\n    onExpandedChange = { expanded = it },\n    variant = FormaSearchBarVariant.Docked,\n    placeholder = { Text(\"Search contacts\") },\n    leadingIcon = { Text(\"🔍\") },\n) {\n    Text(\"Ada Lovelace\")\n}",
+    "accessibility": null
+  },
+  {
+    "id": "segmented-button",
+    "name": "SegmentedButton",
+    "package": "dev.formaui.components.segmentedbutton",
+    "sourceFile": "components/src/commonMain/kotlin/dev/formaui/components/segmentedbutton/FormaSegmentedButton.kt",
+    "prdOrder": null,
+    "tier": "extra",
+    "description": "A FormaUI segmented button row — a set of connected, mutually-styled buttons for view switching or option selection, delegating to Material 3's SingleChoiceSegmentedButtonRow / MultiChoiceSegmentedButtonRow.",
+    "composables": [
+      {
+        "name": "FormaSegmentedButtonRow",
+        "summary": "One entry point for both Material 3 selection modes: multiSelect = false for single-choice, true for per-segment toggles.",
+        "params": [
+          {
+            "name": "multiSelect",
+            "type": "Boolean",
+            "default": null,
+            "description": "false for mutually-exclusive (single-choice) selection, true for independent per-segment toggles (multi-choice)."
+          },
+          {
+            "name": "modifier",
+            "type": "Modifier",
+            "default": "Modifier",
+            "description": "the Modifier applied to the row."
+          },
+          {
+            "name": "content",
+            "type": "@Composable FormaSegmentedButtonRowScope.() -> Unit",
+            "default": null,
+            "description": "the row's segments, typically FormaSegmentedButtons."
+          }
+        ]
+      },
+      {
+        "name": "FormaSegmentedButton",
+        "summary": "Single-choice segment (RadioButton semantics) — extension on FormaSegmentedButtonRowScope; use in rows with multiSelect = false.",
+        "params": [
+          {
+            "name": "selected",
+            "type": "Boolean",
+            "default": null,
+            "description": "whether this segment is the currently selected one."
+          },
+          {
+            "name": "onClick",
+            "type": "() -> Unit",
+            "default": null,
+            "description": "called when the segment is clicked. Not invoked while enabled is false."
+          },
+          {
+            "name": "index",
+            "type": "Int",
+            "default": null,
+            "description": "this segment's position within the row (0-based) — used to compute the correct start/middle/end corner shape."
+          },
+          {
+            "name": "count",
+            "type": "Int",
+            "default": null,
+            "description": "the total number of segments in the row — used to compute the correct start/middle/end corner shape."
+          },
+          {
+            "name": "modifier",
+            "type": "Modifier",
+            "default": "Modifier",
+            "description": "the Modifier applied to the segment."
+          },
+          {
+            "name": "enabled",
+            "type": "Boolean",
+            "default": "true",
+            "description": "whether the segment is interactive."
+          },
+          {
+            "name": "icon",
+            "type": "@Composable () -> Unit",
+            "default": "{ SegmentedButtonDefaults.Icon(selected) }",
+            "description": "the segment's leading icon slot. Defaults to Material 3's crossfading checkmark, shown only while selected."
+          },
+          {
+            "name": "label",
+            "type": "@Composable () -> Unit",
+            "default": null,
+            "description": "the segment's content, typically a Text."
+          }
+        ]
+      },
+      {
+        "name": "FormaSegmentedButton",
+        "summary": "Multi-choice segment (independent toggle semantics) — extension on FormaSegmentedButtonRowScope; use in rows with multiSelect = true.",
+        "params": [
+          {
+            "name": "checked",
+            "type": "Boolean",
+            "default": null,
+            "description": "whether this segment is currently checked."
+          },
+          {
+            "name": "onCheckedChange",
+            "type": "(Boolean) -> Unit",
+            "default": null,
+            "description": "called with the requested new checked state when the segment is clicked. Not invoked while enabled is false."
+          },
+          {
+            "name": "index",
+            "type": "Int",
+            "default": null,
+            "description": "this segment's position within the row (0-based) — used to compute the correct start/middle/end corner shape."
+          },
+          {
+            "name": "count",
+            "type": "Int",
+            "default": null,
+            "description": "the total number of segments in the row — used to compute the correct start/middle/end corner shape."
+          },
+          {
+            "name": "modifier",
+            "type": "Modifier",
+            "default": "Modifier",
+            "description": "the Modifier applied to the segment."
+          },
+          {
+            "name": "enabled",
+            "type": "Boolean",
+            "default": "true",
+            "description": "whether the segment is interactive."
+          },
+          {
+            "name": "icon",
+            "type": "@Composable () -> Unit",
+            "default": "{ SegmentedButtonDefaults.Icon(checked) }",
+            "description": "the segment's leading icon slot. Defaults to Material 3's crossfading checkmark, shown only while checked."
+          },
+          {
+            "name": "label",
+            "type": "@Composable () -> Unit",
+            "default": null,
+            "description": "the segment's content, typically a Text."
+          }
+        ]
+      }
+    ],
+    "supportingApi": [
+      {
+        "name": "FormaSegmentedButtonRowScope",
+        "kind": "class",
+        "summary": "Interface (scope) extending both SingleChoiceSegmentedButtonRowScope and MultiChoiceSegmentedButtonRowScope so one content lambda type serves both selection modes."
+      }
+    ],
+    "variants": [
+      "single-select",
+      "multi-select"
+    ],
+    "codeSample": "var selectedPeriod by remember { mutableStateOf(0) }\nval periods = listOf(\"Day\", \"Week\", \"Month\")\nFormaSegmentedButtonRow(multiSelect = false) {\n    periods.forEachIndexed { index, label ->\n        FormaSegmentedButton(\n            selected = selectedPeriod == index,\n            onClick = { selectedPeriod = index },\n            index = index,\n            count = periods.size,\n            label = { Text(label) },\n        )\n    }\n}",
+    "accessibility": "Single-select segments carry RadioButton semantics and multi-select segments carry toggle semantics, via the correctly-scoped Material 3 SegmentedButton overloads."
+  },
+  {
+    "id": "tab-row",
+    "name": "TabRow",
+    "package": "dev.formaui.components.tabs",
+    "sourceFile": "components/src/commonMain/kotlin/dev/formaui/components/tabs/FormaTabRow.kt",
+    "prdOrder": null,
+    "tier": "extra",
+    "description": "A FormaUI tab row — switches between a small number of related content destinations, delegating to Material 3's PrimaryTabRow/SecondaryTabRow (or their scrollable equivalents).",
+    "composables": [
+      {
+        "name": "FormaTabRow",
+        "summary": "Stateless tab row covering both indicator emphases (variant) and fixed vs. scrollable layout (scrollable) in one entry point.",
+        "params": [
+          {
+            "name": "selectedTabIndex",
+            "type": "Int",
+            "default": null,
+            "description": "the index of the currently selected tab, used to position the active indicator."
+          },
+          {
+            "name": "modifier",
+            "type": "Modifier",
+            "default": "Modifier",
+            "description": "the Modifier applied to the row."
+          },
+          {
+            "name": "variant",
+            "type": "FormaTabRowVariant",
+            "default": "FormaTabRowVariant.Primary",
+            "description": "the indicator style (defaults to FormaTabRowVariant.Primary)."
+          },
+          {
+            "name": "scrollable",
+            "type": "Boolean",
+            "default": "false",
+            "description": "when true, tabs are laid out from the start edge and scroll if they overflow — use this for a large or dynamic number of tabs. When false (the default), tabs are fixed and evenly spaced across the row's width — use this for a small, stable set of tabs."
+          },
+          {
+            "name": "tabs",
+            "type": "@Composable () -> Unit",
+            "default": null,
+            "description": "the row's tabs, typically FormaTabs."
+          }
+        ]
+      },
+      {
+        "name": "FormaTab",
+        "summary": "A single tab; delegates to Material 3's Tab, or to LeadingIconTab automatically when both text and icon are supplied.",
+        "params": [
+          {
+            "name": "selected",
+            "type": "Boolean",
+            "default": null,
+            "description": "whether this tab is the currently active destination."
+          },
+          {
+            "name": "onClick",
+            "type": "() -> Unit",
+            "default": null,
+            "description": "called when the tab is clicked. Not invoked while enabled is false."
+          },
+          {
+            "name": "modifier",
+            "type": "Modifier",
+            "default": "Modifier",
+            "description": "the Modifier applied to the tab."
+          },
+          {
+            "name": "text",
+            "type": "(@Composable () -> Unit)?",
+            "default": "null",
+            "description": "optional text label."
+          },
+          {
+            "name": "icon",
+            "type": "(@Composable () -> Unit)?",
+            "default": "null",
+            "description": "optional icon. Should be 24dp."
+          },
+          {
+            "name": "enabled",
+            "type": "Boolean",
+            "default": "true",
+            "description": "whether the tab is interactive."
+          },
+          {
+            "name": "selectedContentColor",
+            "type": "Color?",
+            "default": "null",
+            "description": "the color for the tab's content (and its ripple) when selected. When null, LocalContentColor is used."
+          },
+          {
+            "name": "unselectedContentColor",
+            "type": "Color?",
+            "default": "null",
+            "description": "the color for the tab's content when not selected. When null, defaults to selectedContentColor."
+          },
+          {
+            "name": "interactionSource",
+            "type": "MutableInteractionSource?",
+            "default": "null",
+            "description": "the MutableInteractionSource for observing/emitting interactions. When null, one is remembered internally."
+          }
+        ]
+      }
+    ],
+    "supportingApi": [
+      {
+        "name": "FormaTabRowVariant",
+        "kind": "enum",
+        "summary": "Indicator style; values: Primary (bold pill indicator, top-level navigation), Secondary (slim underline, views within one destination)."
+      }
+    ],
+    "variants": [
+      "primary",
+      "secondary",
+      "fixed",
+      "scrollable"
+    ],
+    "codeSample": "var selectedTab by remember { mutableStateOf(0) }\nFormaTabRow(selectedTabIndex = selectedTab) {\n    FormaTab(selected = selectedTab == 0, onClick = { selectedTab = 0 }, text = { Text(\"Chat\") })\n    FormaTab(selected = selectedTab == 1, onClick = { selectedTab = 1 }, text = { Text(\"Calls\") })\n}",
+    "accessibility": null
+  },
+  {
+    "id": "tooltip",
+    "name": "Tooltip",
+    "package": "dev.formaui.components.tooltip",
+    "sourceFile": "components/src/commonMain/kotlin/dev/formaui/components/tooltip/FormaTooltip.kt",
+    "prdOrder": null,
+    "tier": "extra",
+    "description": "A FormaUI tooltip — \"Material 3 with better defaults\", wrapping Material 3's TooltipBox + PlainTooltip/RichTooltip.",
+    "composables": [
+      {
+        "name": "FormaTooltip",
+        "summary": "Tooltip anchored to its content slot, triggered on long-press/hover; Plain or Rich (title + action) via variant, caret on by default.",
+        "params": [
+          {
+            "name": "text",
+            "type": "String",
+            "default": null,
+            "description": "the tooltip's message."
+          },
+          {
+            "name": "modifier",
+            "type": "Modifier",
+            "default": "Modifier",
+            "description": "the Modifier applied to the anchor (content)."
+          },
+          {
+            "name": "variant",
+            "type": "FormaTooltipVariant",
+            "default": "FormaTooltipVariant.Plain",
+            "description": "the tooltip surface (defaults to FormaTooltipVariant.Plain)."
+          },
+          {
+            "name": "state",
+            "type": "TooltipState",
+            "default": "rememberTooltipState()",
+            "description": "hoisted visibility state; controls and reports whether the tooltip is currently shown (defaults to a freshly remembered, non-persistent TooltipState)."
+          },
+          {
+            "name": "title",
+            "type": "(@Composable () -> Unit)?",
+            "default": "null",
+            "description": "an optional title shown above text. Only used when variant is FormaTooltipVariant.Rich; ignored for FormaTooltipVariant.Plain."
+          },
+          {
+            "name": "action",
+            "type": "(@Composable () -> Unit)?",
+            "default": "null",
+            "description": "an optional action (typically a TextButton) shown below text. Only used when variant is FormaTooltipVariant.Rich; ignored for Plain. When non-null, the tooltip becomes persistent-friendly: Material 3 keeps it focusable so accessibility services can reach the action."
+          },
+          {
+            "name": "showCaret",
+            "type": "Boolean",
+            "default": "true",
+            "description": "whether a caret pointing at the anchor is drawn on the tooltip container. FormaUI defaults this to true (Material 3's own default is no caret) since it makes the anchor relationship unambiguous."
+          },
+          {
+            "name": "positionProvider",
+            "type": "PopupPositionProvider?",
+            "default": "null",
+            "description": "controls where the tooltip is placed relative to content. When null, it is placed above the anchor via TooltipDefaults.rememberTooltipPositionProvider."
+          },
+          {
+            "name": "onDismissRequest",
+            "type": "(() -> Unit)?",
+            "default": "null",
+            "description": "called when the user clicks outside the tooltip while it is shown. When null, Material 3's default dismiss-on-outside-click behavior applies."
+          },
+          {
+            "name": "enableUserInput",
+            "type": "Boolean",
+            "default": "true",
+            "description": "whether long-press and hover on content trigger the tooltip through state. Set to false if you drive state entirely programmatically."
+          },
+          {
+            "name": "colors",
+            "type": "RichTooltipColors?",
+            "default": "null",
+            "description": "the container/content/title/action colors used by FormaTooltipVariant.Rich. When null, the Material 3 default rich tooltip colors are used. Has no effect on FormaTooltipVariant.Plain."
+          },
+          {
+            "name": "content",
+            "type": "@Composable () -> Unit",
+            "default": null,
+            "description": "the anchor content that the tooltip attaches to."
+          }
+        ]
+      }
+    ],
+    "supportingApi": [
+      {
+        "name": "FormaTooltipVariant",
+        "kind": "enum",
+        "summary": "Visual weight; values: Plain (single line of supporting text), Rich (larger surface with optional title and action)."
+      },
+      {
+        "name": "FormaTooltipDefaults",
+        "kind": "object",
+        "summary": "Default values: caretShape, plainMaxWidth, richMaxWidth."
+      }
+    ],
+    "variants": [
+      "Plain",
+      "Rich"
+    ],
+    "codeSample": "val tooltipState = rememberTooltipState()\nFormaTooltip(\n    text = \"Search\",\n    state = tooltipState,\n) {\n    FormaIconButton(onClick = { }) { Text(\"🔍\") }\n}",
+    "accessibility": "When a Rich tooltip has a non-null action, Material 3 keeps the tooltip focusable so accessibility services can reach the action; triggered by long-press or hover on the anchor."
+  },
+  {
+    "id": "top-app-bar",
+    "name": "TopAppBar",
+    "package": "dev.formaui.components.topappbar",
+    "sourceFile": "components/src/commonMain/kotlin/dev/formaui/components/topappbar/FormaTopAppBar.kt",
+    "prdOrder": null,
+    "tier": "extra",
+    "description": "A FormaUI top app bar — \"Material 3 with better defaults\"; one entry point covers all four Material 3 top app bar sizes via variant.",
+    "composables": [
+      {
+        "name": "FormaTopAppBar",
+        "summary": "One entry point for all four M3 top app bar sizes via variant; pair Medium/Large with a scrollBehavior for the standard collapsing-header behavior (call sites also need @OptIn(ExperimentalMaterial3Api::class) because TopAppBarScrollBehavior is still experimental in M3).",
+        "params": [
+          {
+            "name": "title",
+            "type": "String",
+            "default": null,
+            "description": "the bar's title text."
+          },
+          {
+            "name": "modifier",
+            "type": "Modifier",
+            "default": "Modifier",
+            "description": "the Modifier applied to the bar."
+          },
+          {
+            "name": "variant",
+            "type": "FormaTopAppBarVariant",
+            "default": "FormaTopAppBarVariant.Small",
+            "description": "the bar's layout (defaults to FormaTopAppBarVariant.Small)."
+          },
+          {
+            "name": "navigationIcon",
+            "type": "@Composable (() -> Unit)?",
+            "default": "null",
+            "description": "optional slot at the start of the bar (typically an IconButton, e.g. FormaIconButton, for a back or menu action)."
+          },
+          {
+            "name": "actions",
+            "type": "@Composable RowScope.() -> Unit",
+            "default": "{}",
+            "description": "the actions displayed at the end of the bar, laid out in a RowScope (typically IconButtons)."
+          },
+          {
+            "name": "scrollBehavior",
+            "type": "TopAppBarScrollBehavior?",
+            "default": "null",
+            "description": "an optional TopAppBarScrollBehavior that ties this bar's height/color changes to a scrolling content's NestedScrollConnection."
+          },
+          {
+            "name": "colors",
+            "type": "TopAppBarColors?",
+            "default": "null",
+            "description": "the container/content colors. When null, the Material 3 default colors for the chosen variant are used."
+          }
+        ]
+      }
+    ],
+    "supportingApi": [
+      {
+        "name": "FormaTopAppBarVariant",
+        "kind": "enum",
+        "summary": "The layout of a FormaTopAppBar, mirroring Material 3's four top app bar sizes: Small, CenterAligned, Medium, Large."
+      }
+    ],
+    "variants": [
+      "Small",
+      "CenterAligned",
+      "Medium",
+      "Large"
+    ],
+    "codeSample": "FormaTopAppBar(\n    title = \"Inbox\",\n    variant = FormaTopAppBarVariant.Small,\n    navigationIcon = {\n        FormaIconButton(onClick = { /* back */ }) {\n            Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = \"Back\")\n        }\n    },\n)",
+    "accessibility": null
+  }
+]
