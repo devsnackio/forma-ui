@@ -31,17 +31,17 @@ FormaUI is a [Compose Multiplatform](https://www.jetbrains.com/lp/compose-multip
 
 ## Install
 
-FormaUI will publish to Maven Central under the `io.github.devsnackio` group (`0.1.0` release pending; the `dev.formaui` namespace may be adopted at release time once the domain is verified). Add it to your version catalog / Gradle build:
+FormaUI will publish to Maven Central under the `io.github.devsnackio` group (`0.1.0-beta01` release pending; the `dev.formaui` namespace may be adopted at release time once the domain is verified). Add it to your version catalog / Gradle build:
 
 ```kotlin
 dependencies {
-    implementation("io.github.devsnackio:components:0.1.0") // components transitively brings in :core
+    implementation("io.github.devsnackio:components:0.1.0-beta01") // components transitively brings in :core
     // or depend on the theming engine alone:
-    // implementation("io.github.devsnackio:core:0.1.0")
+    // implementation("io.github.devsnackio:core:0.1.0-beta01")
 }
 ```
 
-> **Not yet published.** The `0.1.0` artifacts aren't on Maven Central yet — these are the intended coordinates for the pending first release.
+> **Not yet published.** The `0.1.0-beta01` artifacts aren't on Maven Central yet — these are the intended coordinates for the pending first release. Stable `0.1.0` follows once the beta has proven itself.
 
 **Requirements:** Android `minSdk 24`+, Kotlin 2.4.x, Compose Multiplatform 1.11.x (or AndroidX Compose with a compatible Material 3).
 

@@ -44,11 +44,12 @@ accessibility built in (48dp touch targets, semantics roles), and full override 
 build a design system. Apache 2.0.
 
 - **29 components** (18 from the PRD roadmap + 11 extras) — see the inventory JSON.
-- Install (NOT yet published — don't show a copy-paste install as if live until 0.1.0 ships):
+- Install (NOT yet published — don't show a copy-paste install as if live until the first release
+  ships; the release train is `0.1.0-beta01` → … → stable `0.1.0`):
 
 ```kotlin
 dependencies {
-    implementation("io.github.devsnackio:components:0.1.0") // brings core transitively
+    implementation("io.github.devsnackio:components:0.1.0-beta01") // brings core transitively
 }
 ```
 
