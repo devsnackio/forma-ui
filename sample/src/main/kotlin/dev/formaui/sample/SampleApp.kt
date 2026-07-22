@@ -177,7 +177,7 @@ private fun SettingsSheet(
         }
 
         Row(
-            horizontalArrangement = Arrangement.spacedBy(FormaTheme.spacing.sm),
+            horizontalArrangement = Arrangement.spacedBy(FormaTheme.spacing.xs),
             verticalAlignment = Alignment.CenterVertically,
         ) {
             FormaSwitch(checked = dynamicColor, onCheckedChange = onDynamicColorChange)

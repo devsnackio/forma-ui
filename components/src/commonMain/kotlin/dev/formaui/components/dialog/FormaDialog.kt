@@ -115,13 +115,13 @@ fun FormaFullScreenDialog(
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(
-                            horizontal = FormaTheme.spacing.sm,
-                            vertical = FormaTheme.spacing.xs,
+                            horizontal = FormaTheme.spacing.xs,
+                            vertical = FormaTheme.spacing.xxs,
                         ),
                 ) {
                     androidx.compose.foundation.layout.Row(
                         modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.spacedBy(FormaTheme.spacing.sm),
+                        horizontalArrangement = Arrangement.spacedBy(FormaTheme.spacing.xs),
                         verticalAlignment = Alignment.CenterVertically,
                     ) {
                         FormaButton(
@@ -157,9 +157,9 @@ fun FormaFullScreenDialog(
  */
 @ExperimentalFormaUiApi
 object FormaDialogDefaults {
-    /** The default alert-dialog [Shape]: FormaUI's large corner tier. */
+    /** The default alert-dialog [Shape]: FormaUI's xl corner tier. */
     val shape: Shape
         @Composable
         @ReadOnlyComposable
-        get() = FormaTheme.shapes.large
+        get() = FormaTheme.shapes.xl
 }

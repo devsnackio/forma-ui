@@ -58,7 +58,7 @@ private fun ButtonPreview() {
                 verticalArrangement = Arrangement.spacedBy(FormaTheme.spacing.lg),
             ) {
                 Row(
-                    horizontalArrangement = Arrangement.spacedBy(FormaTheme.spacing.sm),
+                    horizontalArrangement = Arrangement.spacedBy(FormaTheme.spacing.xs),
                     verticalAlignment = Alignment.CenterVertically,
                 ) {
                     FormaSwitch(checked = dark, onCheckedChange = { dark = it })
@@ -71,8 +71,8 @@ private fun ButtonPreview() {
                 Text("FormaButton", style = MaterialTheme.typography.headlineSmall)
 
                 FlowRow(
-                    horizontalArrangement = Arrangement.spacedBy(FormaTheme.spacing.sm),
-                    verticalArrangement = Arrangement.spacedBy(FormaTheme.spacing.sm),
+                    horizontalArrangement = Arrangement.spacedBy(FormaTheme.spacing.xs),
+                    verticalArrangement = Arrangement.spacedBy(FormaTheme.spacing.xs),
                 ) {
                     FormaButtonVariant.entries.forEach { variant ->
                         FormaButton(onClick = { clicks++ }, variant = variant) {

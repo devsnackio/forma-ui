@@ -151,7 +151,7 @@ fun ComponentShowcase(
             style = MaterialTheme.typography.bodySmall,
             color = MaterialTheme.colorScheme.onSurfaceVariant,
         )
-        Spacer(Modifier.height(FormaTheme.spacing.sm))
+        Spacer(Modifier.height(FormaTheme.spacing.xs))
         content()
     }
 }
