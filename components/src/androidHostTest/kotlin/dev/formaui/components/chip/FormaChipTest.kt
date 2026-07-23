@@ -109,4 +109,24 @@ class FormaChipTest {
         composeRule.onNodeWithTag("chip").performClick()
         composeRule.runOnIdle { assertEquals("disabled chip must not fire onClick", 0, clicks) }
     }
+
+    @Test
+    fun pressScale_disabledViaNullSpec_stillClicks() {
+        // One representative variant exercises the shared dispatch — the press-scale modifier is
+        // built once before the `when`, so the disable path is variant-independent.
+        var clicks = 0
+        composeRule.setContent {
+            FormaTheme {
+                FormaChip(
+                    label = "Tap",
+                    onClick = { clicks++ },
+                    pressAnimationSpec = null,
+                    modifier = Modifier.testTag("chip"),
+                )
+            }
+        }
+
+        composeRule.onNodeWithTag("chip").performClick()
+        composeRule.runOnIdle { assertEquals("chip click should fire with press-scale disabled", 1, clicks) }
+    }
 }

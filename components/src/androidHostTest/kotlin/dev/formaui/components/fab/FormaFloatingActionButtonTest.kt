@@ -114,4 +114,42 @@ class FormaFloatingActionButtonTest {
 
         composeRule.onNodeWithTag("extended-fab").assertExists()
     }
+
+    @Test
+    fun pressScale_disabledViaNullSpec_stillClicks() {
+        var clicks = 0
+        composeRule.setContent {
+            FormaTheme {
+                FormaFloatingActionButton(
+                    onClick = { clicks++ },
+                    pressAnimationSpec = null,
+                    modifier = Modifier.testTag("fab"),
+                ) {
+                    Text("+")
+                }
+            }
+        }
+
+        composeRule.onNodeWithTag("fab").performClick()
+        composeRule.runOnIdle { assertEquals(1, clicks) }
+    }
+
+    @Test
+    fun extendedFab_pressScale_disabledViaNullSpec_stillClicks() {
+        var clicks = 0
+        composeRule.setContent {
+            FormaTheme {
+                FormaExtendedFloatingActionButton(
+                    text = "Compose",
+                    icon = { Text("+") },
+                    onClick = { clicks++ },
+                    pressAnimationSpec = null,
+                    modifier = Modifier.testTag("extended-fab"),
+                )
+            }
+        }
+
+        composeRule.onNodeWithTag("extended-fab").performClick()
+        composeRule.runOnIdle { assertEquals(1, clicks) }
+    }
 }
