@@ -5,6 +5,7 @@
 
 package dev.formaui.components.chip
 
+import androidx.compose.animation.core.FiniteAnimationSpec
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.material3.AssistChip
 import androidx.compose.material3.FilterChip
@@ -13,8 +14,11 @@ import androidx.compose.material3.SuggestionChip
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.ReadOnlyComposable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Shape
+import dev.formaui.components.interaction.FormaPressScaleDefaults
+import dev.formaui.components.interaction.formaPressScale
 import dev.formaui.core.annotation.ExperimentalFormaUiApi
 import dev.formaui.core.theme.FormaTheme
 
@@ -52,6 +56,11 @@ enum class FormaChipVariant {
  * M3 defaults (their color types differ across variants, so they are not exposed as one param —
  * restyle via [FormaTheme] instead).
  *
+ * A **press-scale micro-interaction** ([Modifier.formaPressScale][dev.formaui.components.interaction.formaPressScale])
+ * is on by default, layered on top of the Material ripple: the chip dips to [pressedScale] while
+ * held and springs back on release, uniformly across all four variants. The dip always completes,
+ * even on the quickest tap. Pass `pressAnimationSpec = null` to disable it.
+ *
  * @param label the chip's text label.
  * @param onClick called when the chip is clicked. For selectable variants, toggle [selected] in
  *   response.
@@ -66,6 +75,12 @@ enum class FormaChipVariant {
  * @param shape the chip's container shape (defaults to [FormaChipDefaults.shape]).
  * @param interactionSource the [MutableInteractionSource] for observing/emitting interactions.
  *   When `null`, one is remembered internally.
+ * @param pressedScale the scale factor applied while the chip is pressed (defaults to
+ *   [FormaPressScaleDefaults.PressedScale], a subtle 0.97). Must be greater than 0.
+ * @param pressAnimationSpec the animation used for the press-scale's release spring-back
+ *   (defaults to [FormaPressScaleDefaults.AnimationSpec], a responsive spring; the press dip
+ *   uses [FormaPressScaleDefaults.DownAnimationSpec]). Pass `null` to disable the press-scale
+ *   entirely.
  */
 @ExperimentalFormaUiApi
 @Composable
@@ -80,7 +95,15 @@ fun FormaChip(
     trailingIcon: @Composable (() -> Unit)? = null,
     shape: Shape? = null,
     interactionSource: MutableInteractionSource? = null,
+    pressedScale: Float = FormaPressScaleDefaults.PressedScale,
+    pressAnimationSpec: FiniteAnimationSpec<Float>? = FormaPressScaleDefaults.AnimationSpec,
 ) {
+    val interactionSource = interactionSource ?: remember { MutableInteractionSource() }
+    val chipModifier = modifier.formaPressScale(
+        interactionSource = interactionSource,
+        pressedScale = pressedScale,
+        animationSpec = pressAnimationSpec,
+    )
     val chipShape = shape ?: FormaChipDefaults.shape
     val labelSlot: @Composable () -> Unit = { Text(label) }
 
@@ -88,7 +111,7 @@ fun FormaChip(
         FormaChipVariant.Assist -> AssistChip(
             onClick = onClick,
             label = labelSlot,
-            modifier = modifier,
+            modifier = chipModifier,
             enabled = enabled,
             leadingIcon = leadingIcon,
             trailingIcon = trailingIcon,
@@ -100,7 +123,7 @@ fun FormaChip(
             selected = selected,
             onClick = onClick,
             label = labelSlot,
-            modifier = modifier,
+            modifier = chipModifier,
             enabled = enabled,
             leadingIcon = leadingIcon,
             trailingIcon = trailingIcon,
@@ -112,7 +135,7 @@ fun FormaChip(
             selected = selected,
             onClick = onClick,
             label = labelSlot,
-            modifier = modifier,
+            modifier = chipModifier,
             enabled = enabled,
             leadingIcon = leadingIcon,
             trailingIcon = trailingIcon,
@@ -123,7 +146,7 @@ fun FormaChip(
         FormaChipVariant.Suggestion -> SuggestionChip(
             onClick = onClick,
             label = labelSlot,
-            modifier = modifier,
+            modifier = chipModifier,
             enabled = enabled,
             icon = leadingIcon,
             shape = chipShape,

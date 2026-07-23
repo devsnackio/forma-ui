@@ -5,6 +5,7 @@
 
 package dev.formaui.components.fab
 
+import androidx.compose.animation.core.FiniteAnimationSpec
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.material3.ExtendedFloatingActionButton
 import androidx.compose.material3.FloatingActionButton
@@ -15,9 +16,12 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.contentColorFor
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.ReadOnlyComposable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
+import dev.formaui.components.interaction.FormaPressScaleDefaults
+import dev.formaui.components.interaction.formaPressScale
 import dev.formaui.core.annotation.ExperimentalFormaUiApi
 import dev.formaui.core.theme.FormaTheme
 
@@ -47,6 +51,11 @@ enum class FormaFabSize {
  * ([FormaFabDefaults.shape]) rather than Material 3's per-size squircle, for a consistent
  * silhouette across sizes.
  *
+ * A **press-scale micro-interaction** ([Modifier.formaPressScale][dev.formaui.components.interaction.formaPressScale])
+ * is on by default, layered on top of the Material ripple and the FAB's own elevation behavior:
+ * the FAB dips to [pressedScale] while held and springs back on release. The dip always
+ * completes, even on the quickest tap. Pass `pressAnimationSpec = null` to disable it.
+ *
  * @param onClick called when the FAB is clicked.
  * @param modifier the [Modifier] applied to the FAB.
  * @param size the FAB's size (defaults to [FormaFabSize.Regular]).
@@ -55,6 +64,12 @@ enum class FormaFabSize {
  * @param contentColor the preferred content color, derived from [containerColor] by default.
  * @param interactionSource the [MutableInteractionSource] for observing/emitting interactions.
  *   When `null`, one is remembered internally.
+ * @param pressedScale the scale factor applied while the FAB is pressed (defaults to
+ *   [FormaPressScaleDefaults.PressedScale], a subtle 0.97). Must be greater than 0.
+ * @param pressAnimationSpec the animation used for the press-scale's release spring-back
+ *   (defaults to [FormaPressScaleDefaults.AnimationSpec], a responsive spring; the press dip
+ *   uses [FormaPressScaleDefaults.DownAnimationSpec]). Pass `null` to disable the press-scale
+ *   entirely.
  * @param content the FAB's content, typically a single `Icon`.
  */
 @ExperimentalFormaUiApi
@@ -67,13 +82,21 @@ fun FormaFloatingActionButton(
     containerColor: Color = FloatingActionButtonDefaults.containerColor,
     contentColor: Color = contentColorFor(containerColor),
     interactionSource: MutableInteractionSource? = null,
+    pressedScale: Float = FormaPressScaleDefaults.PressedScale,
+    pressAnimationSpec: FiniteAnimationSpec<Float>? = FormaPressScaleDefaults.AnimationSpec,
     content: @Composable () -> Unit,
 ) {
+    val interactionSource = interactionSource ?: remember { MutableInteractionSource() }
+    val fabModifier = modifier.formaPressScale(
+        interactionSource = interactionSource,
+        pressedScale = pressedScale,
+        animationSpec = pressAnimationSpec,
+    )
     val fabShape = shape ?: FormaFabDefaults.shape
     when (size) {
         FormaFabSize.Small -> SmallFloatingActionButton(
             onClick = onClick,
-            modifier = modifier,
+            modifier = fabModifier,
             shape = fabShape,
             containerColor = containerColor,
             contentColor = contentColor,
@@ -83,7 +106,7 @@ fun FormaFloatingActionButton(
 
         FormaFabSize.Regular -> FloatingActionButton(
             onClick = onClick,
-            modifier = modifier,
+            modifier = fabModifier,
             shape = fabShape,
             containerColor = containerColor,
             contentColor = contentColor,
@@ -93,7 +116,7 @@ fun FormaFloatingActionButton(
 
         FormaFabSize.Large -> LargeFloatingActionButton(
             onClick = onClick,
-            modifier = modifier,
+            modifier = fabModifier,
             shape = fabShape,
             containerColor = containerColor,
             contentColor = contentColor,
@@ -110,6 +133,11 @@ fun FormaFloatingActionButton(
  * Set [expanded] to `false` to collapse the button down to just its [icon] (e.g. while the user
  * scrolls a list) — the width animates between states automatically.
  *
+ * A **press-scale micro-interaction** ([Modifier.formaPressScale][dev.formaui.components.interaction.formaPressScale])
+ * is on by default, layered on top of the Material ripple: the FAB dips to [pressedScale] while
+ * held and springs back on release. The dip always completes, even on the quickest tap. Pass
+ * `pressAnimationSpec = null` to disable it.
+ *
  * @param text the FAB's text label.
  * @param icon the FAB's leading icon.
  * @param onClick called when the FAB is clicked.
@@ -121,6 +149,12 @@ fun FormaFloatingActionButton(
  * @param contentColor the preferred content color, derived from [containerColor] by default.
  * @param interactionSource the [MutableInteractionSource] for observing/emitting interactions.
  *   When `null`, one is remembered internally.
+ * @param pressedScale the scale factor applied while the FAB is pressed (defaults to
+ *   [FormaPressScaleDefaults.PressedScale], a subtle 0.97). Must be greater than 0.
+ * @param pressAnimationSpec the animation used for the press-scale's release spring-back
+ *   (defaults to [FormaPressScaleDefaults.AnimationSpec], a responsive spring; the press dip
+ *   uses [FormaPressScaleDefaults.DownAnimationSpec]). Pass `null` to disable the press-scale
+ *   entirely.
  */
 @ExperimentalFormaUiApi
 @Composable
@@ -134,12 +168,19 @@ fun FormaExtendedFloatingActionButton(
     containerColor: Color = FloatingActionButtonDefaults.containerColor,
     contentColor: Color = contentColorFor(containerColor),
     interactionSource: MutableInteractionSource? = null,
+    pressedScale: Float = FormaPressScaleDefaults.PressedScale,
+    pressAnimationSpec: FiniteAnimationSpec<Float>? = FormaPressScaleDefaults.AnimationSpec,
 ) {
+    val interactionSource = interactionSource ?: remember { MutableInteractionSource() }
     ExtendedFloatingActionButton(
         text = { Text(text) },
         icon = icon,
         onClick = onClick,
-        modifier = modifier,
+        modifier = modifier.formaPressScale(
+            interactionSource = interactionSource,
+            pressedScale = pressedScale,
+            animationSpec = pressAnimationSpec,
+        ),
         expanded = expanded,
         shape = shape ?: FormaFabDefaults.shape,
         containerColor = containerColor,

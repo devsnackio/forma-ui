@@ -42,7 +42,7 @@ import dev.formaui.core.theme.FormaTheme
 fun ButtonShowcase() {
     ComponentShowcase(
         name = "Button",
-        description = "Five emphasis levels, from filled to text-only.",
+        description = "Five emphasis levels, from filled to text-only. Press and hold to feel the press-scale.",
     ) {
         FlowRow(
             horizontalArrangement = Arrangement.spacedBy(FormaTheme.spacing.xs),

@@ -5,6 +5,8 @@
 
 package dev.formaui.components.button
 
+import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.interaction.collectIsPressedAsState
 import androidx.compose.foundation.layout.Column
 import androidx.compose.material3.Text
 import androidx.compose.runtime.getValue
@@ -18,8 +20,12 @@ import androidx.compose.ui.test.assertIsNotEnabled
 import androidx.compose.ui.test.junit4.v2.createComposeRule
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
+import androidx.compose.ui.test.performTouchInput
 import dev.formaui.core.annotation.ExperimentalFormaUiApi
 import dev.formaui.core.theme.FormaTheme
+import org.junit.Assert.assertEquals
+import org.junit.Assert.assertFalse
+import org.junit.Assert.assertTrue
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -106,5 +112,60 @@ class FormaButtonTest {
         composeRule.onNodeWithText("Tap")
             .assertIsEnabled()
             .assertHeightIsAtLeast(FormaButtonDefaults.MinTouchTargetSize)
+    }
+
+    @Test
+    fun pressScale_whileHeld_keepsMinTouchTargetHeight() {
+        composeRule.setContent {
+            FormaTheme {
+                FormaButton(onClick = {}) { Text("Hold") }
+            }
+        }
+
+        val button = composeRule.onNodeWithText("Hold")
+        button.performTouchInput { down(center) }
+        composeRule.waitForIdle()
+        // The press-scale is a pure graphicsLayer effect: while held at pressedScale, the
+        // measured layout — and therefore the 48dp minimum touch target — must not shrink.
+        button.assertHeightIsAtLeast(FormaButtonDefaults.MinTouchTargetSize)
+        button.performTouchInput { up() }
+        composeRule.waitForIdle()
+    }
+
+    @Test
+    fun pressScale_disabledViaNullSpec_stillClicks() {
+        var count = 0
+        composeRule.setContent {
+            FormaTheme {
+                FormaButton(onClick = { count++ }, pressAnimationSpec = null) { Text("No scale") }
+            }
+        }
+
+        composeRule.onNodeWithText("No scale").performClick()
+        composeRule.runOnIdle { assertEquals(1, count) }
+    }
+
+    @Test
+    fun callerInteractionSource_stillReceivesPresses() {
+        val source = MutableInteractionSource()
+        var pressed = false
+        composeRule.setContent {
+            FormaTheme {
+                pressed = source.collectIsPressedAsState().value
+                FormaButton(onClick = {}, interactionSource = source) { Text("Press me") }
+            }
+        }
+
+        // Guards the interactionSource materialization refactor: a caller-supplied source must
+        // still receive every press interaction from the underlying Material 3 button.
+        val button = composeRule.onNodeWithText("Press me")
+        button.performTouchInput { down(center) }
+        composeRule.runOnIdle {
+            assertTrue("Caller-supplied source must observe the press", pressed)
+        }
+        button.performTouchInput { up() }
+        composeRule.runOnIdle {
+            assertFalse("Caller-supplied source must observe the release", pressed)
+        }
     }
 }
