@@ -18,6 +18,8 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
+import androidx.compose.material3.rememberDatePickerState
+import androidx.compose.material3.rememberDateRangePickerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableFloatStateOf
@@ -27,7 +29,11 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.semantics.Role
+import dev.formaui.components.button.FormaButton
+import dev.formaui.components.button.FormaButtonVariant
 import dev.formaui.components.checkbox.FormaCheckbox
+import dev.formaui.components.datepicker.FormaDatePickerSheet
+import dev.formaui.components.datepicker.FormaDateRangePickerSheet
 import dev.formaui.components.listitem.FormaListItem
 import dev.formaui.components.radiobutton.FormaRadioButton
 import dev.formaui.components.search.FormaSearchBar
@@ -38,8 +44,15 @@ import dev.formaui.components.textfield.FormaTextField
 import dev.formaui.components.textfield.FormaTextFieldVariant
 import dev.formaui.core.annotation.ExperimentalFormaUiApi
 import dev.formaui.core.theme.FormaTheme
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
+import java.util.TimeZone
 
-/** The **Inputs** category: TextField, SearchBar, Switch/Checkbox/RadioButton, Slider. */
+/**
+ * The **Inputs** category: TextField, SearchBar, Switch/Checkbox/RadioButton, Slider, and the
+ * date picker sheets.
+ */
 
 @Composable
 fun TextFieldShowcase() {
@@ -191,5 +204,105 @@ fun SliderShowcase() {
             steps = 3,
             modifier = Modifier.fillMaxWidth(),
         )
+    }
+}
+
+/** Formats a UTC-epoch-millis date the picker states report (dates are UTC-anchored). */
+private fun formatUtcDate(millis: Long): String =
+    SimpleDateFormat("MMM d, yyyy", Locale.getDefault())
+        .apply { timeZone = TimeZone.getTimeZone("UTC") }
+        .format(Date(millis))
+
+@Composable
+fun DatePickerSheetShowcase() {
+    ComponentShowcase(
+        name = "DatePickerSheet",
+        description = "The Material date picker hosted in a modal bottom sheet.",
+    ) {
+        var showSheet by remember { mutableStateOf(false) }
+        var confirmedMillis by remember { mutableStateOf<Long?>(null) }
+        val state = rememberDatePickerState()
+
+        FormaButton(onClick = { showSheet = true }, variant = FormaButtonVariant.Outlined) {
+            Text("Pick a date")
+        }
+        Text(
+            text = confirmedMillis?.let { "Selected: ${formatUtcDate(it)}" } ?: "No date selected",
+            style = MaterialTheme.typography.bodySmall,
+        )
+        if (showSheet) {
+            FormaDatePickerSheet(
+                onDismissRequest = { showSheet = false },
+                state = state,
+                confirmButton = {
+                    FormaButton(
+                        onClick = {
+                            confirmedMillis = state.selectedDateMillis
+                            showSheet = false
+                        },
+                        enabled = state.selectedDateMillis != null,
+                    ) {
+                        Text("OK")
+                    }
+                },
+                dismissButton = {
+                    FormaButton(
+                        onClick = { showSheet = false },
+                        variant = FormaButtonVariant.Text,
+                    ) {
+                        Text("Cancel")
+                    }
+                },
+            )
+        }
+    }
+}
+
+@Composable
+fun DateRangePickerSheetShowcase() {
+    ComponentShowcase(
+        name = "DateRangePickerSheet",
+        description = "The Material date-range picker hosted in a modal bottom sheet.",
+    ) {
+        var showSheet by remember { mutableStateOf(false) }
+        var confirmedRange by remember { mutableStateOf<Pair<Long, Long>?>(null) }
+        val state = rememberDateRangePickerState()
+
+        FormaButton(onClick = { showSheet = true }, variant = FormaButtonVariant.Outlined) {
+            Text("Pick a date range")
+        }
+        Text(
+            text = confirmedRange
+                ?.let { (start, end) -> "Selected: ${formatUtcDate(start)} – ${formatUtcDate(end)}" }
+                ?: "No range selected",
+            style = MaterialTheme.typography.bodySmall,
+        )
+        if (showSheet) {
+            FormaDateRangePickerSheet(
+                onDismissRequest = { showSheet = false },
+                state = state,
+                confirmButton = {
+                    FormaButton(
+                        onClick = {
+                            val start = state.selectedStartDateMillis
+                            val end = state.selectedEndDateMillis
+                            if (start != null && end != null) confirmedRange = start to end
+                            showSheet = false
+                        },
+                        enabled = state.selectedEndDateMillis != null,
+                    ) {
+                        Text("OK")
+                    }
+                },
+                dismissButton = {
+                    FormaButton(
+                        onClick = { showSheet = false },
+                        variant = FormaButtonVariant.Text,
+                    ) {
+                        Text("Cancel")
+                    }
+                },
+            )
+        }
     }
 }
