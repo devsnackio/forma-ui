@@ -6,7 +6,7 @@
     "sourceFile": "components/src/commonMain/kotlin/dev/formaui/components/button/FormaButton.kt",
     "prdOrder": 1,
     "tier": "prd",
-    "description": "A FormaUI button — \"Material 3 with better defaults\" — one entry point covering all five Material 3 button variants via a single variant parameter.",
+    "description": "A FormaUI button — \"Material 3 with better defaults\" — one entry point covering all five Material 3 button variants via a single variant parameter, with a default-on press-scale micro-interaction layered on the ripple.",
     "composables": [
       {
         "name": "FormaButton",
@@ -61,6 +61,18 @@
             "description": "The MutableInteractionSource for observing/emitting interactions. When null, one is remembered internally."
           },
           {
+            "name": "pressedScale",
+            "type": "Float",
+            "default": "FormaPressScaleDefaults.PressedScale",
+            "description": "The scale factor applied while the button is pressed (defaults to a subtle 0.97). Must be greater than 0."
+          },
+          {
+            "name": "pressAnimationSpec",
+            "type": "FiniteAnimationSpec<Float>?",
+            "default": "FormaPressScaleDefaults.AnimationSpec",
+            "description": "The animation used for the press-scale's release spring-back (defaults to a responsive spring; the press dip uses FormaPressScaleDefaults.DownAnimationSpec). Pass null to disable the press-scale entirely."
+          },
+          {
             "name": "content",
             "type": "@Composable RowScope.() -> Unit",
             "default": null,
@@ -79,6 +91,16 @@
         "name": "FormaButtonDefaults",
         "kind": "object",
         "summary": "Defaults for FormaButton: MinTouchTargetSize (48dp), shape (FormaTheme.shapes.md), contentPadding (lg horizontal / xs vertical spacing tokens)."
+      },
+      {
+        "name": "Modifier.formaPressScale",
+        "kind": "modifier",
+        "summary": "Reusable press-scale micro-interaction (dev.formaui.components.interaction): observes an InteractionSource and scales the element to pressedScale while pressed via graphicsLayer, so measured size and the 48dp touch target are unaffected. animationSpec = null disables it."
+      },
+      {
+        "name": "FormaPressScaleDefaults",
+        "kind": "object",
+        "summary": "Defaults for Modifier.formaPressScale: PressedScale (0.97), DownAnimationSpec (a fast 100ms tween for the press dip), and AnimationSpec (a medium-stiffness, low-bouncy spring for the release spring-back)."
       }
     ],
     "variants": [
@@ -259,7 +281,7 @@
     "sourceFile": "components/src/commonMain/kotlin/dev/formaui/components/card/FormaCard.kt",
     "prdOrder": 3,
     "tier": "prd",
-    "description": "A FormaUI card — a themed container with an opinionated header / content / footer slot API covering all three Material 3 card families via variant.",
+    "description": "A FormaUI card — a themed container with an opinionated header / content / footer slot API covering all three Material 3 card families via variant; clickable cards get a default-on press-scale micro-interaction (shared Modifier.formaPressScale).",
     "composables": [
       {
         "name": "FormaCard",
@@ -308,6 +330,24 @@
             "description": "Padding between the card edges and its slots (defaults to FormaCardDefaults.contentPadding)."
           },
           {
+            "name": "interactionSource",
+            "type": "MutableInteractionSource?",
+            "default": "null",
+            "description": "The MutableInteractionSource for observing/emitting interactions. When null, one is remembered internally for the clickable card. Unused when onClick is null."
+          },
+          {
+            "name": "pressedScale",
+            "type": "Float",
+            "default": "FormaCardDefaults.PressedScale",
+            "description": "The scale factor applied while a clickable card is pressed (defaults to a subtler 0.98 — large surfaces read a small dip clearly). Must be greater than 0. Unused when onClick is null."
+          },
+          {
+            "name": "pressAnimationSpec",
+            "type": "FiniteAnimationSpec<Float>?",
+            "default": "FormaPressScaleDefaults.AnimationSpec",
+            "description": "The animation used for the press-scale's release spring-back (defaults to a responsive spring; the press dip uses FormaPressScaleDefaults.DownAnimationSpec). Pass null to disable the press-scale entirely. Unused when onClick is null."
+          },
+          {
             "name": "header",
             "type": "(@Composable () -> Unit)?",
             "default": "null",
@@ -337,7 +377,7 @@
       {
         "name": "FormaCardDefaults",
         "kind": "object",
-        "summary": "Defaults for FormaCard: shape (FormaTheme.shapes.lg), contentPadding (FormaTheme.spacing.md on all sides)."
+        "summary": "Defaults for FormaCard: shape (FormaTheme.shapes.lg), contentPadding (FormaTheme.spacing.md on all sides), PressedScale (0.98 — a subtler press-scale dip for large surfaces)."
       }
     ],
     "variants": [
@@ -355,7 +395,7 @@
     "sourceFile": "components/src/commonMain/kotlin/dev/formaui/components/chip/FormaChip.kt",
     "prdOrder": 4,
     "tier": "prd",
-    "description": "A FormaUI chip — \"Material 3 with better defaults\" — one entry point covering all four Material 3 chip types via variant.",
+    "description": "A FormaUI chip — \"Material 3 with better defaults\" — one entry point covering all four Material 3 chip types via variant, with a default-on press-scale micro-interaction (shared Modifier.formaPressScale).",
     "composables": [
       {
         "name": "FormaChip",
@@ -420,6 +460,18 @@
             "type": "MutableInteractionSource?",
             "default": "null",
             "description": "The MutableInteractionSource for observing/emitting interactions. When null, one is remembered internally."
+          },
+          {
+            "name": "pressedScale",
+            "type": "Float",
+            "default": "FormaPressScaleDefaults.PressedScale",
+            "description": "The scale factor applied while the chip is pressed (defaults to a subtle 0.97). Must be greater than 0."
+          },
+          {
+            "name": "pressAnimationSpec",
+            "type": "FiniteAnimationSpec<Float>?",
+            "default": "FormaPressScaleDefaults.AnimationSpec",
+            "description": "The animation used for the press-scale's release spring-back (defaults to a responsive spring; the press dip uses FormaPressScaleDefaults.DownAnimationSpec). Pass null to disable the press-scale entirely."
           }
         ]
       }
@@ -1135,6 +1187,12 @@
             "type": "Color",
             "default": "MaterialTheme.colorScheme.onPrimaryContainer",
             "description": "the initials color (defaults to M3 onPrimaryContainer)."
+          },
+          {
+            "name": "textStyle",
+            "type": "TextStyle",
+            "default": "FormaAvatarDefaults.textStyle(size)",
+            "description": "the initials TextStyle (defaults to FormaAvatarDefaults.textStyle for size, which keeps the type at roughly 35–40% of the avatar diameter)."
           }
         ]
       }
@@ -1148,7 +1206,7 @@
       {
         "name": "FormaAvatarDefaults",
         "kind": "object",
-        "summary": "Default values for FormaAvatar; shape returns FormaTheme.shapes.full (circular)."
+        "summary": "Default values for FormaAvatar; shape returns FormaTheme.shapes.full (circular); textStyle(size) maps the avatar size to the theme type scale (Small → labelMedium, Medium → titleSmall, Large → titleLarge, roughly 35–40% of the diameter)."
       }
     ],
     "variants": [
@@ -1636,7 +1694,7 @@
     "sourceFile": "components/src/commonMain/kotlin/dev/formaui/components/fab/FormaFloatingActionButton.kt",
     "prdOrder": null,
     "tier": "extra",
-    "description": "A FormaUI floating action button — \"Material 3 with better defaults\"; one entry point covers all three Material 3 FAB sizes via size.",
+    "description": "A FormaUI floating action button — \"Material 3 with better defaults\"; one entry point covers all three Material 3 FAB sizes via size, with a default-on press-scale micro-interaction (shared Modifier.formaPressScale) on both FAB composables.",
     "composables": [
       {
         "name": "FormaFloatingActionButton",
@@ -1683,6 +1741,18 @@
             "type": "MutableInteractionSource?",
             "default": "null",
             "description": "the MutableInteractionSource for observing/emitting interactions. When null, one is remembered internally."
+          },
+          {
+            "name": "pressedScale",
+            "type": "Float",
+            "default": "FormaPressScaleDefaults.PressedScale",
+            "description": "the scale factor applied while the FAB is pressed (defaults to a subtle 0.97). Must be greater than 0."
+          },
+          {
+            "name": "pressAnimationSpec",
+            "type": "FiniteAnimationSpec<Float>?",
+            "default": "FormaPressScaleDefaults.AnimationSpec",
+            "description": "the animation used for the press-scale's release spring-back (defaults to a responsive spring; the press dip uses FormaPressScaleDefaults.DownAnimationSpec). Pass null to disable the press-scale entirely."
           },
           {
             "name": "content",
@@ -1749,6 +1819,18 @@
             "type": "MutableInteractionSource?",
             "default": "null",
             "description": "the MutableInteractionSource for observing/emitting interactions. When null, one is remembered internally."
+          },
+          {
+            "name": "pressedScale",
+            "type": "Float",
+            "default": "FormaPressScaleDefaults.PressedScale",
+            "description": "the scale factor applied while the FAB is pressed (defaults to a subtle 0.97). Must be greater than 0."
+          },
+          {
+            "name": "pressAnimationSpec",
+            "type": "FiniteAnimationSpec<Float>?",
+            "default": "FormaPressScaleDefaults.AnimationSpec",
+            "description": "the animation used for the press-scale's release spring-back (defaults to a responsive spring; the press dip uses FormaPressScaleDefaults.DownAnimationSpec). Pass null to disable the press-scale entirely."
           }
         ]
       }
@@ -1781,7 +1863,7 @@
     "sourceFile": "components/src/commonMain/kotlin/dev/formaui/components/iconbutton/FormaIconButton.kt",
     "prdOrder": null,
     "tier": "extra",
-    "description": "A FormaUI icon button — \"Material 3 with better defaults\"; one entry point covers all four Material 3 icon button variants via variant.",
+    "description": "A FormaUI icon button — \"Material 3 with better defaults\"; one entry point covers all four Material 3 icon button variants via variant, with a default-on press-scale micro-interaction (shared Modifier.formaPressScale) using a deeper 0.92 dip.",
     "composables": [
       {
         "name": "FormaIconButton",
@@ -1824,6 +1906,18 @@
             "description": "the MutableInteractionSource for observing/emitting interactions. When null, one is remembered internally."
           },
           {
+            "name": "pressedScale",
+            "type": "Float",
+            "default": "FormaIconButtonDefaults.PressedScale",
+            "description": "the scale factor applied while the button is pressed (defaults to a deeper 0.92 — small targets need a larger relative dip to read). Must be greater than 0."
+          },
+          {
+            "name": "pressAnimationSpec",
+            "type": "FiniteAnimationSpec<Float>?",
+            "default": "FormaPressScaleDefaults.AnimationSpec",
+            "description": "the animation used for the press-scale's release spring-back (defaults to a responsive spring; the press dip uses FormaPressScaleDefaults.DownAnimationSpec). Pass null to disable the press-scale entirely."
+          },
+          {
             "name": "content",
             "type": "@Composable () -> Unit",
             "default": null,
@@ -1837,6 +1931,11 @@
         "name": "FormaIconButtonVariant",
         "kind": "enum",
         "summary": "The visual emphasis of a FormaIconButton, mirroring Material 3's four icon button variants: Standard, Filled, Tonal, Outlined."
+      },
+      {
+        "name": "FormaIconButtonDefaults",
+        "kind": "object",
+        "summary": "Defaults for FormaIconButton: PressedScale (0.92 — a deeper press-scale dip than larger controls, so the feedback reads at icon size)."
       }
     ],
     "variants": [
@@ -2641,5 +2740,499 @@
     ],
     "codeSample": "FormaTopAppBar(\n    title = \"Inbox\",\n    variant = FormaTopAppBarVariant.Small,\n    navigationIcon = {\n        FormaIconButton(onClick = { /* back */ }) {\n            Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = \"Back\")\n        }\n    },\n)",
     "accessibility": null
+  },
+  {
+    "id": "bar-chart",
+    "name": "BarChart",
+    "package": "dev.formaui.components.chart",
+    "sourceFile": "components/src/commonMain/kotlin/dev/formaui/components/chart/FormaBarChart.kt",
+    "prdOrder": null,
+    "tier": "extra",
+    "description": "A FormaUI bar chart — vertical bars with rounded top corners, drawn with pure Compose Canvas (no chart-library dependency); gridlines, category labels, value labels, and a one-shot entry animation are all built in.",
+    "composables": [
+      {
+        "name": "FormaBarChart",
+        "summary": "Vertical rounded bars scaled against a \"nice\" auto-computed (or explicit) y-axis maximum, with optional gridlines, category labels, value labels, and an entry animation; exposes an auto-generated data summary as its content description.",
+        "params": [
+          {
+            "name": "entries",
+            "type": "List<FormaChartEntry>",
+            "default": null,
+            "description": "the data to plot, one bar per entry, in order. Values must be finite and non-negative. An empty list renders an empty (but described) chart area."
+          },
+          {
+            "name": "modifier",
+            "type": "Modifier",
+            "default": "Modifier",
+            "description": "the Modifier applied to the chart (it fills the available width at a minimum height of FormaChartDefaults.MinChartHeight)."
+          },
+          {
+            "name": "barColor",
+            "type": "Color",
+            "default": "Color.Unspecified",
+            "description": "the fill color for all bars (defaults to the theme's primary). A FormaChartEntry.color that is specified overrides this for that bar."
+          },
+          {
+            "name": "maxValue",
+            "type": "Float?",
+            "default": "null",
+            "description": "the value the y-axis tops out at. When null, a \"nice\" rounded maximum is computed from the data. Must be finite and positive when supplied; values above it are clipped to the top of the plot."
+          },
+          {
+            "name": "showValueLabels",
+            "type": "Boolean",
+            "default": "false",
+            "description": "whether to draw each bar's formatted value above it. Labels use FormaChartDefaults.valueLabelStyle (tabular figures)."
+          },
+          {
+            "name": "showCategoryLabels",
+            "type": "Boolean",
+            "default": "true",
+            "description": "whether to draw each entry's label below its bar. Labels use FormaChartDefaults.axisLabelStyle, centered per bar and ellipsized to the bar's slot width."
+          },
+          {
+            "name": "showGridLines",
+            "type": "Boolean",
+            "default": "true",
+            "description": "whether to draw horizontal gridlines dividing the plot into FormaChartDefaults.GridLineCount bands, in FormaChartDefaults.gridLineColor."
+          },
+          {
+            "name": "barCornerRadius",
+            "type": "Dp",
+            "default": "FormaChartDefaults.BarCornerRadius",
+            "description": "the radius of each bar's top corners (defaults to 4dp)."
+          },
+          {
+            "name": "valueFormatter",
+            "type": "(Float) -> String",
+            "default": "FormaChartDefaults.ValueFormatter",
+            "description": "formats a value for value labels and the auto-generated accessibility summary."
+          },
+          {
+            "name": "animationSpec",
+            "type": "FiniteAnimationSpec<Float>?",
+            "default": "FormaChartDefaults.EntryAnimationSpec",
+            "description": "the entry animation for bar growth, or null to render a static final frame (deterministic in tests and screenshots)."
+          },
+          {
+            "name": "contentDescription",
+            "type": "String?",
+            "default": "null",
+            "description": "an explicit accessibility description; when null a summary of the data is generated automatically."
+          }
+        ]
+      }
+    ],
+    "supportingApi": [
+      {
+        "name": "FormaChartEntry",
+        "kind": "data class",
+        "summary": "One data point shared by all FormaUI charts (label, value, optional explicit color). Charts are stateless and redraw when the caller passes a structurally different list — an equal-but-new list never replays the entry animation."
+      },
+      {
+        "name": "FormaChartDefaults",
+        "kind": "object",
+        "summary": "Defaults shared by all FormaUI charts: MinChartHeight (180dp), MinDonutSize (160dp), DonutStrokeWidth (24dp), LineStrokeWidth (2dp), LinePointRadius (3dp), BarCornerRadius (4dp), LegendSwatchSize (12dp), GridLineCount (4), seriesColors (a six-color M3 palette with error last), gridLineColor, valueLabelStyle (tabular figures), axisLabelStyle, ValueFormatter, and EntryAnimationSpec (an 800ms tween)."
+      },
+      {
+        "name": "FormaChartLegend",
+        "kind": "composable",
+        "summary": "A wrapping row of color swatches and labels, one item per FormaChartEntry. Charts never embed a legend — place one next to the chart with the same entries (and, for a donut, the same palette) so swatches resolve to the chart's colors; an optional valueFormatter appends each entry's formatted value. Labels are real Text, so the legend is natively accessible."
+      }
+    ],
+    "variants": [
+      "Default",
+      "Value labels",
+      "Custom colors",
+      "No gridlines",
+      "Static (no animation)"
+    ],
+    "codeSample": "FormaBarChart(\n    entries = listOf(\n        FormaChartEntry(\"Jan\", 12f),\n        FormaChartEntry(\"Feb\", 32f),\n        FormaChartEntry(\"Mar\", 21f),\n    ),\n    showValueLabels = true,\n)",
+    "accessibility": "Exposes an auto-generated data summary (e.g. \"Bar chart with 3 categories. Jan: 12. …\") as its semantics content description — override with contentDescription; empty entries describe themselves as \"Bar chart with no data\"."
+  },
+  {
+    "id": "donut-chart",
+    "name": "DonutChart",
+    "package": "dev.formaui.components.chart",
+    "sourceFile": "components/src/commonMain/kotlin/dev/formaui/components/chart/FormaDonutChart.kt",
+    "prdOrder": null,
+    "tier": "extra",
+    "description": "A FormaUI donut chart — proportional stroked arc segments around an open center slot, drawn with pure Compose Canvas (no chart-library dependency); segments cycle the shared series palette and sweep in clockwise on entry.",
+    "composables": [
+      {
+        "name": "FormaDonutChart",
+        "summary": "Proportional arc segments separated by small gaps around an open center, cycling FormaChartDefaults.seriesColors, with a centerContent slot (e.g. a total) and an auto-generated percentage summary as its content description; empty or all-zero data draws a neutral track ring instead of crashing.",
+        "params": [
+          {
+            "name": "entries",
+            "type": "List<FormaChartEntry>",
+            "default": null,
+            "description": "the data to plot, one segment per entry, clockwise in order. Values must be finite and non-negative; each segment's sweep is proportional to its share of the total."
+          },
+          {
+            "name": "modifier",
+            "type": "Modifier",
+            "default": "Modifier",
+            "description": "the Modifier applied to the chart. It keeps a 1:1 aspect ratio at a minimum size of FormaChartDefaults.MinDonutSize; size it explicitly (e.g. Modifier.size(200.dp))."
+          },
+          {
+            "name": "segmentColors",
+            "type": "List<Color>?",
+            "default": "null",
+            "description": "the palette cycled for segments whose entry has no explicit FormaChartEntry.color; null uses FormaChartDefaults.seriesColors."
+          },
+          {
+            "name": "strokeWidth",
+            "type": "Dp",
+            "default": "FormaChartDefaults.DonutStrokeWidth",
+            "description": "the thickness of the donut's ring (defaults to 24dp)."
+          },
+          {
+            "name": "strokeCap",
+            "type": "StrokeCap",
+            "default": "StrokeCap.Round",
+            "description": "the cap style for each segment's ends: StrokeCap.Round (the default) gives softly rounded ends, insetting each drawn arc by the caps' angular overhang so gaps stay visible and segments land on their true bounds (a segment too small to fit its two caps renders as a dot); StrokeCap.Butt gives flat, squared ends. Irrelevant on a closed ring (a lone visible segment, or the zero-total track ring)."
+          },
+          {
+            "name": "startAngle",
+            "type": "Float",
+            "default": "-90f",
+            "description": "the angle the first segment starts at, in degrees clockwise from 3 o'clock; the default starts at 12 o'clock."
+          },
+          {
+            "name": "segmentGapDegrees",
+            "type": "Float",
+            "default": "2f",
+            "description": "the angular gap between adjacent segments, in degrees. Ignored when only one segment is visible. Must be finite and non-negative."
+          },
+          {
+            "name": "animationSpec",
+            "type": "FiniteAnimationSpec<Float>?",
+            "default": "FormaChartDefaults.EntryAnimationSpec",
+            "description": "the entry animation for the clockwise reveal, or null to render a static final frame."
+          },
+          {
+            "name": "contentDescription",
+            "type": "String?",
+            "default": "null",
+            "description": "an explicit accessibility description; when null a percentage summary of the data is generated automatically."
+          },
+          {
+            "name": "centerContent",
+            "type": "@Composable () -> Unit",
+            "default": "{}",
+            "description": "a slot composed in the donut's center hole (e.g. a total or a caption). Centered but not clipped, so keep it smaller than the hole; its semantics stay independently accessible next to the chart summary."
+          }
+        ]
+      }
+    ],
+    "supportingApi": [
+      {
+        "name": "FormaChartEntry",
+        "kind": "data class",
+        "summary": "The shared chart data point — see the bar-chart entry for the full shared chart API (FormaChartEntry, FormaChartDefaults, FormaChartLegend)."
+      }
+    ],
+    "variants": [
+      "Default",
+      "Custom palette",
+      "Center content",
+      "With legend",
+      "Zero-total track ring"
+    ],
+    "codeSample": "FormaDonutChart(\n    entries = listOf(\n        FormaChartEntry(\"Rent\", 850f),\n        FormaChartEntry(\"Groceries\", 420f),\n        FormaChartEntry(\"Transport\", 210f),\n    ),\n    centerContent = { Text(\"1480\") },\n)",
+    "accessibility": "Exposes an auto-generated integer-percentage summary (e.g. \"Donut chart with 3 segments. Rent: 57 percent. …\") as its semantics content description — override with contentDescription; empty entries describe themselves as \"Donut chart with no data\", and the centerContent slot's semantics stay independently accessible."
+  },
+  {
+    "id": "line-chart",
+    "name": "LineChart",
+    "package": "dev.formaui.components.chart",
+    "sourceFile": "components/src/commonMain/kotlin/dev/formaui/components/chart/FormaLineChart.kt",
+    "prdOrder": null,
+    "tier": "extra",
+    "description": "A FormaUI line chart — a single series plotted as a smooth (or straight) trend line with an optional area fill, point markers, gridlines, and x-axis labels, drawn with pure Compose Canvas (no chart-library dependency). Accepts negative values.",
+    "composables": [
+      {
+        "name": "FormaLineChart",
+        "summary": "Plots a List<Float> as a trend line: smooth horizontally-clamped cubic curves (no vertical overshoot) or straight segments, a gradient area fill, optional point markers and x labels, and a leading-edge sweep entry animation; degenerate data (empty, single point, flat series) renders gracefully.",
+        "params": [
+          {
+            "name": "values",
+            "type": "List<Float>",
+            "default": null,
+            "description": "the series to plot, in order, spread evenly across the width. Values must be finite (negative values are allowed). An empty list renders an empty (but described) chart area."
+          },
+          {
+            "name": "modifier",
+            "type": "Modifier",
+            "default": "Modifier",
+            "description": "the Modifier applied to the chart (it fills the available width at a minimum height of FormaChartDefaults.MinChartHeight)."
+          },
+          {
+            "name": "lineColor",
+            "type": "Color",
+            "default": "Color.Unspecified",
+            "description": "the color of the line, its points, and the area fill (defaults to the theme's primary)."
+          },
+          {
+            "name": "strokeWidth",
+            "type": "Dp",
+            "default": "FormaChartDefaults.LineStrokeWidth",
+            "description": "the thickness of the line (defaults to 2dp)."
+          },
+          {
+            "name": "minValue",
+            "type": "Float?",
+            "default": "null",
+            "description": "the value the y-axis bottoms out at. When null, the data's own minimum is used. Must be finite when supplied; values below it are clipped to the plot's bottom edge."
+          },
+          {
+            "name": "maxValue",
+            "type": "Float?",
+            "default": "null",
+            "description": "the value the y-axis tops out at. When null, the data's own maximum is used. Must be finite (and greater than minValue when both are supplied); values above it are clipped to the plot's top edge."
+          },
+          {
+            "name": "smooth",
+            "type": "Boolean",
+            "default": "true",
+            "description": "whether segments are smoothed cubic curves or straight polyline segments. Smoothing clamps control points horizontally to the midpoint between neighboring x positions, so the curve never overshoots a value vertically."
+          },
+          {
+            "name": "fillArea",
+            "type": "Boolean",
+            "default": "true",
+            "description": "whether to fill the area under the line with a vertical gradient of lineColor fading to transparent at the plot floor."
+          },
+          {
+            "name": "showPoints",
+            "type": "Boolean",
+            "default": "false",
+            "description": "whether to draw a FormaChartDefaults.LinePointRadius circle marker at each data point. A single-value dataset always draws its point (there is no segment to draw)."
+          },
+          {
+            "name": "showGridLines",
+            "type": "Boolean",
+            "default": "true",
+            "description": "whether to draw horizontal gridlines dividing the plot into FormaChartDefaults.GridLineCount bands, in FormaChartDefaults.gridLineColor."
+          },
+          {
+            "name": "xLabels",
+            "type": "List<String>",
+            "default": "emptyList()",
+            "description": "optional x-axis labels drawn under the plot in FormaChartDefaults.axisLabelStyle, paired index-by-index with values and centered under their points; labels beyond the point count are ignored. Empty reserves no label band."
+          },
+          {
+            "name": "valueFormatter",
+            "type": "(Float) -> String",
+            "default": "FormaChartDefaults.ValueFormatter",
+            "description": "formats a value for the auto-generated accessibility summary."
+          },
+          {
+            "name": "animationSpec",
+            "type": "FiniteAnimationSpec<Float>?",
+            "default": "FormaChartDefaults.EntryAnimationSpec",
+            "description": "the entry animation for the leading-edge sweep, or null to render a static final frame."
+          },
+          {
+            "name": "contentDescription",
+            "type": "String?",
+            "default": "null",
+            "description": "an explicit accessibility description; when null a summary of the data is generated automatically."
+          }
+        ]
+      }
+    ],
+    "supportingApi": [
+      {
+        "name": "FormaChartDefaults",
+        "kind": "object",
+        "summary": "Shared chart defaults (LineStrokeWidth, LinePointRadius, GridLineCount, EntryAnimationSpec, ValueFormatter, …) — see the bar-chart entry for the full shared chart API."
+      }
+    ],
+    "variants": [
+      "Smooth with area fill",
+      "Straight polyline",
+      "Point markers",
+      "Negative values",
+      "X-axis labels",
+      "Flat / single point"
+    ],
+    "codeSample": "FormaLineChart(\n    values = listOf(4f, 9f, 6f, 14f, 11f),\n    showPoints = true,\n    xLabels = listOf(\"Mon\", \"Tue\", \"Wed\", \"Thu\", \"Fri\"),\n)",
+    "accessibility": "Exposes an auto-generated summary of point count, min–max range, and latest value (e.g. \"Line chart with 5 points. Range 4 to 14. Latest value 11.\") as its semantics content description — override with contentDescription; empty values describe themselves as \"Line chart with no data\"."
+  },
+  {
+    "id": "date-picker-sheet",
+    "name": "DatePickerSheet",
+    "package": "dev.formaui.components.datepicker",
+    "sourceFile": "components/src/commonMain/kotlin/dev/formaui/components/datepicker/FormaDatePickerSheet.kt",
+    "prdOrder": null,
+    "tier": "extra",
+    "description": "A FormaUI date picker presented in a modal bottom sheet — Material 3's inline DatePicker hosted in a FormaBottomSheet instead of the M3 DatePickerDialog, with hoisted M3 state, confirm/dismiss button slots, and the calendar-to-text-input mode toggle.",
+    "composables": [
+      {
+        "name": "FormaDatePickerSheet",
+        "summary": "Hosts M3's stable DatePicker in a FormaBottomSheet above an end-aligned button row. State is the caller's DatePickerState and the component wires nothing to the button slots — the confirm slot reads state.selectedDateMillis itself (so it can disable itself until a date is picked). The default colors make the picker's own container transparent so it sits directly on the sheet surface.",
+        "params": [
+          {
+            "name": "onDismissRequest",
+            "type": "() -> Unit",
+            "default": null,
+            "description": "called when the sheet is dismissed (scrim tap, back press, or swipe down) — hide the sheet by no longer composing it. There is no separate cancel callback; treat a dismiss as closed-without-confirming."
+          },
+          {
+            "name": "state",
+            "type": "DatePickerState",
+            "default": null,
+            "description": "the hoisted Material 3 state; create it with rememberDatePickerState. Read state.selectedDateMillis (UTC epoch millis, Long?) in the confirm slot's click handler. The picker's locale is captured when the state is created (Material 3 behavior)."
+          },
+          {
+            "name": "confirmButton",
+            "type": "@Composable () -> Unit",
+            "default": null,
+            "description": "the primary action slot (required), typically a FormaButton. The component attaches no click handling or label — the slot owns both."
+          },
+          {
+            "name": "modifier",
+            "type": "Modifier",
+            "default": "Modifier",
+            "description": "the Modifier applied to the sheet."
+          },
+          {
+            "name": "dismissButton",
+            "type": "(@Composable () -> Unit)?",
+            "default": "null",
+            "description": "the optional secondary/cancel action slot, shown before confirmButton."
+          },
+          {
+            "name": "showModeToggle",
+            "type": "Boolean",
+            "default": "true",
+            "description": "whether the picker shows Material 3's calendar-to-text-input mode toggle."
+          },
+          {
+            "name": "skipPartiallyExpanded",
+            "type": "Boolean",
+            "default": "true",
+            "description": "whether the sheet skips the half-expanded state and opens fully. Defaults to true — deliberately unlike FormaBottomSheet — because the half-expanded state clips the calendar grid."
+          },
+          {
+            "name": "shape",
+            "type": "Shape?",
+            "default": "null",
+            "description": "the sheet container shape. When null, Material 3's top-rounded default is used."
+          },
+          {
+            "name": "colors",
+            "type": "DatePickerColors?",
+            "default": "null",
+            "description": "the DatePickerColors for the picker. When null, Material 3's defaults are used with a transparent picker container so the picker sits directly on the sheet surface (avoiding a container-on-container seam). A supplied value is passed through untouched."
+          }
+        ]
+      }
+    ],
+    "supportingApi": [
+      {
+        "name": "rememberDatePickerState",
+        "kind": "function (Material 3)",
+        "summary": "The component defines no state type of its own — callers create and own the picker state via Material 3's rememberDatePickerState (initial date, selectableDates, yearRange, initialDisplayMode, saveability) and read selectedDateMillis from it."
+      }
+    ],
+    "variants": [
+      "Calendar mode",
+      "Text-input mode (initialDisplayMode or the mode toggle)",
+      "With dismiss button",
+      "Mode toggle hidden",
+      "Custom colors"
+    ],
+    "codeSample": "val state = rememberDatePickerState()\nif (open) {\n    FormaDatePickerSheet(\n        onDismissRequest = { open = false },\n        state = state,\n        confirmButton = {\n            FormaButton(\n                onClick = { onPicked(state.selectedDateMillis); open = false },\n                enabled = state.selectedDateMillis != null,\n            ) { Text(\"OK\") }\n        },\n    )\n}",
+    "accessibility": "Inherits Material 3's DatePicker semantics — day cells expose full-date content descriptions, the mode toggle has its own content description, and navigation controls are labeled — plus ModalBottomSheet's back-press and scrim dismiss handling; the button slots are caller-supplied (typically FormaButtons with M3's 48dp minimum touch target)."
+  },
+  {
+    "id": "date-range-picker-sheet",
+    "name": "DateRangePickerSheet",
+    "package": "dev.formaui.components.datepicker",
+    "sourceFile": "components/src/commonMain/kotlin/dev/formaui/components/datepicker/FormaDateRangePickerSheet.kt",
+    "prdOrder": null,
+    "tier": "extra",
+    "description": "A FormaUI date-range picker presented in a modal bottom sheet — Material 3's inline DateRangePicker hosted in a FormaBottomSheet instead of the M3 DatePickerDialog, with hoisted M3 state, confirm/dismiss button slots, and the calendar-to-text-input mode toggle. The picker's scrollable month list is bounded by the sheet so months scroll internally while the buttons stay on-screen.",
+    "composables": [
+      {
+        "name": "FormaDateRangePickerSheet",
+        "summary": "Hosts M3's stable DateRangePicker in a FormaBottomSheet above an end-aligned button row. State is the caller's DateRangePickerState and the component wires nothing to the button slots — the confirm slot reads state.selectedStartDateMillis / state.selectedEndDateMillis itself (so it can disable itself until a complete range is picked). The default colors make the picker's own container transparent so it sits directly on the sheet surface.",
+        "params": [
+          {
+            "name": "onDismissRequest",
+            "type": "() -> Unit",
+            "default": null,
+            "description": "called when the sheet is dismissed (scrim tap, back press, or swipe down) — hide the sheet by no longer composing it. There is no separate cancel callback; treat a dismiss as closed-without-confirming."
+          },
+          {
+            "name": "state",
+            "type": "DateRangePickerState",
+            "default": null,
+            "description": "the hoisted Material 3 state; create it with rememberDateRangePickerState. Read state.selectedStartDateMillis and state.selectedEndDateMillis (UTC epoch millis, Long?) in the confirm slot's click handler. The picker's locale is captured when the state is created (Material 3 behavior)."
+          },
+          {
+            "name": "confirmButton",
+            "type": "@Composable () -> Unit",
+            "default": null,
+            "description": "the primary action slot (required), typically a FormaButton. The component attaches no click handling or label — the slot owns both."
+          },
+          {
+            "name": "modifier",
+            "type": "Modifier",
+            "default": "Modifier",
+            "description": "the Modifier applied to the sheet."
+          },
+          {
+            "name": "dismissButton",
+            "type": "(@Composable () -> Unit)?",
+            "default": "null",
+            "description": "the optional secondary/cancel action slot, shown before confirmButton."
+          },
+          {
+            "name": "showModeToggle",
+            "type": "Boolean",
+            "default": "true",
+            "description": "whether the picker shows Material 3's calendar-to-text-input mode toggle."
+          },
+          {
+            "name": "skipPartiallyExpanded",
+            "type": "Boolean",
+            "default": "true",
+            "description": "whether the sheet skips the half-expanded state and opens fully. Defaults to true — deliberately unlike FormaBottomSheet — because the half-expanded state clips the calendar grid."
+          },
+          {
+            "name": "shape",
+            "type": "Shape?",
+            "default": "null",
+            "description": "the sheet container shape. When null, Material 3's top-rounded default is used."
+          },
+          {
+            "name": "colors",
+            "type": "DatePickerColors?",
+            "default": "null",
+            "description": "the DatePickerColors for the picker. When null, Material 3's defaults are used with a transparent picker container so the picker sits directly on the sheet surface (avoiding a container-on-container seam). A supplied value is passed through untouched."
+          }
+        ]
+      }
+    ],
+    "supportingApi": [
+      {
+        "name": "rememberDateRangePickerState",
+        "kind": "function (Material 3)",
+        "summary": "The component defines no state type of its own — callers create and own the picker state via Material 3's rememberDateRangePickerState (initial range, selectableDates, yearRange, initialDisplayMode, saveability) and read selectedStartDateMillis / selectedEndDateMillis from it."
+      }
+    ],
+    "variants": [
+      "Calendar mode (internally scrolling month list)",
+      "Text-input mode (initialDisplayMode or the mode toggle)",
+      "With dismiss button",
+      "Mode toggle hidden",
+      "Custom colors"
+    ],
+    "codeSample": "val state = rememberDateRangePickerState()\nif (open) {\n    FormaDateRangePickerSheet(\n        onDismissRequest = { open = false },\n        state = state,\n        confirmButton = {\n            FormaButton(\n                onClick = {\n                    onPicked(state.selectedStartDateMillis, state.selectedEndDateMillis)\n                    open = false\n                },\n                enabled = state.selectedEndDateMillis != null,\n            ) { Text(\"OK\") }\n        },\n    )\n}",
+    "accessibility": "Inherits Material 3's DateRangePicker semantics — day cells expose full-date content descriptions with range start/end announcements, the mode toggle has its own content description, and navigation controls are labeled — plus ModalBottomSheet's back-press and scrim dismiss handling; the button slots are caller-supplied (typically FormaButtons with M3's 48dp minimum touch target)."
   }
 ]
