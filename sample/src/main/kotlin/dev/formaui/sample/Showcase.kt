@@ -103,6 +103,8 @@ fun CategoryScreen(
                     item { SearchBarShowcase() }
                     item { SelectionShowcase() }
                     item { SliderShowcase() }
+                    item { DatePickerSheetShowcase() }
+                    item { DateRangePickerSheetShowcase() }
                 }
                 SampleCategory.Containment -> {
                     item { CardShowcase() }
@@ -111,6 +113,9 @@ fun CategoryScreen(
                     item { BadgeShowcase() }
                     item { TooltipShowcase() }
                     item { DropdownMenuShowcase() }
+                    item { BarChartShowcase() }
+                    item { DonutChartShowcase() }
+                    item { LineChartShowcase() }
                 }
                 SampleCategory.Navigation -> {
                     item { TopAppBarShowcase() }

@@ -18,6 +18,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import dev.formaui.core.annotation.ExperimentalFormaUiApi
@@ -92,6 +93,8 @@ fun FormaAvatar(
  * @param shape the clip shape (defaults to [FormaAvatarDefaults.shape], a full circle).
  * @param containerColor the background color (defaults to the M3 `primaryContainer`).
  * @param contentColor the initials color (defaults to M3 `onPrimaryContainer`).
+ * @param textStyle the initials [TextStyle] (defaults to [FormaAvatarDefaults.textStyle] for
+ * [size], which keeps the type at roughly 35–40% of the avatar diameter).
  */
 @ExperimentalFormaUiApi
 @Composable
@@ -102,6 +105,7 @@ fun FormaAvatar(
     shape: Shape = FormaAvatarDefaults.shape,
     containerColor: Color = MaterialTheme.colorScheme.primaryContainer,
     contentColor: Color = MaterialTheme.colorScheme.onPrimaryContainer,
+    textStyle: TextStyle = FormaAvatarDefaults.textStyle(size),
 ) {
     FormaAvatar(
         modifier = modifier,
@@ -112,7 +116,7 @@ fun FormaAvatar(
     ) {
         Text(
             text = initials,
-            style = MaterialTheme.typography.titleMedium,
+            style = textStyle,
         )
     }
 }
@@ -127,4 +131,21 @@ object FormaAvatarDefaults {
         @Composable
         @ReadOnlyComposable
         get() = FormaTheme.shapes.full
+
+    /**
+     * The default initials [TextStyle] for the given avatar [size], pulled from the theme's
+     * [MaterialTheme.typography] type scale so the type sits at roughly 35–40% of the diameter:
+     * - [FormaAvatarSize.Small] (32dp) → `labelMedium`
+     * - [FormaAvatarSize.Medium] (40dp) → `titleSmall`
+     * - [FormaAvatarSize.Large] (56dp) → `titleLarge`
+     *
+     * @param size the avatar diameter the style is scaled for.
+     */
+    @Composable
+    @ReadOnlyComposable
+    fun textStyle(size: FormaAvatarSize): TextStyle = when (size) {
+        FormaAvatarSize.Small -> MaterialTheme.typography.labelMedium
+        FormaAvatarSize.Medium -> MaterialTheme.typography.titleSmall
+        FormaAvatarSize.Large -> MaterialTheme.typography.titleLarge
+    }
 }
