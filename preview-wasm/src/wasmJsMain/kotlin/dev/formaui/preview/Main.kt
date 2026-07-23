@@ -1,92 +1,51 @@
 /*
  * Copyright 2026 FormaUI. Licensed under the Apache License, Version 2.0.
  */
-@file:OptIn(ExperimentalFormaUiApi::class, ExperimentalComposeUiApi::class, ExperimentalLayoutApi::class)
+@file:OptIn(ExperimentalComposeUiApi::class)
 
 package dev.formaui.preview
 
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.ExperimentalLayoutApi
-import androidx.compose.foundation.layout.FlowRow
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableIntStateOf
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
-import androidx.compose.ui.Modifier
 import androidx.compose.ui.window.ComposeViewport
-import dev.formaui.components.button.FormaButton
-import dev.formaui.components.button.FormaButtonVariant
-import dev.formaui.components.switch.FormaSwitch
-import dev.formaui.core.annotation.ExperimentalFormaUiApi
-import dev.formaui.core.theme.FormaTheme
 import kotlinx.browser.document
+import kotlinx.browser.window
 
 /**
- * Browser entry point for the Wasm preview harness. Renders the real [FormaButton] (every variant)
- * inside [FormaTheme], with a light/dark toggle — the smallest end-to-end proof that a live,
- * interactive FormaUI component can run in the browser via the `wasmJs` target.
+ * Browser entry point for the Wasm preview harness. Renders one live, interactive FormaUI
+ * component — the real Compose code running in the browser via the `wasmJs` target — selected by
+ * the `?component=<id>` URL query parameter, where `<id>` is the kebab-case component id from
+ * `docs/component-inventory.json` (e.g. `button`, `icon-button`, `date-picker-sheet`).
+ *
+ * A missing or empty parameter falls back to [DefaultComponentId] (back-compat with the original
+ * Button-only harness); an unrecognized id renders an in-canvas [UnknownComponentMessage]. Every
+ * known preview shares the [PreviewScaffold] chrome: an in-canvas light/dark toggle driving
+ * `FormaTheme(darkTheme = …)`, the component name heading, then the interactive preview content.
+ *
+ * Before composition starts, `document.title` is set to `formaui-preview:<id>` (or
+ * `formaui-preview:unknown:<id>`) so embedders and e2e tests can assert which component rendered.
  */
 fun main() {
+    val requestedId = componentQueryParam() ?: DefaultComponentId
+    val entry = PreviewRegistry[requestedId]
+    document.title =
+        if (entry != null) "formaui-preview:$requestedId" else "formaui-preview:unknown:$requestedId"
     ComposeViewport(document.body!!) {
-        ButtonPreview()
-    }
-}
-
-@Composable
-private fun ButtonPreview() {
-    var dark by remember { mutableStateOf(false) }
-    var clicks by remember { mutableIntStateOf(0) }
-
-    FormaTheme(darkTheme = dark) {
-        Surface(
-            modifier = Modifier.fillMaxSize(),
-            color = MaterialTheme.colorScheme.background,
-        ) {
-            Column(
-                modifier = Modifier.padding(FormaTheme.spacing.xl),
-                verticalArrangement = Arrangement.spacedBy(FormaTheme.spacing.lg),
-            ) {
-                Row(
-                    horizontalArrangement = Arrangement.spacedBy(FormaTheme.spacing.xs),
-                    verticalAlignment = Alignment.CenterVertically,
-                ) {
-                    FormaSwitch(checked = dark, onCheckedChange = { dark = it })
-                    Text(
-                        text = if (dark) "Dark theme" else "Light theme",
-                        style = MaterialTheme.typography.titleMedium,
-                    )
-                }
-
-                Text("FormaButton", style = MaterialTheme.typography.headlineSmall)
-
-                FlowRow(
-                    horizontalArrangement = Arrangement.spacedBy(FormaTheme.spacing.xs),
-                    verticalArrangement = Arrangement.spacedBy(FormaTheme.spacing.xs),
-                ) {
-                    FormaButtonVariant.entries.forEach { variant ->
-                        FormaButton(onClick = { clicks++ }, variant = variant) {
-                            Text(variant.name)
-                        }
-                    }
-                }
-
-                Text(
-                    text = "Clicked $clicks times — this is the real component running in your browser.",
-                    style = MaterialTheme.typography.bodyMedium,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant,
-                )
-            }
+        if (entry != null) {
+            PreviewScaffold(title = entry.title, content = entry.content)
+        } else {
+            UnknownComponentMessage(id = requestedId)
         }
     }
 }
+
+/**
+ * Returns the value of the `component` query parameter in the current page URL, or null when the
+ * parameter is absent or blank. Inventory ids are plain kebab-case, so no URL decoding is needed.
+ */
+private fun componentQueryParam(): String? =
+    window.location.search
+        .removePrefix("?")
+        .split('&')
+        .firstOrNull { it.substringBefore('=') == "component" }
+        ?.substringAfter('=', missingDelimiterValue = "")
+        ?.takeIf { it.isNotBlank() }
