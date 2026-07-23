@@ -5,6 +5,7 @@
 
 package dev.formaui.components.button
 
+import androidx.compose.animation.core.FiniteAnimationSpec
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.RowScope
@@ -18,10 +19,13 @@ import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.ReadOnlyComposable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import dev.formaui.components.interaction.FormaPressScaleDefaults
+import dev.formaui.components.interaction.formaPressScale
 import dev.formaui.core.annotation.ExperimentalFormaUiApi
 import dev.formaui.core.theme.FormaTheme
 
@@ -73,6 +77,10 @@ enum class FormaButtonVariant {
  *   (`lg` horizontal, `xs` vertical) — no hardcoded values.
  * - A **minimum 48dp touch target** ([FormaButtonDefaults.MinTouchTargetSize]) is always
  *   enforced for accessibility.
+ * - A **press-scale micro-interaction** ([Modifier.formaPressScale][dev.formaui.components.interaction.formaPressScale])
+ *   is on by default, layered on top of the Material ripple: the button dips to [pressedScale]
+ *   while held and springs back on release. The dip always completes, even on the quickest tap.
+ *   Pass `pressAnimationSpec = null` to disable it.
  *
  * Everything is overridable: pass [shape], [colors], [contentPadding], or extend [modifier].
  * The button is stateless — click handling ([onClick]) and [enabled] state are hoisted to the
@@ -92,6 +100,12 @@ enum class FormaButtonVariant {
  *   [FormaButtonDefaults.contentPadding]).
  * @param interactionSource the [MutableInteractionSource] for observing/emitting interactions.
  *   When `null`, one is remembered internally.
+ * @param pressedScale the scale factor applied while the button is pressed (defaults to
+ *   [FormaPressScaleDefaults.PressedScale], a subtle 0.97). Must be greater than 0.
+ * @param pressAnimationSpec the animation used for the press-scale's release spring-back
+ *   (defaults to [FormaPressScaleDefaults.AnimationSpec], a responsive spring; the press dip
+ *   uses [FormaPressScaleDefaults.DownAnimationSpec]). Pass `null` to disable the press-scale
+ *   entirely.
  * @param content the button's content, laid out in a [RowScope] (typically a `Text`, optionally
  *   with a leading/trailing `Icon`).
  */
@@ -106,9 +120,18 @@ fun FormaButton(
     colors: ButtonColors? = null,
     contentPadding: PaddingValues = FormaButtonDefaults.contentPadding,
     interactionSource: MutableInteractionSource? = null,
+    pressedScale: Float = FormaPressScaleDefaults.PressedScale,
+    pressAnimationSpec: FiniteAnimationSpec<Float>? = FormaPressScaleDefaults.AnimationSpec,
     content: @Composable RowScope.() -> Unit,
 ) {
-    val buttonModifier = modifier.heightIn(min = FormaButtonDefaults.MinTouchTargetSize)
+    val interactionSource = interactionSource ?: remember { MutableInteractionSource() }
+    val buttonModifier = modifier
+        .heightIn(min = FormaButtonDefaults.MinTouchTargetSize)
+        .formaPressScale(
+            interactionSource = interactionSource,
+            pressedScale = pressedScale,
+            animationSpec = pressAnimationSpec,
+        )
     when (variant) {
         FormaButtonVariant.Filled -> Button(
             onClick = onClick,
