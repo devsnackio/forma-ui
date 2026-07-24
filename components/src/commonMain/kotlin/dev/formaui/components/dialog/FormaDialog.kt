@@ -15,14 +15,19 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.AlertDialogDefaults
+import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
+import androidx.compose.material3.contentColorFor
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.ReadOnlyComposable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import dev.formaui.components.button.FormaButton
@@ -58,6 +63,14 @@ import dev.formaui.core.theme.FormaTheme
  * @param title optional dialog title.
  * @param text optional supporting body text.
  * @param shape the dialog container shape (defaults to [FormaDialogDefaults.shape]).
+ * @param containerColor the dialog's background color (defaults to the M3 default, themed by
+ * [FormaTheme][dev.formaui.core.theme.FormaTheme]).
+ * @param iconContentColor the color applied to [icon] (defaults to the M3 default).
+ * @param titleContentColor the color applied to [title] (defaults to the M3 default).
+ * @param textContentColor the color applied to [text] (defaults to the M3 default).
+ * @param titleTextStyle optional [TextStyle] override for [title], merged on top of the M3 title
+ * style so a partial override keeps the M3 defaults for everything else.
+ * @param textTextStyle optional [TextStyle] override for [text], merged on top of the M3 text style.
  */
 @ExperimentalFormaUiApi
 @Composable
@@ -70,6 +83,12 @@ fun FormaAlertDialog(
     title: String? = null,
     text: String? = null,
     shape: Shape = FormaDialogDefaults.shape,
+    containerColor: Color = AlertDialogDefaults.containerColor,
+    iconContentColor: Color = AlertDialogDefaults.iconContentColor,
+    titleContentColor: Color = AlertDialogDefaults.titleContentColor,
+    textContentColor: Color = AlertDialogDefaults.textContentColor,
+    titleTextStyle: TextStyle? = null,
+    textTextStyle: TextStyle? = null,
 ) {
     AlertDialog(
         onDismissRequest = onDismissRequest,
@@ -77,9 +96,17 @@ fun FormaAlertDialog(
         modifier = modifier,
         dismissButton = dismissButton,
         icon = icon,
-        title = title?.let { value -> { Text(value) } },
-        text = text?.let { value -> { Text(value) } },
+        title = title?.let { value ->
+            { Text(value, style = LocalTextStyle.current.merge(titleTextStyle)) }
+        },
+        text = text?.let { value ->
+            { Text(value, style = LocalTextStyle.current.merge(textTextStyle)) }
+        },
         shape = shape,
+        containerColor = containerColor,
+        iconContentColor = iconContentColor,
+        titleContentColor = titleContentColor,
+        textContentColor = textContentColor,
     )
 }
 
@@ -93,6 +120,12 @@ fun FormaAlertDialog(
  * @param onDismissRequest called when the user closes the dialog (Close button or back press).
  * @param title the dialog's title, shown in the top bar.
  * @param modifier the [Modifier] applied to the dialog surface.
+ * @param containerColor the dialog surface's background color (defaults to the M3 `surface`, themed
+ * by [FormaTheme][dev.formaui.core.theme.FormaTheme]).
+ * @param contentColor the preferred content color inside the dialog (defaults to the color matching
+ * [containerColor]).
+ * @param titleTextStyle optional [TextStyle] override for [title], merged on top of the top bar's
+ * title style (M3 `titleLarge`).
  * @param confirmAction optional top-bar action slot at the end (e.g. a "Save" [FormaButton]).
  * @param content the dialog body, laid out in a scrollable [ColumnScope].
  */
@@ -102,6 +135,9 @@ fun FormaFullScreenDialog(
     onDismissRequest: () -> Unit,
     title: String,
     modifier: Modifier = Modifier,
+    containerColor: Color = MaterialTheme.colorScheme.surface,
+    contentColor: Color = contentColorFor(containerColor),
+    titleTextStyle: TextStyle? = null,
     confirmAction: (@Composable () -> Unit)? = null,
     content: @Composable ColumnScope.() -> Unit,
 ) {
@@ -109,7 +145,11 @@ fun FormaFullScreenDialog(
         onDismissRequest = onDismissRequest,
         properties = DialogProperties(usePlatformDefaultWidth = false),
     ) {
-        Surface(modifier = modifier.fillMaxSize()) {
+        Surface(
+            modifier = modifier.fillMaxSize(),
+            color = containerColor,
+            contentColor = contentColor,
+        ) {
             Column(modifier = Modifier.fillMaxSize()) {
                 Column(
                     modifier = Modifier
@@ -132,7 +172,7 @@ fun FormaFullScreenDialog(
                         }
                         Text(
                             text = title,
-                            style = MaterialTheme.typography.titleLarge,
+                            style = MaterialTheme.typography.titleLarge.merge(titleTextStyle),
                             modifier = Modifier.weight(1f),
                         )
                         confirmAction?.invoke()

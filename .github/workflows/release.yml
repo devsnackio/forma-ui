@@ -99,7 +99,7 @@ jobs:
       # Fallback for a failed/incorrect API step: download this artifact and
       # upload it in the browser per docs/RELEASING.md.
       - name: Upload bundle as workflow artifact
-        uses: actions/upload-artifact@v5
+        uses: actions/upload-artifact@v6
         with:
           name: central-bundle-${{ inputs.version }}
           path: build/formaui-${{ inputs.version }}-bundle.zip

@@ -55,4 +55,10 @@ internal val PreviewRegistry: Map<String, PreviewEntry> = linkedMapOf(
     "line-chart" to PreviewEntry("FormaLineChart") { LineChartPreview() },
     "date-picker-sheet" to PreviewEntry("FormaDatePickerSheet") { DatePickerSheetPreview() },
     "date-range-picker-sheet" to PreviewEntry("FormaDateRangePickerSheet") { DateRangePickerSheetPreview() },
+    "pull-to-refresh" to PreviewEntry("FormaPullToRefresh") { PullToRefreshPreview() },
+    "swipe-to-dismiss" to PreviewEntry("FormaSwipeToDismiss") { SwipeToDismissPreview() },
+    "range-slider" to PreviewEntry("FormaRangeSlider") { RangeSliderPreview() },
+    "time-picker-sheet" to PreviewEntry("FormaTimePickerSheet") { TimePickerSheetPreview() },
+    "carousel" to PreviewEntry("FormaCarousel") { CarouselPreview() },
+    "exposed-dropdown-menu" to PreviewEntry("FormaExposedDropdownMenu") { ExposedDropdownMenuPreview() },
 )

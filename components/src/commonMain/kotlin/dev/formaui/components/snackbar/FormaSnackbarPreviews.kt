@@ -8,6 +8,7 @@ package dev.formaui.components.snackbar
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -32,6 +33,33 @@ private fun FormaSnackbarPreview() {
                     message = "Message deleted.",
                     actionLabel = "Undo",
                     onAction = {},
+                )
+            }
+        }
+    }
+}
+
+/**
+ * Preview of [FormaSnackbar] with a custom container color, message color, recolored action label,
+ * and a custom message text style.
+ */
+@Preview
+@Composable
+private fun FormaSnackbarCustomPreview() {
+    FormaTheme {
+        Surface {
+            Column(
+                modifier = Modifier.padding(FormaTheme.spacing.md),
+                verticalArrangement = Arrangement.spacedBy(FormaTheme.spacing.md),
+            ) {
+                FormaSnackbar(
+                    message = "Message deleted.",
+                    actionLabel = "Undo",
+                    onAction = {},
+                    containerColor = MaterialTheme.colorScheme.tertiaryContainer,
+                    contentColor = MaterialTheme.colorScheme.onTertiaryContainer,
+                    actionContentColor = MaterialTheme.colorScheme.tertiary,
+                    messageTextStyle = MaterialTheme.typography.titleSmall,
                 )
             }
         }
