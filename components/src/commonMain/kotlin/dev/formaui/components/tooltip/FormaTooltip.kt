@@ -6,6 +6,7 @@
 package dev.formaui.components.tooltip
 
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.PlainTooltip
 import androidx.compose.material3.RichTooltip
 import androidx.compose.material3.RichTooltipColors
@@ -17,7 +18,9 @@ import androidx.compose.material3.TooltipState
 import androidx.compose.material3.rememberTooltipState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.window.PopupPositionProvider
 import dev.formaui.core.annotation.ExperimentalFormaUiApi
@@ -94,6 +97,12 @@ enum class FormaTooltipVariant {
  * @param colors the container/content/title/action colors used by [FormaTooltipVariant.Rich].
  *   When `null`, the Material 3 default rich tooltip colors are used. Has no effect on
  *   [FormaTooltipVariant.Plain].
+ * @param containerColor the tooltip's background color for [FormaTooltipVariant.Plain] (defaults to
+ *   the M3 plain-tooltip container). Has no effect on [FormaTooltipVariant.Rich] — use [colors] there.
+ * @param contentColor the tooltip's content color for [FormaTooltipVariant.Plain] (defaults to the
+ *   M3 plain-tooltip content color). Has no effect on [FormaTooltipVariant.Rich] — use [colors] there.
+ * @param textStyle optional [TextStyle] override for the tooltip's body [text] (both variants),
+ *   merged on top of the M3 tooltip body style.
  * @param content the anchor content that the tooltip attaches to.
  */
 @ExperimentalFormaUiApi
@@ -110,6 +119,9 @@ fun FormaTooltip(
     onDismissRequest: (() -> Unit)? = null,
     enableUserInput: Boolean = true,
     colors: RichTooltipColors? = null,
+    containerColor: Color = TooltipDefaults.plainTooltipContainerColor,
+    contentColor: Color = TooltipDefaults.plainTooltipContentColor,
+    textStyle: TextStyle? = null,
     content: @Composable () -> Unit,
 ) {
     val resolvedPositionProvider = positionProvider
@@ -125,8 +137,12 @@ fun FormaTooltip(
         hasAction = variant == FormaTooltipVariant.Rich && action != null,
         tooltip = {
             when (variant) {
-                FormaTooltipVariant.Plain -> PlainTooltip(caretShape = caretShape) {
-                    Text(text)
+                FormaTooltipVariant.Plain -> PlainTooltip(
+                    caretShape = caretShape,
+                    contentColor = contentColor,
+                    containerColor = containerColor,
+                ) {
+                    Text(text, style = LocalTextStyle.current.merge(textStyle))
                 }
 
                 FormaTooltipVariant.Rich -> RichTooltip(
@@ -135,7 +151,7 @@ fun FormaTooltip(
                     caretShape = caretShape,
                     colors = colors ?: TooltipDefaults.richTooltipColors(),
                 ) {
-                    Text(text)
+                    Text(text, style = LocalTextStyle.current.merge(textStyle))
                 }
             }
         },

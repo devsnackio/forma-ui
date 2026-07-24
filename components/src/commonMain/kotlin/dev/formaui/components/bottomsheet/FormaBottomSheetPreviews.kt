@@ -42,3 +42,31 @@ private fun FormaBottomSheetContentPreview() {
         }
     }
 }
+
+/**
+ * Preview standing in for [FormaBottomSheet] with a custom `containerColor` / `contentColor`.
+ *
+ * Because `ModalBottomSheet` renders in its own window (never in a static `@Preview`), the surface
+ * here is tinted with the color you would pass as [FormaBottomSheet]'s `containerColor` (with the
+ * matching `contentColor`) to show what the themed sheet would look like. The `scrimColor` param is
+ * likewise only observable at runtime.
+ */
+@Preview
+@Composable
+private fun FormaBottomSheetCustomContentPreview() {
+    FormaTheme {
+        Surface(
+            color = MaterialTheme.colorScheme.surfaceVariant,
+            contentColor = MaterialTheme.colorScheme.onSurfaceVariant,
+        ) {
+            Column(
+                modifier = Modifier.fillMaxWidth().padding(FormaTheme.spacing.lg),
+                verticalArrangement = Arrangement.spacedBy(FormaTheme.spacing.md),
+            ) {
+                Text("Payment options", style = MaterialTheme.typography.titleMedium)
+                Text("Choose how you'd like to pay.")
+                FormaButton(onClick = {}, modifier = Modifier.fillMaxWidth()) { Text("Continue") }
+            }
+        }
+    }
+}

@@ -54,8 +54,9 @@ private fun FormaNavigationBarPreview() {
 }
 
 /**
- * Preview of [FormaNavigationBar] with custom colors: a tinted [FormaNavigationBar.containerColor]
- * and a custom `selectedTextColor` / `selectedIconColor` / `indicatorColor` on each item.
+ * Preview of [FormaNavigationBar] with custom colors: a tinted container, a custom
+ * `selectedTextColor` / `selectedIconColor` / `indicatorColor` on each item, and a custom
+ * `labelTextStyle` on the first item.
  */
 @Preview
 @Composable
@@ -75,6 +76,7 @@ private fun FormaNavigationBarCustomColorsPreview() {
                     icon = { Text("🏠") },
                     label = "Home",
                     colors = itemColors,
+                    labelTextStyle = MaterialTheme.typography.labelLarge,
                 )
                 FormaNavigationBarItem(
                     selected = selected == 1,

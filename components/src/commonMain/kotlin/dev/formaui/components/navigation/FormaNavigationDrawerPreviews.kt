@@ -7,6 +7,8 @@ package dev.formaui.components.navigation
 
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.DrawerValue
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.NavigationDrawerItemDefaults
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberDrawerState
@@ -52,6 +54,55 @@ private fun FormaModalNavigationDrawerPreview() {
                         selected = selected == 2,
                         onClick = { selected = 2 },
                         icon = { Text("🗑") },
+                    )
+                },
+            ) {
+                Surface(modifier = Modifier.fillMaxSize()) {
+                    Text("Mail content behind the drawer")
+                }
+            }
+        }
+    }
+}
+
+/**
+ * Preview of [FormaModalNavigationDrawer] with a custom `scrimColor` and `drawerContainerColor`, and
+ * items with a custom [FormaNavigationDrawerItem] `colors` and `labelTextStyle`.
+ */
+@Preview
+@Composable
+private fun FormaModalNavigationDrawerCustomPreview() {
+    FormaTheme {
+        Surface {
+            val drawerState = rememberDrawerState(DrawerValue.Open)
+            var selected by remember { mutableIntStateOf(0) }
+            val itemColors = NavigationDrawerItemDefaults.colors(
+                selectedContainerColor = MaterialTheme.colorScheme.tertiaryContainer,
+                selectedTextColor = MaterialTheme.colorScheme.onTertiaryContainer,
+                selectedIconColor = MaterialTheme.colorScheme.onTertiaryContainer,
+            )
+
+            FormaModalNavigationDrawer(
+                drawerState = drawerState,
+                scrimColor = MaterialTheme.colorScheme.scrim.copy(alpha = 0.4f),
+                drawerContainerColor = MaterialTheme.colorScheme.surfaceVariant,
+                drawerContent = {
+                    FormaNavigationDrawerItem(
+                        label = "Inbox",
+                        selected = selected == 0,
+                        onClick = { selected = 0 },
+                        icon = { Text("📥") },
+                        badge = "24",
+                        colors = itemColors,
+                        labelTextStyle = MaterialTheme.typography.titleSmall,
+                    )
+                    FormaNavigationDrawerItem(
+                        label = "Sent",
+                        selected = selected == 1,
+                        onClick = { selected = 1 },
+                        icon = { Text("📤") },
+                        colors = itemColors,
+                        labelTextStyle = MaterialTheme.typography.titleSmall,
                     )
                 },
             ) {

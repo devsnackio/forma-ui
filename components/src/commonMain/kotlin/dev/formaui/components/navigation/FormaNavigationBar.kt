@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.RowScope
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarDefaults
 import androidx.compose.material3.NavigationBarItem
+import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.NavigationBarItemColors
 import androidx.compose.material3.NavigationBarItemDefaults
 import androidx.compose.material3.Text
@@ -16,6 +17,7 @@ import androidx.compose.material3.contentColorFor
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.TextStyle
 import dev.formaui.components.badge.FormaBadge
 import dev.formaui.components.badge.FormaBadgedBox
 import dev.formaui.core.annotation.ExperimentalFormaUiApi
@@ -76,6 +78,8 @@ fun FormaNavigationBar(
  * @param colors the item colors — icon, label, and selection-indicator colors for the selected,
  * unselected, and disabled states (e.g. `NavigationBarItemDefaults.colors(selectedTextColor = ...)`).
  * Defaults to the M3 defaults, themed by [FormaTheme][dev.formaui.core.theme.FormaTheme].
+ * @param labelTextStyle optional [TextStyle] override for [label], merged on top of the M3 label
+ * style so a partial override (e.g. only `fontWeight`) keeps the M3 defaults for everything else.
  */
 @ExperimentalFormaUiApi
 @Composable
@@ -90,6 +94,7 @@ fun RowScope.FormaNavigationBarItem(
     showBadgeDot: Boolean = false,
     alwaysShowLabel: Boolean = true,
     colors: NavigationBarItemColors? = null,
+    labelTextStyle: TextStyle? = null,
 ) {
     val iconContent: @Composable () -> Unit = when {
         badgeCount != null -> {
@@ -107,7 +112,9 @@ fun RowScope.FormaNavigationBarItem(
         icon = iconContent,
         modifier = modifier,
         enabled = enabled,
-        label = label?.let { value -> { Text(value) } },
+        label = label?.let { value ->
+            { Text(value, style = LocalTextStyle.current.merge(labelTextStyle)) }
+        },
         alwaysShowLabel = alwaysShowLabel,
         colors = colors ?: NavigationBarItemDefaults.colors(),
     )
