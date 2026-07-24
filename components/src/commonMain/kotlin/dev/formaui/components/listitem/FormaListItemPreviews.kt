@@ -6,10 +6,12 @@
 package dev.formaui.components.listitem
 
 import androidx.compose.foundation.layout.Column
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.font.FontWeight
 import dev.formaui.components.avatar.FormaAvatar
 import dev.formaui.components.avatar.FormaAvatarSize
 import dev.formaui.components.divider.FormaDivider
@@ -45,6 +47,35 @@ private fun FormaListItemPreview() {
                     headline = "Payment received",
                     overline = "Today, 09:41",
                     supporting = "$1,240.00 from Grace Hopper",
+                    leading = { FormaAvatar(initials = "GH", size = FormaAvatarSize.Small) },
+                )
+            }
+        }
+    }
+}
+
+/**
+ * Preview of [FormaListItem] text-style overrides: a partial override that merges with the M3
+ * headline style (bold only), plus full-style overrides on the overline and supporting slots.
+ */
+@Preview
+@Composable
+private fun FormaListItemTextStylePreview() {
+    FormaTheme {
+        Surface {
+            Column(modifier = Modifier) {
+                FormaListItem(
+                    headline = "Bold headline",
+                    supporting = "Only fontWeight is overridden — size/color stay M3",
+                    headlineTextStyle = MaterialTheme.typography.bodyLarge.copy(fontWeight = FontWeight.Bold),
+                )
+                FormaDivider()
+                FormaListItem(
+                    headline = "Emphasized row",
+                    overline = "OVERLINE",
+                    supporting = "$1,240.00 from Grace Hopper",
+                    overlineTextStyle = MaterialTheme.typography.labelSmall.copy(fontWeight = FontWeight.Bold),
+                    supportingTextStyle = MaterialTheme.typography.bodyMedium.copy(fontWeight = FontWeight.SemiBold),
                     leading = { FormaAvatar(initials = "GH", size = FormaAvatarSize.Small) },
                 )
             }
