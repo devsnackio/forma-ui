@@ -13,6 +13,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.test.junit4.v2.createComposeRule
 import androidx.compose.ui.test.onNodeWithTag
@@ -82,5 +83,31 @@ class FormaBottomSheetTest {
         composeRule.onNodeWithText("Sheet content").assertExists()
         composeRule.onNodeWithTag("hide").performClick()
         composeRule.onNodeWithText("Sheet content").assertDoesNotExist()
+    }
+
+    // --- customization params (container/content/scrim colors) ---
+
+    /**
+     * Container/content/scrim colors aren't reliably pixel-assertable under Robolectric (the sheet
+     * background sits behind M3's tonal-elevation overlay, and the scrim renders in a separate
+     * window layer). This asserts the new [containerColor]/[contentColor]/[scrimColor] params are
+     * accepted and forwarded without breaking the sheet's composition — its content still surfaces.
+     */
+    @Test
+    fun bottomSheet_colorParams_areAcceptedAndRender() {
+        composeRule.setContent {
+            FormaTheme {
+                FormaBottomSheet(
+                    onDismissRequest = {},
+                    containerColor = Color(0xFF102027),
+                    contentColor = Color(0xFFECEFF1),
+                    scrimColor = Color(0x88FF0000),
+                ) {
+                    Text("Sheet content")
+                }
+            }
+        }
+
+        composeRule.onNodeWithText("Sheet content").assertExists()
     }
 }

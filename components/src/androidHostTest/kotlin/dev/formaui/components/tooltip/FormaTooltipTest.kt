@@ -16,15 +16,24 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.testTag
+import androidx.compose.ui.semantics.SemanticsActions
+import androidx.compose.ui.semantics.getOrNull
+import androidx.compose.ui.test.SemanticsNodeInteraction
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.junit4.v2.createComposeRule
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
+import androidx.compose.ui.text.TextLayoutResult
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontWeight
 import dev.formaui.core.annotation.ExperimentalFormaUiApi
 import dev.formaui.core.theme.FormaTheme
+import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
+import org.junit.Assert.assertNotNull
 import org.junit.Assert.assertTrue
 import org.junit.Rule
 import org.junit.Test
@@ -143,5 +152,80 @@ class FormaTooltipTest {
         composeRule.waitForIdle()
 
         composeRule.runOnIdle { assertFalse(tooltipState.isVisible) }
+    }
+
+    // --- customization params (container/content colors + body text style) ---
+
+    /**
+     * Reads the fully-resolved [TextStyle] a text node was actually laid out with, via the
+     * `GetTextLayoutResult` semantics action — the style FormaUI produced with
+     * `LocalTextStyle.current.merge(override)`.
+     */
+    private fun SemanticsNodeInteraction.resolvedTextStyle(): TextStyle {
+        val node = fetchSemanticsNode()
+        val action = node.config.getOrNull(SemanticsActions.GetTextLayoutResult)?.action
+        assertNotNull("text node should expose the GetTextLayoutResult semantics action", action)
+        val results = mutableListOf<TextLayoutResult>()
+        action!!.invoke(results)
+        assertTrue("GetTextLayoutResult must yield a layout", results.isNotEmpty())
+        return results.first().layoutInput.style
+    }
+
+    @Test
+    fun plainTooltip_colorParams_areAcceptedAndRender() {
+        // Container/content colors aren't reliably pixel-assertable in Robolectric; assert the new
+        // params are accepted and the shown plain tooltip's body text still renders.
+        lateinit var tooltipState: TooltipState
+        composeRule.setContent {
+            FormaTheme {
+                val state = rememberTooltipState()
+                tooltipState = state
+                LaunchedEffect(Unit) { state.show() }
+                FormaTooltip(
+                    text = "Adds the item to your cart",
+                    state = state,
+                    containerColor = Color(0xFF102027),
+                    contentColor = Color(0xFFECEFF1),
+                ) {
+                    Text("Anchor")
+                }
+            }
+        }
+
+        composeRule.waitForIdle()
+        composeRule.runOnIdle { assertTrue(tooltipState.isVisible) }
+        composeRule.onNodeWithText("Adds the item to your cart").assertIsDisplayed()
+    }
+
+    @Test
+    fun textStyle_overrideReachesRenderedText() {
+        // Black (900) is not an M3 default tooltip body weight, so a match proves the merge landed
+        // on the laid-out glyphs rather than the param merely being accepted.
+        lateinit var tooltipState: TooltipState
+        composeRule.setContent {
+            FormaTheme {
+                val state = rememberTooltipState()
+                tooltipState = state
+                LaunchedEffect(Unit) { state.show() }
+                FormaTooltip(
+                    text = "Adds the item to your cart",
+                    state = state,
+                    textStyle = TextStyle(fontWeight = FontWeight.Black),
+                ) {
+                    Text("Anchor")
+                }
+            }
+        }
+
+        composeRule.waitForIdle()
+        composeRule.runOnIdle { assertTrue(tooltipState.isVisible) }
+        val style =
+            composeRule.onNodeWithText("Adds the item to your cart", useUnmergedTree = true)
+                .resolvedTextStyle()
+        assertEquals(
+            "textStyle override should reach the rendered tooltip body text",
+            FontWeight.Black,
+            style.fontWeight,
+        )
     }
 }
