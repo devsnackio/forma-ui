@@ -9,9 +9,11 @@ import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.material3.BottomSheetDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ModalBottomSheet
+import androidx.compose.material3.contentColorFor
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
 import dev.formaui.core.annotation.ExperimentalFormaUiApi
 
@@ -38,6 +40,12 @@ import dev.formaui.core.annotation.ExperimentalFormaUiApi
  * @param modifier the [Modifier] applied to the sheet.
  * @param skipPartiallyExpanded when `true`, the sheet has no half-expanded state and opens fully.
  * @param shape the sheet container shape. When `null`, Material 3's top-rounded default is used.
+ * @param containerColor the sheet's background color (defaults to the M3 bottom-sheet container,
+ * themed by [FormaTheme][dev.formaui.core.theme.FormaTheme]).
+ * @param contentColor the preferred content color inside the sheet (defaults to the color matching
+ * [containerColor]).
+ * @param scrimColor the color of the scrim that obscures content behind the sheet (defaults to the
+ * M3 default scrim).
  * @param content the sheet's content, laid out in a [ColumnScope].
  */
 @ExperimentalFormaUiApi
@@ -47,6 +55,9 @@ fun FormaBottomSheet(
     modifier: Modifier = Modifier,
     skipPartiallyExpanded: Boolean = false,
     shape: Shape? = null,
+    containerColor: Color = BottomSheetDefaults.ContainerColor,
+    contentColor: Color = contentColorFor(containerColor),
+    scrimColor: Color = BottomSheetDefaults.ScrimColor,
     content: @Composable ColumnScope.() -> Unit,
 ) {
     val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = skipPartiallyExpanded)
@@ -55,6 +66,9 @@ fun FormaBottomSheet(
         modifier = modifier,
         sheetState = sheetState,
         shape = shape ?: BottomSheetDefaults.ExpandedShape,
+        containerColor = containerColor,
+        contentColor = contentColor,
+        scrimColor = scrimColor,
         content = content,
     )
 }

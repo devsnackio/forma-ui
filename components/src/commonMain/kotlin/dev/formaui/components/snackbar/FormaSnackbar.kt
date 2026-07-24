@@ -6,6 +6,7 @@
 package dev.formaui.components.snackbar
 
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.Snackbar
 import androidx.compose.material3.SnackbarDefaults
 import androidx.compose.material3.SnackbarHost
@@ -15,7 +16,9 @@ import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.ReadOnlyComposable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
+import androidx.compose.ui.text.TextStyle
 import dev.formaui.core.annotation.ExperimentalFormaUiApi
 import dev.formaui.core.theme.FormaTheme
 
@@ -39,6 +42,15 @@ import dev.formaui.core.theme.FormaTheme
  *   [onAction] are provided.
  * @param onAction optional action callback.
  * @param shape the snackbar container shape (defaults to [FormaSnackbarDefaults.shape]).
+ * @param containerColor the snackbar's background color (defaults to the M3 default).
+ * @param contentColor the color of the [message] text (defaults to the M3 default).
+ * @param actionContentColor the color of the action button's label (defaults to the M3
+ *   `SnackbarDefaults.actionColor` — the same value FormaUI used before this was configurable, so
+ *   the action keeps its look unless overridden).
+ * @param messageTextStyle optional [TextStyle] override for [message], merged on top of the M3
+ *   snackbar body style.
+ * @param actionLabelTextStyle optional [TextStyle] override for [actionLabel], merged on top of the
+ *   M3 action-button label style.
  */
 @ExperimentalFormaUiApi
 @Composable
@@ -48,14 +60,19 @@ fun FormaSnackbar(
     actionLabel: String? = null,
     onAction: (() -> Unit)? = null,
     shape: Shape = FormaSnackbarDefaults.shape,
+    containerColor: Color = SnackbarDefaults.color,
+    contentColor: Color = SnackbarDefaults.contentColor,
+    actionContentColor: Color = SnackbarDefaults.actionColor,
+    messageTextStyle: TextStyle? = null,
+    actionLabelTextStyle: TextStyle? = null,
 ) {
     val action: (@Composable () -> Unit)? = if (actionLabel != null && onAction != null) {
         {
             TextButton(
                 onClick = onAction,
-                colors = ButtonDefaults.textButtonColors(contentColor = SnackbarDefaults.actionColor),
+                colors = ButtonDefaults.textButtonColors(contentColor = actionContentColor),
             ) {
-                Text(actionLabel)
+                Text(actionLabel, style = LocalTextStyle.current.merge(actionLabelTextStyle))
             }
         }
     } else {
@@ -66,8 +83,10 @@ fun FormaSnackbar(
         modifier = modifier,
         action = action,
         shape = shape,
+        containerColor = containerColor,
+        contentColor = contentColor,
     ) {
-        Text(message)
+        Text(message, style = LocalTextStyle.current.merge(messageTextStyle))
     }
 }
 

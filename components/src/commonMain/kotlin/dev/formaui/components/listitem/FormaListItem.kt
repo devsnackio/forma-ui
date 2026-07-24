@@ -9,9 +9,11 @@ import androidx.compose.foundation.clickable
 import androidx.compose.material3.ListItem
 import androidx.compose.material3.ListItemColors
 import androidx.compose.material3.ListItemDefaults
+import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.TextStyle
 import dev.formaui.core.annotation.ExperimentalFormaUiApi
 
 /**
@@ -37,6 +39,10 @@ import dev.formaui.core.annotation.ExperimentalFormaUiApi
  * @param onClick optional click handler; when non-null the whole row becomes clickable.
  * @param enabled whether the row responds to clicks. Only meaningful when [onClick] is non-null.
  * @param colors the row colors (defaults to the M3 defaults, themed by [FormaTheme][dev.formaui.core.theme.FormaTheme]).
+ * @param headlineTextStyle optional [TextStyle] override for [headline], merged on top of the M3
+ * headline style so a partial override (e.g. only `fontWeight`) keeps the M3 defaults for everything else.
+ * @param overlineTextStyle optional [TextStyle] override for [overline], merged on top of the M3 overline style.
+ * @param supportingTextStyle optional [TextStyle] override for [supporting], merged on top of the M3 supporting style.
  */
 @ExperimentalFormaUiApi
 @Composable
@@ -50,6 +56,9 @@ fun FormaListItem(
     onClick: (() -> Unit)? = null,
     enabled: Boolean = true,
     colors: ListItemColors? = null,
+    headlineTextStyle: TextStyle? = null,
+    overlineTextStyle: TextStyle? = null,
+    supportingTextStyle: TextStyle? = null,
 ) {
     val rowModifier = if (onClick != null) {
         modifier.clickable(enabled = enabled, onClick = onClick)
@@ -58,10 +67,14 @@ fun FormaListItem(
     }
 
     ListItem(
-        headlineContent = { Text(headline) },
+        headlineContent = { Text(headline, style = LocalTextStyle.current.merge(headlineTextStyle)) },
         modifier = rowModifier,
-        overlineContent = overline?.let { text -> { Text(text) } },
-        supportingContent = supporting?.let { text -> { Text(text) } },
+        overlineContent = overline?.let { text ->
+            { Text(text, style = LocalTextStyle.current.merge(overlineTextStyle)) }
+        },
+        supportingContent = supporting?.let { text ->
+            { Text(text, style = LocalTextStyle.current.merge(supportingTextStyle)) }
+        },
         leadingContent = leading,
         trailingContent = trailing,
         colors = colors ?: ListItemDefaults.colors(),

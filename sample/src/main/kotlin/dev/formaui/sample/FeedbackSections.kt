@@ -8,9 +8,13 @@ package dev.formaui.sample
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ReceiptLong
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -19,8 +23,10 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
@@ -29,13 +35,18 @@ import dev.formaui.components.button.FormaButton
 import dev.formaui.components.button.FormaButtonVariant
 import dev.formaui.components.dialog.FormaAlertDialog
 import dev.formaui.components.dialog.FormaFullScreenDialog
+import dev.formaui.components.divider.FormaDivider
 import dev.formaui.components.emptystate.FormaEmptyState
+import dev.formaui.components.listitem.FormaListItem
 import dev.formaui.components.loading.FormaLoadingIndicator
 import dev.formaui.components.loading.FormaLoadingIndicatorVariant
+import dev.formaui.components.pulltorefresh.FormaPullToRefresh
 import dev.formaui.components.snackbar.FormaSnackbar
 import dev.formaui.components.textfield.FormaTextField
 import dev.formaui.core.annotation.ExperimentalFormaUiApi
 import dev.formaui.core.theme.FormaTheme
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 /** The **Feedback** category: Dialog, BottomSheet, Snackbar, LoadingIndicator, EmptyState. */
 
@@ -158,6 +169,47 @@ fun LoadingShowcase() {
             progress = 0.6f,
             contentDescription = "60 percent loaded",
         )
+    }
+}
+
+@Composable
+fun PullToRefreshShowcase() {
+    ComponentShowcase(
+        name = "PullToRefresh",
+        description = "Pull the list down to trigger a refresh; it resolves after a moment.",
+    ) {
+        var refreshing by remember { mutableStateOf(false) }
+        var refreshCount by remember { mutableIntStateOf(0) }
+        val scope = rememberCoroutineScope()
+
+        FormaPullToRefresh(
+            isRefreshing = refreshing,
+            onRefresh = {
+                refreshing = true
+                scope.launch {
+                    delay(1200)
+                    refreshCount++
+                    refreshing = false
+                }
+            },
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(220.dp),
+        ) {
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .verticalScroll(rememberScrollState()),
+            ) {
+                repeat(6) { i ->
+                    FormaListItem(
+                        headline = "Item ${i + 1}",
+                        supporting = "Refreshed $refreshCount time(s)",
+                    )
+                    FormaDivider()
+                }
+            }
+        }
     }
 }
 

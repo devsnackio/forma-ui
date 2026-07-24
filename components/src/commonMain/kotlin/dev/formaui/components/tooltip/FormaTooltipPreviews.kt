@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberTooltipState
@@ -64,6 +65,33 @@ private fun FormaTooltipVariantsPreview() {
                     state = rememberTooltipState(initialIsVisible = true, isPersistent = true),
                 ) {
                     Text("🗑")
+                }
+            }
+        }
+    }
+}
+
+/**
+ * Preview of [FormaTooltip] ([FormaTooltipVariant.Plain]) with a custom container color, content
+ * color, and body text style.
+ */
+@Preview
+@Composable
+private fun FormaTooltipCustomPreview() {
+    FormaTheme {
+        Surface {
+            Row(
+                modifier = Modifier.padding(FormaTheme.spacing.xl),
+                horizontalArrangement = Arrangement.spacedBy(FormaTheme.spacing.lg),
+            ) {
+                FormaTooltip(
+                    text = "Search",
+                    state = rememberTooltipState(initialIsVisible = true),
+                    containerColor = MaterialTheme.colorScheme.tertiaryContainer,
+                    contentColor = MaterialTheme.colorScheme.onTertiaryContainer,
+                    textStyle = MaterialTheme.typography.titleSmall,
+                ) {
+                    Text("🔍")
                 }
             }
         }

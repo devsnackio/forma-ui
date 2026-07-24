@@ -6,6 +6,8 @@
 package dev.formaui.components.navigation
 
 import androidx.compose.foundation.layout.Row
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.NavigationRailItemDefaults
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -49,6 +51,49 @@ private fun FormaNavigationRailPreview() {
                         icon = { Text("👤") },
                         label = "Profile",
                         showBadgeDot = true,
+                    )
+                }
+            }
+        }
+    }
+}
+
+/**
+ * Preview of [FormaNavigationRail] with a custom container color and, on the items, a custom
+ * [FormaNavigationRailItem] `colors` and `labelTextStyle`.
+ */
+@Preview
+@Composable
+private fun FormaNavigationRailCustomPreview() {
+    FormaTheme {
+        Surface {
+            var selected by remember { mutableIntStateOf(0) }
+            val itemColors = NavigationRailItemDefaults.colors(
+                selectedTextColor = MaterialTheme.colorScheme.tertiary,
+                selectedIconColor = MaterialTheme.colorScheme.tertiary,
+                indicatorColor = MaterialTheme.colorScheme.tertiaryContainer,
+            )
+            Row {
+                FormaNavigationRail(
+                    containerColor = MaterialTheme.colorScheme.surfaceVariant,
+                    header = { Text("+") },
+                ) {
+                    FormaNavigationRailItem(
+                        selected = selected == 0,
+                        onClick = { selected = 0 },
+                        icon = { Text("🏠") },
+                        label = "Home",
+                        colors = itemColors,
+                        labelTextStyle = MaterialTheme.typography.labelLarge,
+                    )
+                    FormaNavigationRailItem(
+                        selected = selected == 1,
+                        onClick = { selected = 1 },
+                        icon = { Text("🔔") },
+                        label = "Alerts",
+                        badgeCount = 12,
+                        colors = itemColors,
+                        labelTextStyle = MaterialTheme.typography.labelLarge,
                     )
                 }
             }
