@@ -3234,5 +3234,560 @@
     ],
     "codeSample": "val state = rememberDateRangePickerState()\nif (open) {\n    FormaDateRangePickerSheet(\n        onDismissRequest = { open = false },\n        state = state,\n        confirmButton = {\n            FormaButton(\n                onClick = {\n                    onPicked(state.selectedStartDateMillis, state.selectedEndDateMillis)\n                    open = false\n                },\n                enabled = state.selectedEndDateMillis != null,\n            ) { Text(\"OK\") }\n        },\n    )\n}",
     "accessibility": "Inherits Material 3's DateRangePicker semantics — day cells expose full-date content descriptions with range start/end announcements, the mode toggle has its own content description, and navigation controls are labeled — plus ModalBottomSheet's back-press and scrim dismiss handling; the button slots are caller-supplied (typically FormaButtons with M3's 48dp minimum touch target)."
+  },
+  {
+    "id": "pull-to-refresh",
+    "name": "PullToRefresh",
+    "package": "dev.formaui.components.pulltorefresh",
+    "sourceFile": "components/src/commonMain/kotlin/dev/formaui/components/pulltorefresh/FormaPullToRefresh.kt",
+    "prdOrder": null,
+    "tier": "extra",
+    "description": "A FormaUI pull-to-refresh container — wraps a scrollable layout and adds a swipe-down-to-refresh gesture, delegating to Material 3's stable PullToRefreshBox with fully hoisted isRefreshing state and a styling-passthrough indicator slot.",
+    "composables": [
+      {
+        "name": "FormaPullToRefresh",
+        "summary": "Wraps a scrollable BoxScope content with a pull-down-to-refresh gesture; the caller hoists isRefreshing and reacts in onRefresh. The indicator slot defaults to Material 3's themed PullToRefreshDefaults.Indicator aligned to the top-center (the styling passthrough).",
+        "params": [
+          {
+            "name": "isRefreshing",
+            "type": "Boolean",
+            "default": null,
+            "description": "whether a refresh is currently occurring; drives the indicator's spinning state. Flip it to true when your refresh starts and back to false when it completes."
+          },
+          {
+            "name": "onRefresh",
+            "type": "() -> Unit",
+            "default": null,
+            "description": "called when the user's pull crosses the threshold, requesting a refresh."
+          },
+          {
+            "name": "modifier",
+            "type": "Modifier",
+            "default": "Modifier",
+            "description": "the Modifier applied to the container."
+          },
+          {
+            "name": "state",
+            "type": "PullToRefreshState",
+            "default": "rememberPullToRefreshState()",
+            "description": "the Material 3 PullToRefreshState tracking pull distance (defaults to a rememberPullToRefreshState())."
+          },
+          {
+            "name": "contentAlignment",
+            "type": "Alignment",
+            "default": "Alignment.TopStart",
+            "description": "the Alignment of children inside the container (defaults to Alignment.TopStart)."
+          },
+          {
+            "name": "indicator",
+            "type": "@Composable BoxScope.() -> Unit",
+            "default": "PullToRefreshDefaults.Indicator(...)",
+            "description": "the indicator drawn on top of the content while pulling or refreshing (defaults to Material 3's PullToRefreshDefaults.Indicator aligned top-center, themed by FormaTheme). This is the styling passthrough; supply a custom indicator (e.g. PullToRefreshDefaults.LoadingIndicator) to override."
+          },
+          {
+            "name": "content",
+            "type": "@Composable BoxScope.() -> Unit",
+            "default": null,
+            "description": "the scrollable content of the container, laid out in a BoxScope (typically a LazyColumn or a Column with Modifier.verticalScroll)."
+          }
+        ]
+      }
+    ],
+    "supportingApi": [
+      {
+        "name": "rememberPullToRefreshState",
+        "kind": "function (Material 3)",
+        "summary": "The component defines no state type of its own — callers may create and own the pull state via Material 3's rememberPullToRefreshState; when omitted, FormaPullToRefresh remembers one internally."
+      }
+    ],
+    "variants": [
+      "Idle",
+      "Refreshing",
+      "Custom indicator"
+    ],
+    "codeSample": "var refreshing by remember { mutableStateOf(false) }\nval scope = rememberCoroutineScope()\nFormaPullToRefresh(\n    isRefreshing = refreshing,\n    onRefresh = {\n        refreshing = true\n        scope.launch { delay(1500); refreshing = false }\n    },\n) {\n    LazyColumn(Modifier.fillMaxSize()) {\n        items(items) { item -> FormaListItem(headline = item) }\n    }\n}",
+    "accessibility": "Inherits Material 3's PullToRefreshBox gesture and indicator behavior; drive isRefreshing from your data-load state so the spinning indicator reflects the actual busy state."
+  },
+  {
+    "id": "swipe-to-dismiss",
+    "name": "SwipeToDismiss",
+    "package": "dev.formaui.components.swipedismiss",
+    "sourceFile": "components/src/commonMain/kotlin/dev/formaui/components/swipedismiss/FormaSwipeToDismiss.kt",
+    "prdOrder": null,
+    "tier": "extra",
+    "description": "A FormaUI swipe-to-dismiss row — lets the user swipe a row horizontally to dismiss it (e.g. delete or archive), delegating to Material 3's stable SwipeToDismissBox with hoisted state, a revealed background slot, and per-direction enable flags.",
+    "composables": [
+      {
+        "name": "FormaSwipeToDismiss",
+        "summary": "Wraps RowScope content with a horizontal swipe-to-dismiss gesture; the caller creates the state via rememberSwipeToDismissBoxState and reacts to a completed swipe via onDismiss (or by reading state.dismissDirection). The backgroundContent slot is revealed behind the content while swiping — vary it per direction using state.",
+        "params": [
+          {
+            "name": "state",
+            "type": "SwipeToDismissBoxState",
+            "default": null,
+            "description": "the Material 3 SwipeToDismissBoxState tracking the swipe; create it with rememberSwipeToDismissBoxState (initialValue, confirmValueChange, positionalThreshold)."
+          },
+          {
+            "name": "backgroundContent",
+            "type": "@Composable RowScope.() -> Unit",
+            "default": null,
+            "description": "the content stacked behind content and revealed while swiping, laid out in a RowScope; use state (e.g. state.dismissDirection) to vary it per swipe direction."
+          },
+          {
+            "name": "modifier",
+            "type": "Modifier",
+            "default": "Modifier",
+            "description": "the Modifier applied to the row."
+          },
+          {
+            "name": "enableDismissFromStartToEnd",
+            "type": "Boolean",
+            "default": "true",
+            "description": "whether the row can be dismissed by swiping start-to-end (defaults to true)."
+          },
+          {
+            "name": "enableDismissFromEndToStart",
+            "type": "Boolean",
+            "default": "true",
+            "description": "whether the row can be dismissed by swiping end-to-start (defaults to true)."
+          },
+          {
+            "name": "gesturesEnabled",
+            "type": "Boolean",
+            "default": "true",
+            "description": "whether the swipe gesture is interactive (defaults to true)."
+          },
+          {
+            "name": "onDismiss",
+            "type": "(SwipeToDismissBoxValue) -> Unit",
+            "default": "{}",
+            "description": "called when content is dismissed, with the resulting SwipeToDismissBoxValue direction (defaults to a no-op)."
+          },
+          {
+            "name": "content",
+            "type": "@Composable RowScope.() -> Unit",
+            "default": null,
+            "description": "the dismissable content, laid out in a RowScope (typically a FormaListItem or a Surface)."
+          }
+        ]
+      }
+    ],
+    "supportingApi": [
+      {
+        "name": "rememberSwipeToDismissBoxState",
+        "kind": "function (Material 3)",
+        "summary": "The component defines no state type of its own — callers create and own the swipe state via Material 3's rememberSwipeToDismissBoxState and read dismissDirection / currentValue from it."
+      },
+      {
+        "name": "SwipeToDismissBoxValue",
+        "kind": "enum (Material 3)",
+        "summary": "The swipe direction reported to onDismiss and held by the state: StartToEnd, EndToStart, Settled."
+      }
+    ],
+    "variants": [
+      "Both directions",
+      "Single direction (enable flags)",
+      "Gestures disabled"
+    ],
+    "codeSample": "val state = rememberSwipeToDismissBoxState()\nFormaSwipeToDismiss(\n    state = state,\n    onDismiss = { direction -> onRemove(item) },\n    backgroundContent = {\n        Box(\n            Modifier.fillMaxSize()\n                .background(MaterialTheme.colorScheme.errorContainer)\n                .padding(horizontal = FormaTheme.spacing.md),\n            contentAlignment = Alignment.CenterEnd,\n        ) { Text(\"Delete\", color = MaterialTheme.colorScheme.onErrorContainer) }\n    },\n) {\n    FormaListItem(headline = item.title, supporting = item.subtitle)\n}",
+    "accessibility": "Inherits Material 3's SwipeToDismissBox gesture handling; because a swipe gesture is not reachable by all users, pair the swipe action with an equivalent explicit control (e.g. a trailing overflow action) so the dismiss action stays operable without gestures."
+  },
+  {
+    "id": "range-slider",
+    "name": "RangeSlider",
+    "package": "dev.formaui.components.slider",
+    "sourceFile": "components/src/commonMain/kotlin/dev/formaui/components/slider/FormaRangeSlider.kt",
+    "prdOrder": null,
+    "tier": "extra",
+    "description": "A FormaUI range slider — lets the user select a sub-range (start and end value) from a continuous or stepped range, delegating to Material 3's RangeSlider. The sibling of FormaSlider for two-thumb selection.",
+    "composables": [
+      {
+        "name": "FormaRangeSlider",
+        "summary": "A stateless two-thumb slider with the hoisted value as a ClosedFloatingPointRange; the thumbs are bounded by valueRange and cannot cross. Mirrors FormaSlider's API.",
+        "params": [
+          {
+            "name": "value",
+            "type": "ClosedFloatingPointRange<Float>",
+            "default": null,
+            "description": "the current selected range; both ends should sit within valueRange."
+          },
+          {
+            "name": "onValueChange",
+            "type": "(ClosedFloatingPointRange<Float>) -> Unit",
+            "default": null,
+            "description": "called continuously with the new range as the user drags either thumb. The caller must hoist and persist the new value for it to appear."
+          },
+          {
+            "name": "modifier",
+            "type": "Modifier",
+            "default": "Modifier",
+            "description": "the Modifier applied to the slider."
+          },
+          {
+            "name": "enabled",
+            "type": "Boolean",
+            "default": "true",
+            "description": "whether the slider is interactive."
+          },
+          {
+            "name": "valueRange",
+            "type": "ClosedFloatingPointRange<Float>",
+            "default": "0f..1f",
+            "description": "the inclusive range of selectable values (defaults to 0f..1f)."
+          },
+          {
+            "name": "steps",
+            "type": "Int",
+            "default": "0",
+            "description": "the number of discrete intermediate stops (0 = continuous)."
+          },
+          {
+            "name": "onValueChangeFinished",
+            "type": "(() -> Unit)?",
+            "default": "null",
+            "description": "called once when the user finishes changing the range."
+          },
+          {
+            "name": "colors",
+            "type": "SliderColors?",
+            "default": "null",
+            "description": "the slider colors (defaults to the M3 defaults, themed by FormaTheme)."
+          }
+        ]
+      }
+    ],
+    "supportingApi": [],
+    "variants": [
+      "Continuous",
+      "Stepped"
+    ],
+    "codeSample": "var range by remember { mutableStateOf(0.2f..0.8f) }\nFormaRangeSlider(\n    value = range,\n    onValueChange = { range = it },\n    modifier = Modifier.fillMaxWidth(),\n)",
+    "accessibility": "Each thumb exposes a 48dp touch target via Material 3's minimum interactive component size; the two thumbs are bounded by valueRange and cannot cross each other."
+  },
+  {
+    "id": "time-picker-sheet",
+    "name": "TimePickerSheet",
+    "package": "dev.formaui.components.timepicker",
+    "sourceFile": "components/src/commonMain/kotlin/dev/formaui/components/timepicker/FormaTimePickerSheet.kt",
+    "prdOrder": null,
+    "tier": "extra",
+    "description": "A FormaUI time picker presented in a modal bottom sheet — Material 3's TimePicker (clock dial) and TimeInput (text entry) hosted in a FormaBottomSheet, with hoisted M3 TimePickerState, confirm/dismiss button slots, and a FormaUI-provided dial-to-input mode toggle (M3's TimePicker has none of its own). Mirrors FormaDatePickerSheet's structure.",
+    "composables": [
+      {
+        "name": "FormaTimePickerSheet",
+        "summary": "Hosts M3's TimePicker/TimeInput in a FormaBottomSheet above a button row: an optional FormaUI mode toggle at the start and end-aligned dismiss/confirm slots. State is the caller's TimePickerState and the component wires nothing to the button slots — the confirm slot reads state.hour / state.minute itself. The default colors make the picker's own container transparent so it sits directly on the sheet surface.",
+        "params": [
+          {
+            "name": "onDismissRequest",
+            "type": "() -> Unit",
+            "default": null,
+            "description": "called when the sheet is dismissed (scrim tap, back press, or swipe down) — hide the sheet by no longer composing it. There is no separate cancel callback; treat a dismiss as closed-without-confirming."
+          },
+          {
+            "name": "state",
+            "type": "TimePickerState",
+            "default": null,
+            "description": "the hoisted Material 3 state; create it with rememberTimePickerState. Read state.hour (0-23) and state.minute (0-59) in the confirm slot's click handler. The 12h/24h format and locale are captured when the state is created (Material 3 behavior)."
+          },
+          {
+            "name": "confirmButton",
+            "type": "@Composable () -> Unit",
+            "default": null,
+            "description": "the primary action slot (required), typically a FormaButton. The component attaches no click handling or label — the slot owns both."
+          },
+          {
+            "name": "modifier",
+            "type": "Modifier",
+            "default": "Modifier",
+            "description": "the Modifier applied to the sheet."
+          },
+          {
+            "name": "dismissButton",
+            "type": "(@Composable () -> Unit)?",
+            "default": "null",
+            "description": "the optional secondary/cancel action slot, shown before confirmButton."
+          },
+          {
+            "name": "showModeToggle",
+            "type": "Boolean",
+            "default": "true",
+            "description": "whether to show the FormaUI-provided toggle that swaps the picker between the clock dial and text input. When false, only the clock dial is shown. (Material 3's TimePicker has no built-in toggle, unlike DatePicker.)"
+          },
+          {
+            "name": "skipPartiallyExpanded",
+            "type": "Boolean",
+            "default": "true",
+            "description": "whether the sheet skips the half-expanded state and opens fully. Defaults to true — deliberately unlike FormaBottomSheet — because the half-expanded state clips the clock dial."
+          },
+          {
+            "name": "shape",
+            "type": "Shape?",
+            "default": "null",
+            "description": "the sheet container shape. When null, Material 3's top-rounded default is used."
+          },
+          {
+            "name": "colors",
+            "type": "TimePickerColors?",
+            "default": "null",
+            "description": "the TimePickerColors applied to both the dial and text-input modes. When null, Material 3's defaults are used with a transparent picker container so the picker sits directly on the sheet surface (avoiding a container-on-container seam). A supplied value is passed through untouched."
+          }
+        ]
+      }
+    ],
+    "supportingApi": [
+      {
+        "name": "rememberTimePickerState",
+        "kind": "function (Material 3)",
+        "summary": "The component defines no state type of its own — callers create and own the picker state via Material 3's rememberTimePickerState (initialHour, initialMinute, is24Hour) and read hour / minute from it."
+      }
+    ],
+    "variants": [
+      "Clock dial mode",
+      "Text-input mode (via the toggle)",
+      "With dismiss button",
+      "Mode toggle hidden",
+      "Custom colors"
+    ],
+    "codeSample": "val state = rememberTimePickerState(initialHour = 9, initialMinute = 30)\nif (open) {\n    FormaTimePickerSheet(\n        onDismissRequest = { open = false },\n        state = state,\n        confirmButton = {\n            FormaButton(onClick = { onPicked(state.hour, state.minute); open = false }) { Text(\"OK\") }\n        },\n    )\n}",
+    "accessibility": "Inherits Material 3's TimePicker/TimeInput semantics — the dial and the hour/minute selectors are labeled and the AM/PM toggle is announced — plus ModalBottomSheet's back-press and scrim dismiss handling; the FormaUI mode toggle carries a mode-dependent contentDescription ('Switch to text input' / 'Switch to clock dial'). The button slots are caller-supplied (typically FormaButtons with M3's 48dp minimum touch target)."
+  },
+  {
+    "id": "carousel",
+    "name": "Carousel",
+    "package": "dev.formaui.components.carousel",
+    "sourceFile": "components/src/commonMain/kotlin/dev/formaui/components/carousel/FormaCarousel.kt",
+    "prdOrder": null,
+    "tier": "extra",
+    "description": "A FormaUI carousel — a horizontally scrolling, snapping strip of items — one entry point covering both Material 3 horizontal carousel families (multi-browse and uncontained) via a variant enum, with hoisted M3 CarouselState and an indexed item slot.",
+    "composables": [
+      {
+        "name": "FormaCarousel",
+        "summary": "One entry point for both M3 horizontal carousels; a single itemWidth maps to preferredItemWidth (MultiBrowse) or the exact itemWidth (Uncontained), with an opinionated default item spacing and per-variant default fling.",
+        "params": [
+          {
+            "name": "state",
+            "type": "CarouselState",
+            "default": null,
+            "description": "the hoisted CarouselState; create it with Material 3's rememberCarouselState(itemCount = { ... })."
+          },
+          {
+            "name": "itemWidth",
+            "type": "Dp",
+            "default": null,
+            "description": "the item width — the preferred (flexing) width for FormaCarouselVariant.MultiBrowse, the exact width for FormaCarouselVariant.Uncontained."
+          },
+          {
+            "name": "modifier",
+            "type": "Modifier",
+            "default": "Modifier",
+            "description": "the Modifier applied to the carousel (typically sets its height)."
+          },
+          {
+            "name": "variant",
+            "type": "FormaCarouselVariant",
+            "default": "FormaCarouselVariant.MultiBrowse",
+            "description": "the layout strategy (defaults to FormaCarouselVariant.MultiBrowse)."
+          },
+          {
+            "name": "itemSpacing",
+            "type": "Dp",
+            "default": "FormaCarouselDefaults.itemSpacing",
+            "description": "the gap between items (defaults to FormaCarouselDefaults.itemSpacing, an opinionated small gap; pass 0.dp for Material 3's flush default)."
+          },
+          {
+            "name": "contentPadding",
+            "type": "PaddingValues",
+            "default": "PaddingValues(0.dp)",
+            "description": "padding around the whole content strip (defaults to none)."
+          },
+          {
+            "name": "flingBehavior",
+            "type": "TargetedFlingBehavior?",
+            "default": "null",
+            "description": "the post-scroll fling behavior. When null, the Material 3 default for the variant is used (a single-advance snap for MultiBrowse, a no-snap fling for Uncontained)."
+          },
+          {
+            "name": "userScrollEnabled",
+            "type": "Boolean",
+            "default": "true",
+            "description": "whether the user can scroll the carousel by gesture."
+          },
+          {
+            "name": "content",
+            "type": "@Composable CarouselItemScope.(index: Int) -> Unit",
+            "default": null,
+            "description": "the item slot, invoked per item with its index, in a CarouselItemScope (use its mask modifiers, e.g. Modifier.maskClip, to shape items)."
+          }
+        ]
+      }
+    ],
+    "supportingApi": [
+      {
+        "name": "FormaCarouselVariant",
+        "kind": "enum",
+        "summary": "Layout strategy of a FormaCarousel: MultiBrowse (default; flexing large/medium/small items), Uncontained (every item keeps the exact width)."
+      },
+      {
+        "name": "FormaCarouselDefaults",
+        "kind": "object",
+        "summary": "Defaults for FormaCarousel: itemSpacing (FormaTheme.spacing.xs — a small opinionated gap, vs Material 3's 0.dp)."
+      },
+      {
+        "name": "rememberCarouselState",
+        "kind": "function (Material 3)",
+        "summary": "The component defines no state type of its own — callers create and own the state via Material 3's rememberCarouselState(initialItem, itemCount)."
+      }
+    ],
+    "variants": [
+      "MultiBrowse",
+      "Uncontained"
+    ],
+    "codeSample": "val state = rememberCarouselState(itemCount = { photos.size })\nFormaCarousel(\n    state = state,\n    itemWidth = 220.dp,\n    modifier = Modifier.height(200.dp),\n) { index ->\n    Image(\n        painter = photos[index].painter,\n        contentDescription = photos[index].description,\n        modifier = Modifier.fillMaxSize().maskClip(FormaTheme.shapes.lg),\n        contentScale = ContentScale.Crop,\n    )\n}",
+    "accessibility": "The carousel is a horizontally scrollable container; supply a meaningful contentDescription on each item's own content (e.g. the Image inside the slot). Material 3 handles the scroll/snap semantics."
+  },
+  {
+    "id": "exposed-dropdown-menu",
+    "name": "ExposedDropdownMenu",
+    "package": "dev.formaui.components.autocomplete",
+    "sourceFile": "components/src/commonMain/kotlin/dev/formaui/components/autocomplete/FormaExposedDropdownMenu.kt",
+    "prdOrder": null,
+    "tier": "extra",
+    "description": "A FormaUI exposed dropdown menu (autocomplete) — a FormaTextField anchor that drops a menu of options below it, delegating to Material 3's ExposedDropdownMenuBox. Fully hoisted (query text, expanded state, and the already-filtered options are the caller's); FormaUI provides the wiring, the rotating chevron, and the option rows. Generic over the option type via optionLabel.",
+    "composables": [
+      {
+        "name": "FormaExposedDropdownMenu",
+        "summary": "Generic <T> autocomplete: caller owns value/onValueChange, expanded/onExpandedChange, and the pre-filtered options; editable=true is a type-to-filter field (PrimaryEditable), editable=false is a read-only tap-to-select field (PrimaryNotEditable). Empty options while expanded shows a disabled 'No matches' row.",
+        "params": [
+          {
+            "name": "expanded",
+            "type": "Boolean",
+            "default": null,
+            "description": "whether the menu is currently open."
+          },
+          {
+            "name": "onExpandedChange",
+            "type": "(Boolean) -> Unit",
+            "default": null,
+            "description": "called when the menu requests to open or close (anchor tap, dismiss)."
+          },
+          {
+            "name": "value",
+            "type": "String",
+            "default": null,
+            "description": "the current query / selected text shown in the anchor field."
+          },
+          {
+            "name": "onValueChange",
+            "type": "(String) -> Unit",
+            "default": null,
+            "description": "called as the user edits the query. Only fires while editable is true."
+          },
+          {
+            "name": "options",
+            "type": "List<T>",
+            "default": null,
+            "description": "the options to show, already filtered by the caller for the current value."
+          },
+          {
+            "name": "onOptionSelected",
+            "type": "(T) -> Unit",
+            "default": null,
+            "description": "called with the chosen option when a row is tapped; the menu then collapses. The caller reflects the choice into value (e.g. value = optionLabel(it))."
+          },
+          {
+            "name": "optionLabel",
+            "type": "(T) -> String",
+            "default": null,
+            "description": "maps an option to its display (and menu-row) text."
+          },
+          {
+            "name": "modifier",
+            "type": "Modifier",
+            "default": "Modifier",
+            "description": "the Modifier applied to the ExposedDropdownMenuBox."
+          },
+          {
+            "name": "variant",
+            "type": "FormaTextFieldVariant",
+            "default": "FormaTextFieldVariant.Outlined",
+            "description": "the anchor field's container style (defaults to FormaTextFieldVariant.Outlined)."
+          },
+          {
+            "name": "editable",
+            "type": "Boolean",
+            "default": "true",
+            "description": "whether the field is a type-to-filter autocomplete (true) or a read-only tap-to-select field (false)."
+          },
+          {
+            "name": "enabled",
+            "type": "Boolean",
+            "default": "true",
+            "description": "whether the control is interactive (disables both the field and the menu anchor)."
+          },
+          {
+            "name": "label",
+            "type": "String?",
+            "default": "null",
+            "description": "optional floating label on the anchor field."
+          },
+          {
+            "name": "placeholder",
+            "type": "String?",
+            "default": "null",
+            "description": "optional placeholder shown while the field is empty."
+          },
+          {
+            "name": "isError",
+            "type": "Boolean",
+            "default": "false",
+            "description": "whether the anchor field is in the error state."
+          },
+          {
+            "name": "helperText",
+            "type": "String?",
+            "default": "null",
+            "description": "optional supporting text shown below the field when not in error."
+          },
+          {
+            "name": "errorText",
+            "type": "String?",
+            "default": "null",
+            "description": "optional supporting text shown below the field while isError is true."
+          },
+          {
+            "name": "leadingIcon",
+            "type": "@Composable (() -> Unit)?",
+            "default": "null",
+            "description": "optional slot at the start of the anchor field."
+          },
+          {
+            "name": "colors",
+            "type": "TextFieldColors?",
+            "default": "null",
+            "description": "the anchor field colors. When null, the M3 defaults for the variant are used."
+          },
+          {
+            "name": "noMatchesText",
+            "type": "String",
+            "default": "FormaExposedDropdownMenuDefaults.NoMatchesText",
+            "description": "the label of the single disabled row shown when options is empty while expanded (defaults to FormaExposedDropdownMenuDefaults.NoMatchesText, \"No matches\")."
+          }
+        ]
+      }
+    ],
+    "supportingApi": [
+      {
+        "name": "FormaExposedDropdownMenuDefaults",
+        "kind": "object",
+        "summary": "Defaults for FormaExposedDropdownMenu: NoMatchesText (\"No matches\") — the label of the disabled empty-options row."
+      }
+    ],
+    "variants": [
+      "Editable (type-to-filter)",
+      "Non-editable (tap-to-select)",
+      "Empty (No matches)"
+    ],
+    "codeSample": "var text by remember { mutableStateOf(\"\") }\nvar expanded by remember { mutableStateOf(false) }\nval matches = countries.filter { it.contains(text, ignoreCase = true) }\nFormaExposedDropdownMenu(\n    expanded = expanded,\n    onExpandedChange = { expanded = it },\n    value = text,\n    onValueChange = { text = it },\n    options = matches,\n    onOptionSelected = { text = it },\n    optionLabel = { it },\n    label = \"Country\",\n)",
+    "accessibility": "The rotating chevron trailing icon and the anchor's expand/collapse + option semantics are handled by Material 3's ExposedDropdownMenuBox / menuAnchor; the trailing icon is the standard M3 ExposedDropdownMenuDefaults.TrailingIcon. The field's error state is surfaced to accessibility services by the underlying FormaTextField."
   }
 ]

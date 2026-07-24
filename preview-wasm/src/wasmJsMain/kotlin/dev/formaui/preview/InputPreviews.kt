@@ -23,10 +23,12 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import dev.formaui.components.autocomplete.FormaExposedDropdownMenu
 import dev.formaui.components.checkbox.FormaCheckbox
 import dev.formaui.components.listitem.FormaListItem
 import dev.formaui.components.radiobutton.FormaRadioButton
 import dev.formaui.components.search.FormaSearchBar
+import dev.formaui.components.slider.FormaRangeSlider
 import dev.formaui.components.slider.FormaSlider
 import dev.formaui.components.switch.FormaSwitch
 import dev.formaui.components.textfield.FormaTextField
@@ -198,6 +200,90 @@ internal fun ColumnScope.SearchBarPreview() {
 
     Text(
         text = "Docked variant — focus the field to expand the suggestions.",
+        style = MaterialTheme.typography.bodyMedium,
+        color = MaterialTheme.colorScheme.onSurfaceVariant,
+    )
+}
+
+/** Live preview for `range-slider`: a continuous range and a stepped range, both draggable. */
+@Composable
+internal fun ColumnScope.RangeSliderPreview() {
+    var range by remember { mutableStateOf(0.2f..0.8f) }
+    FormaRangeSlider(
+        value = range,
+        onValueChange = { range = it },
+        modifier = Modifier.fillMaxWidth(),
+    )
+    Text(
+        text = "Continuous: ${(range.start * 100).toInt()}%–${(range.endInclusive * 100).toInt()}%",
+        style = MaterialTheme.typography.bodyMedium,
+        color = MaterialTheme.colorScheme.onSurfaceVariant,
+    )
+
+    var stepped by remember { mutableStateOf(2f..6f) }
+    FormaRangeSlider(
+        value = stepped,
+        onValueChange = { stepped = it },
+        modifier = Modifier.fillMaxWidth(),
+        valueRange = 0f..8f,
+        steps = 7,
+    )
+    Text(
+        text = "Stepped: ${stepped.start.toInt()}–${stepped.endInclusive.toInt()} of 8",
+        style = MaterialTheme.typography.bodyMedium,
+        color = MaterialTheme.colorScheme.onSurfaceVariant,
+    )
+}
+
+/**
+ * Live preview for `exposed-dropdown-menu`: an editable type-to-filter autocomplete (Outlined) and a
+ * read-only tap-to-select field (Filled).
+ */
+@Composable
+internal fun ColumnScope.ExposedDropdownMenuPreview() {
+    val fruits = remember {
+        listOf("Apple", "Banana", "Cherry", "Date", "Elderberry", "Fig", "Grape")
+    }
+
+    var query by remember { mutableStateOf("") }
+    var editableExpanded by remember { mutableStateOf(false) }
+    val matches = fruits.filter { it.contains(query, ignoreCase = true) }
+    FormaExposedDropdownMenu(
+        expanded = editableExpanded,
+        onExpandedChange = { editableExpanded = it },
+        value = query,
+        onValueChange = { query = it },
+        options = matches,
+        onOptionSelected = {
+            query = it
+            editableExpanded = false
+        },
+        optionLabel = { it },
+        modifier = Modifier.fillMaxWidth(),
+        label = "Fruit (type to filter)",
+    )
+
+    var selected by remember { mutableStateOf("Banana") }
+    var selectExpanded by remember { mutableStateOf(false) }
+    FormaExposedDropdownMenu(
+        expanded = selectExpanded,
+        onExpandedChange = { selectExpanded = it },
+        value = selected,
+        onValueChange = {},
+        options = fruits,
+        onOptionSelected = {
+            selected = it
+            selectExpanded = false
+        },
+        optionLabel = { it },
+        modifier = Modifier.fillMaxWidth(),
+        variant = FormaTextFieldVariant.Filled,
+        editable = false,
+        label = "Fruit (tap to select)",
+    )
+
+    Text(
+        text = "Editable filters as you type; the Filled field is tap-to-select.",
         style = MaterialTheme.typography.bodyMedium,
         color = MaterialTheme.colorScheme.onSurfaceVariant,
     )

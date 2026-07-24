@@ -1,30 +1,43 @@
 /*
  * Copyright 2026 FormaUI. Licensed under the Apache License, Version 2.0.
  */
-@file:OptIn(ExperimentalFormaUiApi::class, ExperimentalLayoutApi::class)
+@file:OptIn(ExperimentalFormaUiApi::class, ExperimentalLayoutApi::class, ExperimentalMaterial3Api::class)
 
 package dev.formaui.preview
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
+import androidx.compose.material3.carousel.rememberCarouselState
+import androidx.compose.material3.rememberSwipeToDismissBoxState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.key
 import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
 import dev.formaui.components.avatar.FormaAvatar
 import dev.formaui.components.avatar.FormaAvatarSize
 import dev.formaui.components.badge.FormaBadge
@@ -37,11 +50,17 @@ import dev.formaui.components.divider.FormaDivider
 import dev.formaui.components.divider.FormaDividerOrientation
 import dev.formaui.components.emptystate.FormaEmptyState
 import dev.formaui.components.listitem.FormaListItem
+import dev.formaui.components.carousel.FormaCarousel
+import dev.formaui.components.carousel.FormaCarouselVariant
 import dev.formaui.components.loading.FormaLoadingIndicator
 import dev.formaui.components.loading.FormaLoadingIndicatorVariant
+import dev.formaui.components.pulltorefresh.FormaPullToRefresh
 import dev.formaui.components.slider.FormaSlider
+import dev.formaui.components.swipedismiss.FormaSwipeToDismiss
 import dev.formaui.core.annotation.ExperimentalFormaUiApi
 import dev.formaui.core.theme.FormaTheme
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 /** Live preview for `card`: all three [FormaCardVariant]s, each clickable with the press-scale dip. */
 @Composable
@@ -220,6 +239,141 @@ internal fun ColumnScope.EmptyStatePreview() {
             "The action slot is a real button."
         } else {
             "Action clicked $actionClicks times."
+        },
+        style = MaterialTheme.typography.bodyMedium,
+        color = MaterialTheme.colorScheme.onSurfaceVariant,
+    )
+}
+
+/** Live preview for `carousel`: the multi-browse and uncontained variants with colored items. */
+@Composable
+internal fun ColumnScope.CarouselPreview() {
+    val colors = listOf(
+        MaterialTheme.colorScheme.primaryContainer,
+        MaterialTheme.colorScheme.secondaryContainer,
+        MaterialTheme.colorScheme.tertiaryContainer,
+        MaterialTheme.colorScheme.errorContainer,
+        MaterialTheme.colorScheme.surfaceVariant,
+    )
+
+    Text("Multi-browse", style = MaterialTheme.typography.titleSmall)
+    val multiState = rememberCarouselState(itemCount = { colors.size })
+    FormaCarousel(
+        state = multiState,
+        itemWidth = 200.dp,
+        modifier = Modifier
+            .fillMaxWidth()
+            .height(160.dp),
+    ) { index ->
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(colors[index]),
+            contentAlignment = Alignment.Center,
+        ) {
+            Text("${index + 1}", style = MaterialTheme.typography.titleMedium)
+        }
+    }
+
+    Text("Uncontained", style = MaterialTheme.typography.titleSmall)
+    val uncontainedState = rememberCarouselState(itemCount = { colors.size })
+    FormaCarousel(
+        state = uncontainedState,
+        itemWidth = 140.dp,
+        variant = FormaCarouselVariant.Uncontained,
+        modifier = Modifier
+            .fillMaxWidth()
+            .height(120.dp),
+    ) { index ->
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(colors[index]),
+            contentAlignment = Alignment.Center,
+        ) {
+            Text("${index + 1}", style = MaterialTheme.typography.titleMedium)
+        }
+    }
+}
+
+/** Live preview for `pull-to-refresh`: pull the list down to trigger a simulated refresh. */
+@Composable
+internal fun ColumnScope.PullToRefreshPreview() {
+    var refreshing by remember { mutableStateOf(false) }
+    var refreshCount by remember { mutableIntStateOf(0) }
+    val scope = rememberCoroutineScope()
+
+    FormaPullToRefresh(
+        isRefreshing = refreshing,
+        onRefresh = {
+            refreshing = true
+            scope.launch {
+                delay(1200)
+                refreshCount++
+                refreshing = false
+            }
+        },
+        modifier = Modifier
+            .fillMaxWidth()
+            .height(200.dp),
+    ) {
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .verticalScroll(rememberScrollState()),
+        ) {
+            repeat(6) { i ->
+                FormaListItem(
+                    headline = "Item ${i + 1}",
+                    supporting = "Refreshed $refreshCount time(s)",
+                )
+                FormaDivider()
+            }
+        }
+    }
+
+    Text(
+        text = "Pull the list down to refresh (refreshed $refreshCount times).",
+        style = MaterialTheme.typography.bodyMedium,
+        color = MaterialTheme.colorScheme.onSurfaceVariant,
+    )
+}
+
+/** Live preview for `swipe-to-dismiss`: swipe a row to reveal the delete background and dismiss it. */
+@Composable
+internal fun ColumnScope.SwipeToDismissPreview() {
+    val items = remember { mutableStateListOf("Ada Lovelace", "Alan Turing", "Grace Hopper") }
+
+    Column {
+        items.forEach { item ->
+            key(item) {
+                val state = rememberSwipeToDismissBoxState()
+                FormaSwipeToDismiss(
+                    state = state,
+                    onDismiss = { items.remove(item) },
+                    backgroundContent = {
+                        Box(
+                            modifier = Modifier
+                                .fillMaxSize()
+                                .background(MaterialTheme.colorScheme.errorContainer)
+                                .padding(horizontal = FormaTheme.spacing.md),
+                            contentAlignment = Alignment.CenterEnd,
+                        ) {
+                            Text("Delete", color = MaterialTheme.colorScheme.onErrorContainer)
+                        }
+                    },
+                ) {
+                    FormaListItem(headline = item, supporting = "Swipe me away")
+                }
+            }
+        }
+    }
+
+    Text(
+        text = if (items.isEmpty()) {
+            "All dismissed — reload to reset."
+        } else {
+            "${items.size} item(s) — swipe a row to dismiss it."
         },
         style = MaterialTheme.typography.bodyMedium,
         color = MaterialTheme.colorScheme.onSurfaceVariant,

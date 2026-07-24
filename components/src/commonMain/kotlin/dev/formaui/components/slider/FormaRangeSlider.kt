@@ -1,0 +1,56 @@
+/*
+ * Copyright 2026 FormaUI. Licensed under the Apache License, Version 2.0.
+ */
+@file:OptIn(ExperimentalFormaUiApi::class)
+
+package dev.formaui.components.slider
+
+import androidx.compose.material3.RangeSlider
+import androidx.compose.material3.SliderColors
+import androidx.compose.material3.SliderDefaults
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
+import dev.formaui.core.annotation.ExperimentalFormaUiApi
+
+/**
+ * A FormaUI range slider — lets the user select a sub-range (a start and end value) from a
+ * continuous or stepped range, delegating to Material 3's `RangeSlider`.
+ *
+ * Stateless with hoisted state: the caller owns [value] (a [ClosedFloatingPointRange]) and updates
+ * it in [onValueChange]. The two thumbs are bounded by [valueRange] and cannot cross each other. Use
+ * [onValueChangeFinished] to react once the user stops dragging (e.g. to commit the range). Set
+ * [steps] to make both thumbs snap to discrete stops within [valueRange]. Each thumb exposes a 48dp
+ * touch target via Material 3's minimum interactive component size.
+ *
+ * @param value the current selected range; both ends should sit within [valueRange].
+ * @param onValueChange called continuously with the new range as the user drags either thumb.
+ * @param modifier the [Modifier] applied to the slider.
+ * @param enabled whether the slider is interactive.
+ * @param valueRange the inclusive range of selectable values (defaults to `0f..1f`).
+ * @param steps the number of discrete intermediate stops (0 = continuous).
+ * @param onValueChangeFinished called once when the user finishes changing the range.
+ * @param colors the slider colors (defaults to the M3 defaults, themed by [FormaTheme][dev.formaui.core.theme.FormaTheme]).
+ */
+@ExperimentalFormaUiApi
+@Composable
+fun FormaRangeSlider(
+    value: ClosedFloatingPointRange<Float>,
+    onValueChange: (ClosedFloatingPointRange<Float>) -> Unit,
+    modifier: Modifier = Modifier,
+    enabled: Boolean = true,
+    valueRange: ClosedFloatingPointRange<Float> = 0f..1f,
+    steps: Int = 0,
+    onValueChangeFinished: (() -> Unit)? = null,
+    colors: SliderColors? = null,
+) {
+    RangeSlider(
+        value = value,
+        onValueChange = onValueChange,
+        modifier = modifier,
+        enabled = enabled,
+        valueRange = valueRange,
+        steps = steps,
+        onValueChangeFinished = onValueChangeFinished,
+        colors = colors ?: SliderDefaults.colors(),
+    )
+}
