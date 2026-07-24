@@ -101,16 +101,21 @@ fun CategoryScreen(
                 SampleCategory.Inputs -> {
                     item { TextFieldShowcase() }
                     item { SearchBarShowcase() }
+                    item { ExposedDropdownMenuShowcase() }
                     item { SelectionShowcase() }
                     item { SliderShowcase() }
+                    item { RangeSliderShowcase() }
                     item { DatePickerSheetShowcase() }
+                    item { TimePickerSheetShowcase() }
                     item { DateRangePickerSheetShowcase() }
                 }
                 SampleCategory.Containment -> {
                     item { CardShowcase() }
                     item { ListItemShowcase() }
+                    item { SwipeToDismissShowcase() }
                     item { AvatarShowcase() }
                     item { BadgeShowcase() }
+                    item { CarouselShowcase() }
                     item { TooltipShowcase() }
                     item { DropdownMenuShowcase() }
                     item { BarChartShowcase() }
@@ -130,6 +135,7 @@ fun CategoryScreen(
                     item { BottomSheetShowcase() }
                     item { SnackbarShowcase() }
                     item { LoadingShowcase() }
+                    item { PullToRefreshShowcase() }
                     item { EmptyStateShowcase() }
                 }
             }

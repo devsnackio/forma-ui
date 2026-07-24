@@ -5,12 +5,17 @@
 
 package dev.formaui.sample
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.KeyboardArrowRight
 import androidx.compose.material.icons.filled.Delete
@@ -23,13 +28,18 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TooltipState
+import androidx.compose.material3.carousel.rememberCarouselState
+import androidx.compose.material3.rememberSwipeToDismissBoxState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.key
+import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
 import dev.formaui.components.avatar.FormaAvatar
 import dev.formaui.components.avatar.FormaAvatarSize
 import dev.formaui.components.badge.FormaBadge
@@ -38,11 +48,14 @@ import dev.formaui.components.button.FormaButton
 import dev.formaui.components.button.FormaButtonVariant
 import dev.formaui.components.card.FormaCard
 import dev.formaui.components.card.FormaCardVariant
+import dev.formaui.components.carousel.FormaCarousel
+import dev.formaui.components.carousel.FormaCarouselVariant
 import dev.formaui.components.divider.FormaDivider
 import dev.formaui.components.iconbutton.FormaIconButton
 import dev.formaui.components.listitem.FormaListItem
 import dev.formaui.components.menu.FormaDropdownMenu
 import dev.formaui.components.menu.FormaDropdownMenuItem
+import dev.formaui.components.swipedismiss.FormaSwipeToDismiss
 import dev.formaui.components.tooltip.FormaTooltip
 import dev.formaui.components.tooltip.FormaTooltipVariant
 import dev.formaui.core.annotation.ExperimentalFormaUiApi
@@ -216,5 +229,100 @@ fun DropdownMenuShowcase() {
                 )
             }
         }
+    }
+}
+
+@Composable
+fun CarouselShowcase() {
+    ComponentShowcase(
+        name = "Carousel",
+        description = "Multi-browse and uncontained horizontal carousels of items.",
+    ) {
+        val colors = listOf(
+            MaterialTheme.colorScheme.primaryContainer,
+            MaterialTheme.colorScheme.secondaryContainer,
+            MaterialTheme.colorScheme.tertiaryContainer,
+            MaterialTheme.colorScheme.errorContainer,
+            MaterialTheme.colorScheme.surfaceVariant,
+        )
+
+        Text("Multi-browse", style = MaterialTheme.typography.bodySmall)
+        val multiState = rememberCarouselState(itemCount = { colors.size })
+        FormaCarousel(
+            state = multiState,
+            itemWidth = 200.dp,
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(140.dp),
+        ) { index ->
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .background(colors[index]),
+                contentAlignment = Alignment.Center,
+            ) {
+                Text("${index + 1}", style = MaterialTheme.typography.titleMedium)
+            }
+        }
+
+        Text("Uncontained", style = MaterialTheme.typography.bodySmall)
+        val uncontainedState = rememberCarouselState(itemCount = { colors.size })
+        FormaCarousel(
+            state = uncontainedState,
+            itemWidth = 120.dp,
+            variant = FormaCarouselVariant.Uncontained,
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(100.dp),
+        ) { index ->
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .background(colors[index]),
+                contentAlignment = Alignment.Center,
+            ) {
+                Text("${index + 1}", style = MaterialTheme.typography.titleMedium)
+            }
+        }
+    }
+}
+
+@Composable
+fun SwipeToDismissShowcase() {
+    ComponentShowcase(
+        name = "SwipeToDismiss",
+        description = "Swipe a row to reveal a delete background and dismiss it.",
+    ) {
+        val items = remember { mutableStateListOf("Ada Lovelace", "Alan Turing", "Grace Hopper") }
+
+        Column {
+            items.forEach { item ->
+                key(item) {
+                    val state = rememberSwipeToDismissBoxState()
+                    FormaSwipeToDismiss(
+                        state = state,
+                        onDismiss = { items.remove(item) },
+                        backgroundContent = {
+                            Box(
+                                modifier = Modifier
+                                    .fillMaxSize()
+                                    .background(MaterialTheme.colorScheme.errorContainer)
+                                    .padding(horizontal = FormaTheme.spacing.md),
+                                contentAlignment = Alignment.CenterEnd,
+                            ) {
+                                Text("Delete", color = MaterialTheme.colorScheme.onErrorContainer)
+                            }
+                        },
+                    ) {
+                        FormaListItem(headline = item, supporting = "Swipe me away")
+                    }
+                }
+            }
+        }
+        Text(
+            text = if (items.isEmpty()) "All dismissed." else "${items.size} item(s) left.",
+            style = MaterialTheme.typography.bodySmall,
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
+        )
     }
 }

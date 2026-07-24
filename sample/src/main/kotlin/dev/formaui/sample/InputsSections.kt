@@ -20,6 +20,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberDatePickerState
 import androidx.compose.material3.rememberDateRangePickerState
+import androidx.compose.material3.rememberTimePickerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableFloatStateOf
@@ -29,6 +30,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.semantics.Role
+import dev.formaui.components.autocomplete.FormaExposedDropdownMenu
 import dev.formaui.components.button.FormaButton
 import dev.formaui.components.button.FormaButtonVariant
 import dev.formaui.components.checkbox.FormaCheckbox
@@ -38,10 +40,12 @@ import dev.formaui.components.listitem.FormaListItem
 import dev.formaui.components.radiobutton.FormaRadioButton
 import dev.formaui.components.search.FormaSearchBar
 import dev.formaui.components.search.FormaSearchBarVariant
+import dev.formaui.components.slider.FormaRangeSlider
 import dev.formaui.components.slider.FormaSlider
 import dev.formaui.components.switch.FormaSwitch
 import dev.formaui.components.textfield.FormaTextField
 import dev.formaui.components.textfield.FormaTextFieldVariant
+import dev.formaui.components.timepicker.FormaTimePickerSheet
 import dev.formaui.core.annotation.ExperimentalFormaUiApi
 import dev.formaui.core.theme.FormaTheme
 import java.text.SimpleDateFormat
@@ -129,6 +133,55 @@ fun SearchBarShowcase() {
 }
 
 @Composable
+fun ExposedDropdownMenuShowcase() {
+    ComponentShowcase(
+        name = "ExposedDropdownMenu",
+        description = "An autocomplete: type to filter, or a read-only tap-to-select field.",
+    ) {
+        val fruits = listOf("Apple", "Banana", "Cherry", "Date", "Elderberry", "Fig", "Grape")
+
+        var query by remember { mutableStateOf("") }
+        var editableExpanded by remember { mutableStateOf(false) }
+        val matches = remember(query) {
+            if (query.isBlank()) fruits else fruits.filter { it.contains(query, ignoreCase = true) }
+        }
+        FormaExposedDropdownMenu(
+            expanded = editableExpanded,
+            onExpandedChange = { editableExpanded = it },
+            value = query,
+            onValueChange = { query = it },
+            options = matches,
+            onOptionSelected = {
+                query = it
+                editableExpanded = false
+            },
+            optionLabel = { it },
+            modifier = Modifier.fillMaxWidth(),
+            label = "Fruit (type to filter)",
+        )
+
+        var selected by remember { mutableStateOf("Banana") }
+        var selectExpanded by remember { mutableStateOf(false) }
+        FormaExposedDropdownMenu(
+            expanded = selectExpanded,
+            onExpandedChange = { selectExpanded = it },
+            value = selected,
+            onValueChange = {},
+            options = fruits,
+            onOptionSelected = {
+                selected = it
+                selectExpanded = false
+            },
+            optionLabel = { it },
+            modifier = Modifier.fillMaxWidth(),
+            variant = FormaTextFieldVariant.Filled,
+            editable = false,
+            label = "Fruit (tap to select)",
+        )
+    }
+}
+
+@Composable
 fun SelectionShowcase() {
     ComponentShowcase(
         name = "Switch · Checkbox · RadioButton",
@@ -207,6 +260,39 @@ fun SliderShowcase() {
     }
 }
 
+@Composable
+fun RangeSliderShowcase() {
+    ComponentShowcase(
+        name = "RangeSlider",
+        description = "A two-thumb slider selecting a start and end value.",
+    ) {
+        var price by remember { mutableStateOf(20f..80f) }
+        Text(
+            "Price: \$${price.start.toInt()} – \$${price.endInclusive.toInt()}",
+            style = MaterialTheme.typography.bodySmall,
+        )
+        FormaRangeSlider(
+            value = price,
+            onValueChange = { price = it },
+            valueRange = 0f..100f,
+            modifier = Modifier.fillMaxWidth(),
+        )
+
+        var rating by remember { mutableStateOf(1f..3f) }
+        Text(
+            "Rating: ${rating.start.toInt()} – ${rating.endInclusive.toInt()}",
+            style = MaterialTheme.typography.bodySmall,
+        )
+        FormaRangeSlider(
+            value = rating,
+            onValueChange = { rating = it },
+            valueRange = 0f..5f,
+            steps = 4,
+            modifier = Modifier.fillMaxWidth(),
+        )
+    }
+}
+
 /** Formats a UTC-epoch-millis date the picker states report (dates are UTC-anchored). */
 private fun formatUtcDate(millis: Long): String =
     SimpleDateFormat("MMM d, yyyy", Locale.getDefault())
@@ -241,6 +327,50 @@ fun DatePickerSheetShowcase() {
                             showSheet = false
                         },
                         enabled = state.selectedDateMillis != null,
+                    ) {
+                        Text("OK")
+                    }
+                },
+                dismissButton = {
+                    FormaButton(
+                        onClick = { showSheet = false },
+                        variant = FormaButtonVariant.Text,
+                    ) {
+                        Text("Cancel")
+                    }
+                },
+            )
+        }
+    }
+}
+
+@Composable
+fun TimePickerSheetShowcase() {
+    ComponentShowcase(
+        name = "TimePickerSheet",
+        description = "The Material time picker (clock dial + text input) hosted in a modal bottom sheet.",
+    ) {
+        var showSheet by remember { mutableStateOf(false) }
+        var confirmed by remember { mutableStateOf<String?>(null) }
+        val state = rememberTimePickerState(initialHour = 9, initialMinute = 30)
+
+        FormaButton(onClick = { showSheet = true }, variant = FormaButtonVariant.Outlined) {
+            Text("Pick a time")
+        }
+        Text(
+            text = confirmed?.let { "Selected: $it" } ?: "No time selected",
+            style = MaterialTheme.typography.bodySmall,
+        )
+        if (showSheet) {
+            FormaTimePickerSheet(
+                onDismissRequest = { showSheet = false },
+                state = state,
+                confirmButton = {
+                    FormaButton(
+                        onClick = {
+                            confirmed = "%02d:%02d".format(state.hour, state.minute)
+                            showSheet = false
+                        },
                     ) {
                         Text("OK")
                     }

@@ -14,7 +14,7 @@ user: developers who want to ship fast, not build a design system.
 
 ## Status
 
-**Phase 1 library work is DONE: 29/29 components built + tested** (18 PRD + 11 extra —
+**Phase 1 library work is DONE: 40 components built + tested** (18 PRD + 22 extra —
 see `docs/component-inventory.json`). Warm-editorial rebrand per `docs/DESIGN.md` landed
 2026-07-22 (breaking token renames; typography stays Public Sans — no serif/Inter).
 Remaining Phase 1: the `formaui-site` docs site + first Maven Central publish.
@@ -51,7 +51,7 @@ All three together = the authoritative QA gate. Wrapper only — there is no sta
 
 ```
 core/          # theming engine: FormaTheme, color/typography/spacing/shape tokens. ZERO FormaUI deps.
-components/    # the 29 free components; depends on core.
+components/    # the 40 free components; depends on core.
 sample/        # Android showcase app (not published). AGP 9 built-in Kotlin — do NOT apply kotlin.android.
 preview-wasm/  # wasm live-preview harness for the docs site (not published). Pipeline validated —
                # see docs/WASM_PREVIEW_PIPELINE.md + docs/SITE_HANDOFF.md.

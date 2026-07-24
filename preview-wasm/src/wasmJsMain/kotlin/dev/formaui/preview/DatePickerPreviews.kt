@@ -11,6 +11,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberDatePickerState
 import androidx.compose.material3.rememberDateRangePickerState
+import androidx.compose.material3.rememberTimePickerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -20,6 +21,7 @@ import dev.formaui.components.button.FormaButton
 import dev.formaui.components.button.FormaButtonVariant
 import dev.formaui.components.datepicker.FormaDatePickerSheet
 import dev.formaui.components.datepicker.FormaDateRangePickerSheet
+import dev.formaui.components.timepicker.FormaTimePickerSheet
 import dev.formaui.core.annotation.ExperimentalFormaUiApi
 
 /** Live preview for `date-picker-sheet`: a button opens the sheet; confirming echoes the date. */
@@ -100,6 +102,45 @@ internal fun ColumnScope.DateRangePickerSheetPreview() {
         )
     }
 }
+
+/** Live preview for `time-picker-sheet`: a button opens the sheet; confirming echoes the time. */
+@Composable
+internal fun ColumnScope.TimePickerSheetPreview() {
+    var open by remember { mutableStateOf(false) }
+    var picked by remember { mutableStateOf<String?>(null) }
+    val state = rememberTimePickerState(initialHour = 9, initialMinute = 30)
+
+    FormaButton(onClick = { open = true }) { Text("Pick a time") }
+    Text(
+        text = "Selected: ${picked ?: "none yet"}",
+        style = MaterialTheme.typography.bodyMedium,
+        color = MaterialTheme.colorScheme.onSurfaceVariant,
+    )
+
+    if (open) {
+        FormaTimePickerSheet(
+            onDismissRequest = { open = false },
+            state = state,
+            confirmButton = {
+                FormaButton(
+                    onClick = {
+                        picked = formatTime(state.hour, state.minute)
+                        open = false
+                    },
+                ) { Text("OK") }
+            },
+            dismissButton = {
+                FormaButton(onClick = { open = false }, variant = FormaButtonVariant.Text) {
+                    Text("Cancel")
+                }
+            },
+        )
+    }
+}
+
+/** Formats an hour (0–23) and minute (0–59) as a zero-padded 24-hour `HH:mm` string. */
+private fun formatTime(hour: Int, minute: Int): String =
+    "${hour.toString().padStart(2, '0')}:${minute.toString().padStart(2, '0')}"
 
 /**
  * Formats UTC epoch millis (as produced by the Material 3 picker states) as an ISO-8601 date,
