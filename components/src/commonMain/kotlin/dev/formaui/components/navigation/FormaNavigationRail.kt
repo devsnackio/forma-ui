@@ -6,11 +6,18 @@
 package dev.formaui.components.navigation
 
 import androidx.compose.foundation.layout.ColumnScope
+import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.NavigationRail
+import androidx.compose.material3.NavigationRailDefaults
 import androidx.compose.material3.NavigationRailItem
+import androidx.compose.material3.NavigationRailItemColors
+import androidx.compose.material3.NavigationRailItemDefaults
 import androidx.compose.material3.Text
+import androidx.compose.material3.contentColorFor
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.TextStyle
 import dev.formaui.components.badge.FormaBadge
 import dev.formaui.components.badge.FormaBadgedBox
 import dev.formaui.core.annotation.ExperimentalFormaUiApi
@@ -36,6 +43,10 @@ import dev.formaui.core.annotation.ExperimentalFormaUiApi
  * ```
  *
  * @param modifier the [Modifier] applied to the rail.
+ * @param containerColor the rail's background color (defaults to the M3 navigation-rail container,
+ *   themed by [FormaTheme][dev.formaui.core.theme.FormaTheme]).
+ * @param contentColor the preferred content color for items (defaults to the color matching
+ *   [containerColor]).
  * @param header optional content shown above the items (typically a FAB or a logo).
  * @param content the rail's items, laid out in a [ColumnScope] (typically 3-7
  *   [FormaNavigationRailItem]s).
@@ -44,10 +55,18 @@ import dev.formaui.core.annotation.ExperimentalFormaUiApi
 @Composable
 fun FormaNavigationRail(
     modifier: Modifier = Modifier,
+    containerColor: Color = NavigationRailDefaults.ContainerColor,
+    contentColor: Color = contentColorFor(containerColor),
     header: @Composable (ColumnScope.() -> Unit)? = null,
     content: @Composable ColumnScope.() -> Unit,
 ) {
-    NavigationRail(modifier = modifier, header = header, content = content)
+    NavigationRail(
+        modifier = modifier,
+        containerColor = containerColor,
+        contentColor = contentColor,
+        header = header,
+        content = content,
+    )
 }
 
 /**
@@ -70,6 +89,11 @@ fun FormaNavigationRail(
  * @param badgeCount optional unread count to show as a numeric badge on the icon.
  * @param showBadgeDot when `true` and [badgeCount] is null, shows a dot badge on the icon.
  * @param alwaysShowLabel whether the label is shown even when the item is unselected.
+ * @param colors the item colors — icon, label, and selection-indicator colors for the selected,
+ * unselected, and disabled states (e.g. `NavigationRailItemDefaults.colors(selectedTextColor = ...)`).
+ * Defaults to the M3 defaults, themed by [FormaTheme][dev.formaui.core.theme.FormaTheme].
+ * @param labelTextStyle optional [TextStyle] override for [label], merged on top of the M3 label
+ * style so a partial override (e.g. only `fontWeight`) keeps the M3 defaults for everything else.
  */
 @ExperimentalFormaUiApi
 @Composable
@@ -83,6 +107,8 @@ fun FormaNavigationRailItem(
     badgeCount: Int? = null,
     showBadgeDot: Boolean = false,
     alwaysShowLabel: Boolean = true,
+    colors: NavigationRailItemColors? = null,
+    labelTextStyle: TextStyle? = null,
 ) {
     val iconContent: @Composable () -> Unit = when {
         badgeCount != null -> {
@@ -100,7 +126,10 @@ fun FormaNavigationRailItem(
         icon = iconContent,
         modifier = modifier,
         enabled = enabled,
-        label = label?.let { value -> { Text(value) } },
+        label = label?.let { value ->
+            { Text(value, style = LocalTextStyle.current.merge(labelTextStyle)) }
+        },
         alwaysShowLabel = alwaysShowLabel,
+        colors = colors ?: NavigationRailItemDefaults.colors(),
     )
 }

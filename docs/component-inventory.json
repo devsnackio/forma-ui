@@ -812,6 +812,42 @@
             "type": "Shape",
             "default": "FormaDialogDefaults.shape",
             "description": "the dialog container shape (defaults to FormaDialogDefaults.shape)."
+          },
+          {
+            "name": "containerColor",
+            "type": "Color",
+            "default": "AlertDialogDefaults.containerColor",
+            "description": "the dialog's background color (defaults to the M3 default, themed by FormaTheme)."
+          },
+          {
+            "name": "iconContentColor",
+            "type": "Color",
+            "default": "AlertDialogDefaults.iconContentColor",
+            "description": "the color applied to icon (defaults to the M3 default)."
+          },
+          {
+            "name": "titleContentColor",
+            "type": "Color",
+            "default": "AlertDialogDefaults.titleContentColor",
+            "description": "the color applied to title (defaults to the M3 default)."
+          },
+          {
+            "name": "textContentColor",
+            "type": "Color",
+            "default": "AlertDialogDefaults.textContentColor",
+            "description": "the color applied to text (defaults to the M3 default)."
+          },
+          {
+            "name": "titleTextStyle",
+            "type": "TextStyle?",
+            "default": "null",
+            "description": "optional TextStyle override for title, merged on top of the M3 title style."
+          },
+          {
+            "name": "textTextStyle",
+            "type": "TextStyle?",
+            "default": "null",
+            "description": "optional TextStyle override for text, merged on top of the M3 text style."
           }
         ]
       },
@@ -836,6 +872,24 @@
             "type": "Modifier",
             "default": "Modifier",
             "description": "the Modifier applied to the dialog surface."
+          },
+          {
+            "name": "containerColor",
+            "type": "Color",
+            "default": "MaterialTheme.colorScheme.surface",
+            "description": "the dialog surface's background color (defaults to the M3 surface, themed by FormaTheme)."
+          },
+          {
+            "name": "contentColor",
+            "type": "Color",
+            "default": "contentColorFor(containerColor)",
+            "description": "the preferred content color inside the dialog (defaults to the color matching containerColor)."
+          },
+          {
+            "name": "titleTextStyle",
+            "type": "TextStyle?",
+            "default": "null",
+            "description": "optional TextStyle override for title, merged on top of the top bar's title style (M3 titleLarge)."
           },
           {
             "name": "confirmAction",
@@ -904,6 +958,24 @@
             "description": "the sheet container shape. When null, Material 3's top-rounded default is used."
           },
           {
+            "name": "containerColor",
+            "type": "Color",
+            "default": "BottomSheetDefaults.ContainerColor",
+            "description": "the sheet's background color (defaults to the M3 bottom-sheet container, themed by FormaTheme)."
+          },
+          {
+            "name": "contentColor",
+            "type": "Color",
+            "default": "contentColorFor(containerColor)",
+            "description": "the preferred content color inside the sheet (defaults to the color matching containerColor)."
+          },
+          {
+            "name": "scrimColor",
+            "type": "Color",
+            "default": "BottomSheetDefaults.ScrimColor",
+            "description": "the color of the scrim that obscures content behind the sheet (defaults to the M3 default scrim)."
+          },
+          {
             "name": "content",
             "type": "@Composable ColumnScope.() -> Unit",
             "default": null,
@@ -938,6 +1010,18 @@
             "type": "Modifier",
             "default": "Modifier",
             "description": "the Modifier applied to the bar."
+          },
+          {
+            "name": "containerColor",
+            "type": "Color",
+            "default": "NavigationBarDefaults.containerColor",
+            "description": "the bar's background color (defaults to the M3 navigation-bar container, themed by FormaTheme)."
+          },
+          {
+            "name": "contentColor",
+            "type": "Color",
+            "default": "contentColorFor(containerColor)",
+            "description": "the preferred content color for items (defaults to the color matching containerColor)."
           },
           {
             "name": "content",
@@ -1004,6 +1088,18 @@
             "type": "Boolean",
             "default": "true",
             "description": "whether the label is shown even when the item is unselected."
+          },
+          {
+            "name": "colors",
+            "type": "NavigationBarItemColors?",
+            "default": "null",
+            "description": "the item colors — icon, label, and selection-indicator colors for the selected, unselected, and disabled states. Defaults to the M3 defaults, themed by FormaTheme."
+          },
+          {
+            "name": "labelTextStyle",
+            "type": "TextStyle?",
+            "default": "null",
+            "description": "optional TextStyle override for label, merged on top of the M3 label style so a partial override (e.g. only fontWeight) keeps the M3 defaults for everything else."
           }
         ]
       }
@@ -1428,6 +1524,36 @@
             "type": "Shape",
             "default": "FormaSnackbarDefaults.shape",
             "description": "the snackbar container shape (defaults to FormaSnackbarDefaults.shape)."
+          },
+          {
+            "name": "containerColor",
+            "type": "Color",
+            "default": "SnackbarDefaults.color",
+            "description": "the snackbar's background color (defaults to the M3 default)."
+          },
+          {
+            "name": "contentColor",
+            "type": "Color",
+            "default": "SnackbarDefaults.contentColor",
+            "description": "the color of the message text (defaults to the M3 default)."
+          },
+          {
+            "name": "actionContentColor",
+            "type": "Color",
+            "default": "SnackbarDefaults.actionColor",
+            "description": "the color of the action button's label (defaults to SnackbarDefaults.actionColor — the same value FormaUI used before this was configurable, so the action keeps its look unless overridden)."
+          },
+          {
+            "name": "messageTextStyle",
+            "type": "TextStyle?",
+            "default": "null",
+            "description": "optional TextStyle override for message, merged on top of the M3 snackbar body style."
+          },
+          {
+            "name": "actionLabelTextStyle",
+            "type": "TextStyle?",
+            "default": "null",
+            "description": "optional TextStyle override for actionLabel, merged on top of the M3 action-button label style."
           }
         ]
       },
@@ -1985,6 +2111,24 @@
             "description": "whether the drawer can be opened/closed by a swipe gesture."
           },
           {
+            "name": "scrimColor",
+            "type": "Color",
+            "default": "DrawerDefaults.scrimColor",
+            "description": "the color of the scrim that obscures content while the drawer is open (defaults to the M3 default scrim)."
+          },
+          {
+            "name": "drawerContainerColor",
+            "type": "Color",
+            "default": "DrawerDefaults.modalContainerColor",
+            "description": "the background color of the drawer sheet (defaults to the M3 modal drawer container, themed by FormaTheme)."
+          },
+          {
+            "name": "drawerContentColor",
+            "type": "Color",
+            "default": "contentColorFor(drawerContainerColor)",
+            "description": "the preferred content color inside the drawer sheet (defaults to the color matching drawerContainerColor)."
+          },
+          {
             "name": "content",
             "type": "@Composable () -> Unit",
             "default": null,
@@ -2031,6 +2175,24 @@
             "type": "String?",
             "default": "null",
             "description": "optional trailing text (e.g. an unread count) shown at the item's end."
+          },
+          {
+            "name": "colors",
+            "type": "NavigationDrawerItemColors?",
+            "default": "null",
+            "description": "the item colors — text, icon, badge, and selection-container colors for the selected and unselected states. Defaults to the M3 defaults, themed by FormaTheme."
+          },
+          {
+            "name": "labelTextStyle",
+            "type": "TextStyle?",
+            "default": "null",
+            "description": "optional TextStyle override for label, merged on top of the M3 label style."
+          },
+          {
+            "name": "badgeTextStyle",
+            "type": "TextStyle?",
+            "default": "null",
+            "description": "optional TextStyle override for badge, merged on top of the M3 badge style."
           }
         ]
       }
@@ -2060,6 +2222,18 @@
             "type": "Modifier",
             "default": "Modifier",
             "description": "the Modifier applied to the rail."
+          },
+          {
+            "name": "containerColor",
+            "type": "Color",
+            "default": "NavigationRailDefaults.ContainerColor",
+            "description": "the rail's background color (defaults to the M3 navigation-rail container, themed by FormaTheme)."
+          },
+          {
+            "name": "contentColor",
+            "type": "Color",
+            "default": "contentColorFor(containerColor)",
+            "description": "the preferred content color for items (defaults to the color matching containerColor)."
           },
           {
             "name": "header",
@@ -2132,6 +2306,18 @@
             "type": "Boolean",
             "default": "true",
             "description": "whether the label is shown even when the item is unselected."
+          },
+          {
+            "name": "colors",
+            "type": "NavigationRailItemColors?",
+            "default": "null",
+            "description": "the item colors — icon, label, and selection-indicator colors for the selected, unselected, and disabled states. Defaults to the M3 defaults, themed by FormaTheme."
+          },
+          {
+            "name": "labelTextStyle",
+            "type": "TextStyle?",
+            "default": "null",
+            "description": "optional TextStyle override for label, merged on top of the M3 label style."
           }
         ]
       }
@@ -2638,6 +2824,24 @@
             "type": "RichTooltipColors?",
             "default": "null",
             "description": "the container/content/title/action colors used by FormaTooltipVariant.Rich. When null, the Material 3 default rich tooltip colors are used. Has no effect on FormaTooltipVariant.Plain."
+          },
+          {
+            "name": "containerColor",
+            "type": "Color",
+            "default": "TooltipDefaults.plainTooltipContainerColor",
+            "description": "the tooltip's background color for FormaTooltipVariant.Plain (defaults to the M3 plain-tooltip container). No effect on Rich — use colors there."
+          },
+          {
+            "name": "contentColor",
+            "type": "Color",
+            "default": "TooltipDefaults.plainTooltipContentColor",
+            "description": "the tooltip's content color for FormaTooltipVariant.Plain (defaults to the M3 plain-tooltip content color). No effect on Rich — use colors there."
+          },
+          {
+            "name": "textStyle",
+            "type": "TextStyle?",
+            "default": "null",
+            "description": "optional TextStyle override for the tooltip's body text (both variants), merged on top of the M3 tooltip body style."
           },
           {
             "name": "content",

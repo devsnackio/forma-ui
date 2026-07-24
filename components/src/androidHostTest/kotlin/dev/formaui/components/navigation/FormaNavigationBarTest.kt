@@ -22,6 +22,7 @@ import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
 import androidx.compose.ui.text.TextLayoutResult
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontWeight
 import dev.formaui.core.annotation.ExperimentalFormaUiApi
 import dev.formaui.core.theme.FormaTheme
 import org.junit.Assert.assertEquals
@@ -240,5 +241,34 @@ class FormaNavigationBarTest {
 
         composeRule.onNodeWithText("Home").assertIsDisplayed()
         composeRule.onNodeWithText("Alerts").assertIsDisplayed()
+    }
+
+    // --- item text-style param (labelTextStyle) ---
+
+    @Test
+    fun labelTextStyle_overrideReachesRenderedLabel() {
+        // A distinctive weight (Black = 900) that no M3 default label style uses, so a match proves
+        // the override's merge reached the laid-out glyphs, not just that the param was accepted.
+        composeRule.setContent {
+            FormaTheme {
+                FormaNavigationBar {
+                    FormaNavigationBarItem(
+                        selected = true,
+                        onClick = {},
+                        icon = { Text("H") },
+                        label = "Home",
+                        labelTextStyle = TextStyle(fontWeight = FontWeight.Black),
+                    )
+                }
+            }
+        }
+
+        val style =
+            composeRule.onNodeWithText("Home", useUnmergedTree = true).resolvedTextStyle()
+        assertEquals(
+            "labelTextStyle override should reach the rendered nav bar item label",
+            FontWeight.Black,
+            style.fontWeight,
+        )
     }
 }
