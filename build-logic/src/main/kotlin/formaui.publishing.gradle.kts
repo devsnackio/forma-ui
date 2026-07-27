@@ -85,6 +85,33 @@ publishing {
     }
 }
 
+/**
+ * The `wasmJs` publication is deliberately NOT published.
+ *
+ * `wasmJs` exists as a compile target because `:preview-wasm` links against it to build the docs
+ * site's live previews (and `compileKotlinWasmJs` is part of the QA gate) — but nothing consumes
+ * `*-wasm-js` from a Maven repository. The docs site gets its bundle from the `previews-<version>`
+ * GitHub release asset (`.github/workflows/previews.yml`), never from Maven. Android is the
+ * shipped, published artifact.
+ *
+ * Why bother: the wasm publications are 130 of the 370 files in a release, and Maven Central's
+ * free tier is limited on monthly FILE COUNT (~1,167) long before size (~78 MB) — this project's
+ * payload is only ~3 MB, so file count is the binding constraint. Dropping them takes a release
+ * from 370 to 240 files.
+ *
+ * Trade-off, verified by inspecting the published Gradle Module Metadata: the root
+ * `kotlinMultiplatform` module still advertises a wasmJs variant with an `available-at` pointer to
+ * the absent `*-wasm-js` module, and Gradle offers no supported way to edit GMM. A consumer that
+ * asks for wasmJs therefore gets a 404 on that pointer rather than a clean "no matching variant"
+ * error. That is acceptable here precisely because wasmJs is not a supported consumer target — but
+ * it is the reason to re-enable this the moment we DO want to ship wasm to consumers.
+ */
+tasks.withType<AbstractPublishToMaven>().configureEach {
+    onlyIf("wasmJs is a build-only target — see the note above") { task ->
+        (task as AbstractPublishToMaven).publication?.name != "wasmJs"
+    }
+}
+
 signing {
     val signingKey = providers.gradleProperty("signingInMemoryKey")
         .orElse(providers.environmentVariable("SIGNING_KEY"))

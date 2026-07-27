@@ -58,6 +58,20 @@ cleanly onto how the Next.js docs site would embed a preview (static assets, opt
 Verified headlessly with Playwright + the cached `chromium_headless_shell` (WebGL via
 `--use-angle=swiftshader`).
 
+## Automated in CI
+
+The recipe below is still the local/manual path, and still what `:preview-wasm` produces on a dev
+machine. It is now also automated: **`.github/workflows/previews.yml`** runs steps 1–2 on a tag push
+(or manual dispatch) and publishes the result as a `previews-<version>.tar.gz` GitHub release asset,
+which the docs site downloads at build time. That is what makes previews work on Vercel, where the
+site repo has no sibling `forma-ui` checkout to copy from. The asset's directory contract and the
+split of responsibilities (which pieces forma-ui ships vs. which the site adds) are documented in
+`docs/SITE_HANDOFF.md` §"Live preview embed contract" step 4.
+
+Note the workflow adds `:preview-wasm:wasmJsProcessResources` to the task list below — step 2's
+`composeResources/` is not a guaranteed by-product of the executable compile, and a bundle without
+it fails at runtime on the Public Sans fonts.
+
 ## Notes / follow-ups for the docs site
 - **Bundle size:** the *development* executable is unoptimized (~21 MB wasm + ~8.6 MB skiko). For
   production, use the optimized/production executable (needs Binaryen `wasm-opt`, a Kotlin-managed

@@ -1,0 +1,159 @@
+# Publish the wasm live-preview bundle as a GitHub release asset.
+#
+# WHY THIS EXISTS: the docs site (formaui-site, separate repo) embeds real
+# components compiled to wasm. Those bundles are built HERE (docs/SITE_HANDOFF.md
+# §"Live preview embed contract" step 1) and were historically copied by hand from
+# a sibling checkout — which meant a Vercel build of the site, which only has the
+# site repo, had no bundle and rendered the "not available in this deployment"
+# card on every component page. This workflow is the cross-repo delivery step:
+# the site's scripts/sync-previews.mjs downloads the asset this uploads.
+#
+# ## Asset contract (the site depends on this layout — don't reshape it casually)
+#
+#   previews-<version>.tar.gz
+#     kotlin/            Kotlin/wasm output (forma-ui-preview-wasm.{mjs,wasm,...})
+#     skiko/             Skia web runtime (skiko.mjs, skiko.wasm, ...)
+#     composeResources/  Compose resources — REQUIRED at runtime (Public Sans fonts)
+#
+# Those are exactly the three forma-ui-owned pieces. The remaining two pieces of a
+# working preview — @js-joda/core's ESM build and the preview host index.html —
+# are site-owned and added by the site's sync script, so they are deliberately NOT
+# in this tarball.
+#
+# ## Development, not production, executable
+#
+# This ships the DEVELOPMENT executable (~39 MB raw, far less gzipped). The
+# optimized production build needs Binaryen's wasm-opt and is tracked as a later
+# optimization in docs/WASM_PREVIEW_PIPELINE.md — switching is a task-name change
+# here plus the same directory contract, so it does not affect the site.
+name: Publish preview bundle
+
+on:
+  # Tagging a release publishes its preview bundle automatically.
+  push:
+    tags: ["v*"]
+  # Manual rebuild for an existing tag, or a bundle for an untagged version.
+  workflow_dispatch:
+    inputs:
+      version:
+        description: "Version to publish previews for (e.g. 0.1.0-beta04) — a v-prefixed tag/release is created if absent"
+        required: true
+        type: string
+
+concurrency:
+  group: previews-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: write # create/update the release and upload the asset
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+
+      # Resolve the version once: from the tag on a tag push, from the input on
+      # dispatch. TAG is always "v${VERSION}".
+      - name: Resolve version
+        id: v
+        run: |
+          if [ "${{ github.event_name }}" = "push" ]; then
+            TAG="${GITHUB_REF#refs/tags/}"
+            VERSION="${TAG#v}"
+          else
+            VERSION="${{ inputs.version }}"
+            TAG="v${VERSION}"
+          fi
+          echo "version=${VERSION}" >> "${GITHUB_OUTPUT}"
+          echo "tag=${TAG}" >> "${GITHUB_OUTPUT}"
+          echo "Publishing previews for ${VERSION} (tag ${TAG})"
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v5
+        with:
+          distribution: temurin
+          java-version: 17
+
+      - name: Set up Gradle
+        uses: gradle/actions/setup-gradle@v5
+
+      # wasmJsProcessResources is listed explicitly: composeResources/ is NOT a
+      # guaranteed by-product of the executable compile, and a bundle missing it
+      # fails at runtime with MissingResourceException on the Public Sans fonts.
+      - name: Build preview bundle
+        run: >
+          ./gradlew
+          :preview-wasm:wasmJsDevelopmentExecutableCompileSync
+          :preview-wasm:unpackSkikoWasmRuntime
+          :preview-wasm:wasmJsProcessResources
+
+      - name: Assemble tarball
+        id: pack
+        env:
+          VERSION: ${{ steps.v.outputs.version }}
+        run: |
+          set -euo pipefail
+          BUILD="preview-wasm/build"
+          KOTLIN="${BUILD}/compileSync/wasmJs/main/developmentExecutable/kotlin"
+          SKIKO="${BUILD}/compose/skiko-for-web-runtime"
+          RESOURCES="${BUILD}/processedResources/wasmJs/main/composeResources"
+
+          # Fail loudly here rather than shipping a half-bundle that breaks in a
+          # browser: an incomplete asset is worse than a missing one, because the
+          # site treats a downloadable asset as authoritative.
+          for dir in "${KOTLIN}" "${SKIKO}" "${RESOURCES}"; do
+            if [ ! -d "${dir}" ]; then
+              echo "::error::Expected build output missing: ${dir}"
+              exit 1
+            fi
+          done
+          if ! ls "${KOTLIN}"/*.wasm >/dev/null 2>&1; then
+            echo "::error::No .wasm in ${KOTLIN} — the wasm compile produced nothing."
+            exit 1
+          fi
+
+          STAGE="$(mktemp -d)/previews"
+          mkdir -p "${STAGE}"
+          cp -R "${KOTLIN}" "${STAGE}/kotlin"
+          cp -R "${SKIKO}" "${STAGE}/skiko"
+          cp -R "${RESOURCES}" "${STAGE}/composeResources"
+
+          ASSET="previews-${VERSION}.tar.gz"
+          tar -czf "${ASSET}" -C "${STAGE}" kotlin skiko composeResources
+          echo "asset=${ASSET}" >> "${GITHUB_OUTPUT}"
+
+          echo "### Preview bundle \`${ASSET}\`" >> "${GITHUB_STEP_SUMMARY}"
+          echo "" >> "${GITHUB_STEP_SUMMARY}"
+          echo "- Packed size: $(du -h "${ASSET}" | cut -f1)" >> "${GITHUB_STEP_SUMMARY}"
+          echo "- Top-level entries: $(tar -tzf "${ASSET}" | awk -F/ '{print $1}' | sort -u | tr '\n' ' ')" >> "${GITHUB_STEP_SUMMARY}"
+
+      # Also keep it as a workflow artifact: useful for inspecting a bundle from a
+      # dispatch run without touching a release.
+      - name: Upload as workflow artifact
+        uses: actions/upload-artifact@v6
+        with:
+          name: previews-${{ steps.v.outputs.version }}
+          path: ${{ steps.pack.outputs.asset }}
+          if-no-files-found: error
+
+      # --clobber so a re-run replaces the asset instead of erroring. The release
+      # itself is created only if absent, so re-running never discards notes.
+      - name: Attach to release
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TAG: ${{ steps.v.outputs.tag }}
+          VERSION: ${{ steps.v.outputs.version }}
+          ASSET: ${{ steps.pack.outputs.asset }}
+        run: |
+          set -euo pipefail
+          if ! gh release view "${TAG}" >/dev/null 2>&1; then
+            echo "Release ${TAG} does not exist — creating it."
+            gh release create "${TAG}" \
+              --title "FormaUI ${VERSION}" \
+              --notes "Wasm live-preview bundle for the docs site. See docs/SITE_HANDOFF.md." \
+              --prerelease
+          fi
+          gh release upload "${TAG}" "${ASSET}" --clobber
+          echo "Uploaded ${ASSET} to release ${TAG}."
