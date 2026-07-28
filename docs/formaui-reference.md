@@ -3,7 +3,17 @@
 > Generated from `docs/component-inventory.json` in the forma-ui repo — regenerate there
 > when the library version is bumped. Do not edit by hand.
 
-**Artifacts** (Maven Central): `io.github.devsnackio:core` and `io.github.devsnackio:components`.
+**Artifacts** (Maven Central): `io.github.devsnackio:core` and `io.github.devsnackio:components`, version `0.1.0-beta04`.
+
+```kotlin
+dependencies {
+    implementation("io.github.devsnackio:components:0.1.0-beta04") // brings :core transitively
+}
+```
+
+> **Not yet on Maven Central.** `0.1.0-beta04` is the intended coordinate set for the pending
+> first release; stable `0.1.0` follows once the beta has proven itself.
+
 Code packages are `dev.formaui.*` — the group/package mismatch is intentional (the Maven group
 is namespace-verified as `io.github.devsnackio`); import from `dev.formaui.*`, never "correct" it.
 
@@ -14,7 +24,7 @@ is namespace-verified as `io.github.devsnackio`); import from `dev.formaui.*`, n
 - Always prefer `Forma*` components over raw Material 3 equivalents.
 - min SDK 24; Compose Multiplatform (JetBrains) with Material 3.
 
-**34 components.** Index:
+**40 components.** Index:
 
 | Component | Package | Summary |
 |---|---|---|
@@ -52,6 +62,12 @@ is namespace-verified as `io.github.devsnackio`); import from `dev.formaui.*`, n
 | [LineChart](#linechart) | `chart` | a single series plotted as a smooth (or straight) trend line with an optional area fill, point markers, gridli… |
 | [DatePickerSheet](#datepickersheet) | `datepicker` | Material 3's inline DatePicker hosted in a FormaBottomSheet instead of the M3 DatePickerDialog, with hoisted M… |
 | [DateRangePickerSheet](#daterangepickersheet) | `datepicker` | Material 3's inline DateRangePicker hosted in a FormaBottomSheet instead of the M3 DatePickerDialog, with hois… |
+| [PullToRefresh](#pulltorefresh) | `pulltorefresh` | wraps a scrollable layout and adds a swipe-down-to-refresh gesture, delegating to Material 3's stable PullToRe… |
+| [SwipeToDismiss](#swipetodismiss) | `swipedismiss` | lets the user swipe a row horizontally to dismiss it (e.g. delete or archive), delegating to Material 3's stab… |
+| [RangeSlider](#rangeslider) | `slider` | lets the user select a sub-range (start and end value) from a continuous or stepped range, delegating to Mater… |
+| [TimePickerSheet](#timepickersheet) | `timepicker` | Material 3's TimePicker (clock dial) and TimeInput (text entry) hosted in a FormaBottomSheet, with hoisted M3 … |
+| [Carousel](#carousel) | `carousel` | one entry point covering both Material 3 horizontal carousel families (multi-browse and uncontained) via a var… |
+| [ExposedDropdownMenu](#exposeddropdownmenu) | `autocomplete` | a FormaTextField anchor that drops a menu of options below it, delegating to Material 3's ExposedDropdownMenuB… |
 
 ---
 
@@ -529,6 +545,12 @@ fun FormaAlertDialog(
     title: String? = null,
     text: String? = null,
     shape: Shape = FormaDialogDefaults.shape,
+    containerColor: Color = AlertDialogDefaults.containerColor,
+    iconContentColor: Color = AlertDialogDefaults.iconContentColor,
+    titleContentColor: Color = AlertDialogDefaults.titleContentColor,
+    textContentColor: Color = AlertDialogDefaults.textContentColor,
+    titleTextStyle: TextStyle? = null,
+    textTextStyle: TextStyle? = null,
 )
 ```
 
@@ -540,6 +562,12 @@ fun FormaAlertDialog(
 - `title` — optional dialog title.
 - `text` — optional supporting body text.
 - `shape` — the dialog container shape (defaults to FormaDialogDefaults.shape).
+- `containerColor` — the dialog's background color (defaults to the M3 default, themed by FormaTheme).
+- `iconContentColor` — the color applied to icon (defaults to the M3 default).
+- `titleContentColor` — the color applied to title (defaults to the M3 default).
+- `textContentColor` — the color applied to text (defaults to the M3 default).
+- `titleTextStyle` — optional TextStyle override for title, merged on top of the M3 title style.
+- `textTextStyle` — optional TextStyle override for text, merged on top of the M3 text style.
 
 **`FormaFullScreenDialog`** — Full-screen modal dialog for a focused multi-step task, with a top bar hosting Close, the title, and an optional confirm action.
 
@@ -548,6 +576,9 @@ fun FormaFullScreenDialog(
     onDismissRequest: () -> Unit,
     title: String,
     modifier: Modifier = Modifier,
+    containerColor: Color = MaterialTheme.colorScheme.surface,
+    contentColor: Color = contentColorFor(containerColor),
+    titleTextStyle: TextStyle? = null,
     confirmAction: (@Composable () -> Unit)? = null,
     content: @Composable ColumnScope.() -> Unit,
 )
@@ -556,6 +587,9 @@ fun FormaFullScreenDialog(
 - `onDismissRequest` — called when the user closes the dialog (Close button or back press).
 - `title` — the dialog's title, shown in the top bar.
 - `modifier` — the Modifier applied to the dialog surface.
+- `containerColor` — the dialog surface's background color (defaults to the M3 surface, themed by FormaTheme).
+- `contentColor` — the preferred content color inside the dialog (defaults to the color matching containerColor).
+- `titleTextStyle` — optional TextStyle override for title, merged on top of the top bar's title style (M3 titleLarge).
 - `confirmAction` — optional top-bar action slot at the end (e.g. a "Save" FormaButton).
 - `content` — the dialog body, laid out in a scrollable ColumnScope.
 
@@ -583,6 +617,8 @@ if (showDialog) {
 }
 ```
 
+**Accessibility:** Both variants delegate dismissal to the underlying Dialog, so an outside tap or back press routes to onDismissRequest; FormaFullScreenDialog's Close control is a text FormaButton, so it announces its label without needing a contentDescription. Pass contentDescription = null on FormaAlertDialog's icon when the title already conveys the same meaning.
+
 ---
 
 ## BottomSheet
@@ -599,6 +635,9 @@ fun FormaBottomSheet(
     modifier: Modifier = Modifier,
     skipPartiallyExpanded: Boolean = false,
     shape: Shape? = null,
+    containerColor: Color = BottomSheetDefaults.ContainerColor,
+    contentColor: Color = contentColorFor(containerColor),
+    scrimColor: Color = BottomSheetDefaults.ScrimColor,
     content: @Composable ColumnScope.() -> Unit,
 )
 ```
@@ -607,6 +646,9 @@ fun FormaBottomSheet(
 - `modifier` — the Modifier applied to the sheet.
 - `skipPartiallyExpanded` — when true, the sheet has no half-expanded state and opens fully.
 - `shape` — the sheet container shape. When null, Material 3's top-rounded default is used.
+- `containerColor` — the sheet's background color (defaults to the M3 bottom-sheet container, themed by FormaTheme).
+- `contentColor` — the preferred content color inside the sheet (defaults to the color matching containerColor).
+- `scrimColor` — the color of the scrim that obscures content behind the sheet (defaults to the M3 default scrim).
 - `content` — the sheet's content, laid out in a ColumnScope.
 
 **Variants:** Modal, Modal (skipPartiallyExpanded)
@@ -625,6 +667,8 @@ if (open) {
 }
 ```
 
+**Accessibility:** Delegates to Material 3's ModalBottomSheet, which holds focus above the scrim and routes a scrim tap, back press, or swipe-down to onDismissRequest; the default M3 drag handle (and its semantics) comes with the sheet. The sheet itself carries no title semantics — give its content a heading Text of its own.
+
 ---
 
 ## NavigationBar
@@ -638,11 +682,15 @@ A FormaUI bottom navigation bar — top-level destination switching, delegating 
 ```kotlin
 fun FormaNavigationBar(
     modifier: Modifier = Modifier,
+    containerColor: Color = NavigationBarDefaults.containerColor,
+    contentColor: Color = contentColorFor(containerColor),
     content: @Composable RowScope.() -> Unit,
 )
 ```
 
 - `modifier` — the Modifier applied to the bar.
+- `containerColor` — the bar's background color (defaults to the M3 navigation-bar container, themed by FormaTheme).
+- `contentColor` — the preferred content color for items (defaults to the color matching containerColor).
 - `content` — the bar's items, laid out in a RowScope (typically FormaNavigationBarItems).
 
 **`FormaNavigationBarItem`** — A single destination in a FormaNavigationBar (RowScope extension) with built-in numeric or dot badge support on the icon.
@@ -658,6 +706,8 @@ fun FormaNavigationBarItem(
     badgeCount: Int? = null,
     showBadgeDot: Boolean = false,
     alwaysShowLabel: Boolean = true,
+    colors: NavigationBarItemColors? = null,
+    labelTextStyle: TextStyle? = null,
 )
 ```
 
@@ -670,6 +720,8 @@ fun FormaNavigationBarItem(
 - `badgeCount` — optional unread count to show as a numeric badge on the icon.
 - `showBadgeDot` — when true and badgeCount is null, shows a dot badge on the icon.
 - `alwaysShowLabel` — whether the label is shown even when the item is unselected.
+- `colors` — the item colors — icon, label, and selection-indicator colors for the selected, unselected, and disabled states. Defaults to the M3 defaults, themed by FormaTheme.
+- `labelTextStyle` — optional TextStyle override for label, merged on top of the M3 label style so a partial override (e.g. only fontWeight) keeps the M3 defaults for everything else.
 
 **Variants:** No badge, Numeric badge, Dot badge
 
@@ -714,6 +766,9 @@ fun FormaListItem(
     onClick: (() -> Unit)? = null,
     enabled: Boolean = true,
     colors: ListItemColors? = null,
+    headlineTextStyle: TextStyle? = null,
+    overlineTextStyle: TextStyle? = null,
+    supportingTextStyle: TextStyle? = null,
 )
 ```
 
@@ -726,6 +781,9 @@ fun FormaListItem(
 - `onClick` — optional click handler; when non-null the whole row becomes clickable.
 - `enabled` — whether the row responds to clicks. Only meaningful when onClick is non-null.
 - `colors` — the row colors (defaults to the M3 defaults, themed by FormaTheme).
+- `headlineTextStyle` — optional TextStyle override for headline, merged on top of the M3 headline style so a partial override (e.g. only fontWeight) keeps the M3 defaults for everything else.
+- `overlineTextStyle` — optional TextStyle override for overline, merged on top of the M3 overline style.
+- `supportingTextStyle` — optional TextStyle override for supporting, merged on top of the M3 supporting style.
 
 **Variants:** Single-line, Two-line, Three-line, Clickable
 
@@ -950,6 +1008,8 @@ FormaEmptyState(
 )
 ```
 
+**Accessibility:** title and description render as real Text, so both are announced in order; the icon slot is decorative — pass contentDescription = null on it — and any action should be a labelled control such as a FormaButton.
+
 ---
 
 ## Snackbar
@@ -967,6 +1027,11 @@ fun FormaSnackbar(
     actionLabel: String? = null,
     onAction: (() -> Unit)? = null,
     shape: Shape = FormaSnackbarDefaults.shape,
+    containerColor: Color = SnackbarDefaults.color,
+    contentColor: Color = SnackbarDefaults.contentColor,
+    actionContentColor: Color = SnackbarDefaults.actionColor,
+    messageTextStyle: TextStyle? = null,
+    actionLabelTextStyle: TextStyle? = null,
 )
 ```
 
@@ -975,6 +1040,11 @@ fun FormaSnackbar(
 - `actionLabel` — optional action button label; the action is shown only when both this and onAction are provided.
 - `onAction` — optional action callback.
 - `shape` — the snackbar container shape (defaults to FormaSnackbarDefaults.shape).
+- `containerColor` — the snackbar's background color (defaults to the M3 default).
+- `contentColor` — the color of the message text (defaults to the M3 default).
+- `actionContentColor` — the color of the action button's label (defaults to SnackbarDefaults.actionColor — the same value FormaUI used before this was configurable, so the action keeps its look unless overridden).
+- `messageTextStyle` — optional TextStyle override for message, merged on top of the M3 snackbar body style.
+- `actionLabelTextStyle` — optional TextStyle override for actionLabel, merged on top of the M3 action-button label style.
 
 **`FormaSnackbarHost`** — Hosts snackbars queued through a SnackbarHostState, rendering each as a FormaUI-styled FormaSnackbar (including its action button); place it in a Scaffold's snackbarHost slot.
 
@@ -1007,6 +1077,8 @@ val hostState = remember { SnackbarHostState() }
 Scaffold(snackbarHost = { FormaSnackbarHost(hostState) }) { /* ... */ }
 // elsewhere: scope.launch { hostState.showSnackbar("Saved.", actionLabel = "Undo") }
 ```
+
+**Accessibility:** message and actionLabel render as real Text, so both are announced, and the action becomes a focusable button only when actionLabel and onAction are both supplied. Prefer queueing through SnackbarHostState + FormaSnackbarHost so Material 3 owns the show/dismiss timing, rather than composing FormaSnackbar directly.
 
 ---
 
@@ -1109,6 +1181,8 @@ FormaBottomAppBar(
 )
 ```
 
+**Accessibility:** The bar is icon-only, so supply a contentDescription on every icon in actions (and on the embedded floatingActionButton's) — without one they announce as unlabelled buttons. Touch targets come from the Material 3 icon buttons placed in actions.
+
 ---
 
 ## DropdownMenu
@@ -1167,6 +1241,8 @@ Box {
     }
 }
 ```
+
+**Accessibility:** The menu renders in its own popup and routes an outside tap or the back gesture to onDismissRequest. FormaDropdownMenuItem's text is a real Text, so each item announces its own label; treat leadingIcon/trailingIcon as decorative (contentDescription = null) since they repeat it.
 
 ---
 
@@ -1257,6 +1333,8 @@ FormaExtendedFloatingActionButton(
 )
 ```
 
+**Accessibility:** A FAB is icon-only, so its content Icon must carry a contentDescription naming the action — as must FormaExtendedFloatingActionButton's icon, whose text label is hidden while expanded is false. Role.Button semantics and the touch target come from Material 3; the press-scale is a graphicsLayer effect only, so it never shrinks the touch target.
+
 ---
 
 ## IconButton
@@ -1327,6 +1405,9 @@ fun FormaModalNavigationDrawer(
     drawerContent: @Composable ColumnScope.() -> Unit,
     modifier: Modifier = Modifier,
     gesturesEnabled: Boolean = true,
+    scrimColor: Color = DrawerDefaults.scrimColor,
+    drawerContainerColor: Color = DrawerDefaults.modalContainerColor,
+    drawerContentColor: Color = contentColorFor(drawerContainerColor),
     content: @Composable () -> Unit,
 )
 ```
@@ -1335,6 +1416,9 @@ fun FormaModalNavigationDrawer(
 - `drawerContent` — the drawer's items, laid out in a ColumnScope inside a ModalDrawerSheet (typically FormaNavigationDrawerItems).
 - `modifier` — the Modifier applied to the drawer.
 - `gesturesEnabled` — whether the drawer can be opened/closed by a swipe gesture.
+- `scrimColor` — the color of the scrim that obscures content while the drawer is open (defaults to the M3 default scrim).
+- `drawerContainerColor` — the background color of the drawer sheet (defaults to the M3 modal drawer container, themed by FormaTheme).
+- `drawerContentColor` — the preferred content color inside the drawer sheet (defaults to the color matching drawerContainerColor).
 - `content` — the screen content behind the drawer.
 
 **`FormaNavigationDrawerItem`** — A single destination row in the drawer, with optional leading icon and trailing text badge (e.g. an unread count).
@@ -1347,6 +1431,9 @@ fun FormaNavigationDrawerItem(
     modifier: Modifier = Modifier,
     icon: @Composable (() -> Unit)? = null,
     badge: String? = null,
+    colors: NavigationDrawerItemColors? = null,
+    labelTextStyle: TextStyle? = null,
+    badgeTextStyle: TextStyle? = null,
 )
 ```
 
@@ -1356,6 +1443,9 @@ fun FormaNavigationDrawerItem(
 - `modifier` — the Modifier applied to the item.
 - `icon` — optional leading icon (supply a contentDescription on it for accessibility).
 - `badge` — optional trailing text (e.g. an unread count) shown at the item's end.
+- `colors` — the item colors — text, icon, badge, and selection-container colors for the selected and unselected states. Defaults to the M3 defaults, themed by FormaTheme.
+- `labelTextStyle` — optional TextStyle override for label, merged on top of the M3 label style.
+- `badgeTextStyle` — optional TextStyle override for badge, merged on top of the M3 badge style.
 
 **Variants:** modal
 
@@ -1390,12 +1480,16 @@ A FormaUI navigation rail — top-level destination switching for tablet/desktop
 ```kotlin
 fun FormaNavigationRail(
     modifier: Modifier = Modifier,
+    containerColor: Color = NavigationRailDefaults.ContainerColor,
+    contentColor: Color = contentColorFor(containerColor),
     header: @Composable (ColumnScope.() -> Unit)? = null,
     content: @Composable ColumnScope.() -> Unit,
 )
 ```
 
 - `modifier` — the Modifier applied to the rail.
+- `containerColor` — the rail's background color (defaults to the M3 navigation-rail container, themed by FormaTheme).
+- `contentColor` — the preferred content color for items (defaults to the color matching containerColor).
 - `header` — optional content shown above the items (typically a FAB or a logo).
 - `content` — the rail's items, laid out in a ColumnScope (typically 3-7 FormaNavigationRailItems).
 
@@ -1412,6 +1506,8 @@ fun FormaNavigationRailItem(
     badgeCount: Int? = null,
     showBadgeDot: Boolean = false,
     alwaysShowLabel: Boolean = true,
+    colors: NavigationRailItemColors? = null,
+    labelTextStyle: TextStyle? = null,
 )
 ```
 
@@ -1424,6 +1520,8 @@ fun FormaNavigationRailItem(
 - `badgeCount` — optional unread count to show as a numeric badge on the icon.
 - `showBadgeDot` — when true and badgeCount is null, shows a dot badge on the icon.
 - `alwaysShowLabel` — whether the label is shown even when the item is unselected.
+- `colors` — the item colors — icon, label, and selection-indicator colors for the selected, unselected, and disabled states. Defaults to the M3 defaults, themed by FormaTheme.
+- `labelTextStyle` — optional TextStyle override for label, merged on top of the M3 label style.
 
 **Variants:** with header, item with numeric badge, item with dot badge
 
@@ -1516,6 +1614,8 @@ FormaSearchBar(
     Text("Ada Lovelace")
 }
 ```
+
+**Accessibility:** The input field carries Material 3's text-field semantics, and expansion stays hoisted — onExpandedChange fires both when the field gains focus and on back navigation, so the caller owns the collapse. A search-glyph leadingIcon is decorative (contentDescription = null); give trailingIcon a description when it is an action such as clear.
 
 ---
 
@@ -1679,6 +1779,8 @@ FormaTabRow(selectedTabIndex = selectedTab) {
 }
 ```
 
+**Accessibility:** Role.Tab selection semantics and the 48dp touch target come from Material 3's PrimaryTabRow/SecondaryTabRow (and their scrollable equivalents). A FormaTab given only an icon and no text has no accessible label — supply a contentDescription on the icon in that case.
+
 ---
 
 ## Tooltip
@@ -1702,6 +1804,9 @@ fun FormaTooltip(
     onDismissRequest: (() -> Unit)? = null,
     enableUserInput: Boolean = true,
     colors: RichTooltipColors? = null,
+    containerColor: Color = TooltipDefaults.plainTooltipContainerColor,
+    contentColor: Color = TooltipDefaults.plainTooltipContentColor,
+    textStyle: TextStyle? = null,
     content: @Composable () -> Unit,
 )
 ```
@@ -1717,6 +1822,9 @@ fun FormaTooltip(
 - `onDismissRequest` — called when the user clicks outside the tooltip while it is shown. When null, Material 3's default dismiss-on-outside-click behavior applies.
 - `enableUserInput` — whether long-press and hover on content trigger the tooltip through state. Set to false if you drive state entirely programmatically.
 - `colors` — the container/content/title/action colors used by FormaTooltipVariant.Rich. When null, the Material 3 default rich tooltip colors are used. Has no effect on FormaTooltipVariant.Plain.
+- `containerColor` — the tooltip's background color for FormaTooltipVariant.Plain (defaults to the M3 plain-tooltip container). No effect on Rich — use colors there.
+- `contentColor` — the tooltip's content color for FormaTooltipVariant.Plain (defaults to the M3 plain-tooltip content color). No effect on Rich — use colors there.
+- `textStyle` — optional TextStyle override for the tooltip's body text (both variants), merged on top of the M3 tooltip body style.
 - `content` — the anchor content that the tooltip attaches to.
 
 **Supporting API:**
@@ -1787,6 +1895,8 @@ FormaTopAppBar(
     },
 )
 ```
+
+**Accessibility:** title is a real Text and is announced as the bar's label; navigationIcon and actions are icon slots, so supply a contentDescription on each (e.g. "Back", "More options"). Touch targets come from the Material 3 icon buttons placed in those slots.
 
 ---
 
@@ -2085,5 +2195,363 @@ if (open) {
 ```
 
 **Accessibility:** Inherits Material 3's DateRangePicker semantics — day cells expose full-date content descriptions with range start/end announcements, the mode toggle has its own content description, and navigation controls are labeled — plus ModalBottomSheet's back-press and scrim dismiss handling; the button slots are caller-supplied (typically FormaButtons with M3's 48dp minimum touch target).
+
+---
+
+## PullToRefresh
+
+`dev.formaui.components.pulltorefresh` · tier: extra
+
+A FormaUI pull-to-refresh container — wraps a scrollable layout and adds a swipe-down-to-refresh gesture, delegating to Material 3's stable PullToRefreshBox with fully hoisted isRefreshing state and a styling-passthrough indicator slot.
+
+**`FormaPullToRefresh`** — Wraps a scrollable BoxScope content with a pull-down-to-refresh gesture; the caller hoists isRefreshing and reacts in onRefresh. The indicator slot defaults to Material 3's themed PullToRefreshDefaults.Indicator aligned to the top-center (the styling passthrough).
+
+```kotlin
+fun FormaPullToRefresh(
+    isRefreshing: Boolean,
+    onRefresh: () -> Unit,
+    modifier: Modifier = Modifier,
+    state: PullToRefreshState = rememberPullToRefreshState(),
+    contentAlignment: Alignment = Alignment.TopStart,
+    indicator: @Composable BoxScope.() -> Unit = PullToRefreshDefaults.Indicator(...),
+    content: @Composable BoxScope.() -> Unit,
+)
+```
+
+- `isRefreshing` — whether a refresh is currently occurring; drives the indicator's spinning state. Flip it to true when your refresh starts and back to false when it completes.
+- `onRefresh` — called when the user's pull crosses the threshold, requesting a refresh.
+- `modifier` — the Modifier applied to the container.
+- `state` — the Material 3 PullToRefreshState tracking pull distance (defaults to a rememberPullToRefreshState()).
+- `contentAlignment` — the Alignment of children inside the container (defaults to Alignment.TopStart).
+- `indicator` — the indicator drawn on top of the content while pulling or refreshing (defaults to Material 3's PullToRefreshDefaults.Indicator aligned top-center, themed by FormaTheme). This is the styling passthrough; supply a custom indicator (e.g. PullToRefreshDefaults.LoadingIndicator) to override.
+- `content` — the scrollable content of the container, laid out in a BoxScope (typically a LazyColumn or a Column with Modifier.verticalScroll).
+
+**Supporting API:**
+- `rememberPullToRefreshState` (function (Material 3)) — The component defines no state type of its own — callers may create and own the pull state via Material 3's rememberPullToRefreshState; when omitted, FormaPullToRefresh remembers one internally.
+
+**Variants:** Idle, Refreshing, Custom indicator
+
+**Example:**
+
+```kotlin
+var refreshing by remember { mutableStateOf(false) }
+val scope = rememberCoroutineScope()
+FormaPullToRefresh(
+    isRefreshing = refreshing,
+    onRefresh = {
+        refreshing = true
+        scope.launch { delay(1500); refreshing = false }
+    },
+) {
+    LazyColumn(Modifier.fillMaxSize()) {
+        items(items) { item -> FormaListItem(headline = item) }
+    }
+}
+```
+
+**Accessibility:** Inherits Material 3's PullToRefreshBox gesture and indicator behavior; drive isRefreshing from your data-load state so the spinning indicator reflects the actual busy state.
+
+---
+
+## SwipeToDismiss
+
+`dev.formaui.components.swipedismiss` · tier: extra
+
+A FormaUI swipe-to-dismiss row — lets the user swipe a row horizontally to dismiss it (e.g. delete or archive), delegating to Material 3's stable SwipeToDismissBox with hoisted state, a revealed background slot, and per-direction enable flags.
+
+**`FormaSwipeToDismiss`** — Wraps RowScope content with a horizontal swipe-to-dismiss gesture; the caller creates the state via rememberSwipeToDismissBoxState and reacts to a completed swipe via onDismiss (or by reading state.dismissDirection). The backgroundContent slot is revealed behind the content while swiping — vary it per direction using state.
+
+```kotlin
+fun FormaSwipeToDismiss(
+    state: SwipeToDismissBoxState,
+    backgroundContent: @Composable RowScope.() -> Unit,
+    modifier: Modifier = Modifier,
+    enableDismissFromStartToEnd: Boolean = true,
+    enableDismissFromEndToStart: Boolean = true,
+    gesturesEnabled: Boolean = true,
+    onDismiss: (SwipeToDismissBoxValue) -> Unit = {},
+    content: @Composable RowScope.() -> Unit,
+)
+```
+
+- `state` — the Material 3 SwipeToDismissBoxState tracking the swipe; create it with rememberSwipeToDismissBoxState (initialValue, confirmValueChange, positionalThreshold).
+- `backgroundContent` — the content stacked behind content and revealed while swiping, laid out in a RowScope; use state (e.g. state.dismissDirection) to vary it per swipe direction.
+- `modifier` — the Modifier applied to the row.
+- `enableDismissFromStartToEnd` — whether the row can be dismissed by swiping start-to-end (defaults to true).
+- `enableDismissFromEndToStart` — whether the row can be dismissed by swiping end-to-start (defaults to true).
+- `gesturesEnabled` — whether the swipe gesture is interactive (defaults to true).
+- `onDismiss` — called when content is dismissed, with the resulting SwipeToDismissBoxValue direction (defaults to a no-op).
+- `content` — the dismissable content, laid out in a RowScope (typically a FormaListItem or a Surface).
+
+**Supporting API:**
+- `rememberSwipeToDismissBoxState` (function (Material 3)) — The component defines no state type of its own — callers create and own the swipe state via Material 3's rememberSwipeToDismissBoxState and read dismissDirection / currentValue from it.
+- `SwipeToDismissBoxValue` (enum (Material 3)) — The swipe direction reported to onDismiss and held by the state: StartToEnd, EndToStart, Settled.
+
+**Variants:** Both directions, Single direction (enable flags), Gestures disabled
+
+**Example:**
+
+```kotlin
+val state = rememberSwipeToDismissBoxState()
+FormaSwipeToDismiss(
+    state = state,
+    onDismiss = { direction -> onRemove(item) },
+    backgroundContent = {
+        Box(
+            Modifier.fillMaxSize()
+                .background(MaterialTheme.colorScheme.errorContainer)
+                .padding(horizontal = FormaTheme.spacing.md),
+            contentAlignment = Alignment.CenterEnd,
+        ) { Text("Delete", color = MaterialTheme.colorScheme.onErrorContainer) }
+    },
+) {
+    FormaListItem(headline = item.title, supporting = item.subtitle)
+}
+```
+
+**Accessibility:** Inherits Material 3's SwipeToDismissBox gesture handling; because a swipe gesture is not reachable by all users, pair the swipe action with an equivalent explicit control (e.g. a trailing overflow action) so the dismiss action stays operable without gestures.
+
+---
+
+## RangeSlider
+
+`dev.formaui.components.slider` · tier: extra
+
+A FormaUI range slider — lets the user select a sub-range (start and end value) from a continuous or stepped range, delegating to Material 3's RangeSlider. The sibling of FormaSlider for two-thumb selection.
+
+**`FormaRangeSlider`** — A stateless two-thumb slider with the hoisted value as a ClosedFloatingPointRange; the thumbs are bounded by valueRange and cannot cross. Mirrors FormaSlider's API.
+
+```kotlin
+fun FormaRangeSlider(
+    value: ClosedFloatingPointRange<Float>,
+    onValueChange: (ClosedFloatingPointRange<Float>) -> Unit,
+    modifier: Modifier = Modifier,
+    enabled: Boolean = true,
+    valueRange: ClosedFloatingPointRange<Float> = 0f..1f,
+    steps: Int = 0,
+    onValueChangeFinished: (() -> Unit)? = null,
+    colors: SliderColors? = null,
+)
+```
+
+- `value` — the current selected range; both ends should sit within valueRange.
+- `onValueChange` — called continuously with the new range as the user drags either thumb. The caller must hoist and persist the new value for it to appear.
+- `modifier` — the Modifier applied to the slider.
+- `enabled` — whether the slider is interactive.
+- `valueRange` — the inclusive range of selectable values (defaults to 0f..1f).
+- `steps` — the number of discrete intermediate stops (0 = continuous).
+- `onValueChangeFinished` — called once when the user finishes changing the range.
+- `colors` — the slider colors (defaults to the M3 defaults, themed by FormaTheme).
+
+**Variants:** Continuous, Stepped
+
+**Example:**
+
+```kotlin
+var range by remember { mutableStateOf(0.2f..0.8f) }
+FormaRangeSlider(
+    value = range,
+    onValueChange = { range = it },
+    modifier = Modifier.fillMaxWidth(),
+)
+```
+
+**Accessibility:** Each thumb exposes a 48dp touch target via Material 3's minimum interactive component size; the two thumbs are bounded by valueRange and cannot cross each other.
+
+---
+
+## TimePickerSheet
+
+`dev.formaui.components.timepicker` · tier: extra
+
+A FormaUI time picker presented in a modal bottom sheet — Material 3's TimePicker (clock dial) and TimeInput (text entry) hosted in a FormaBottomSheet, with hoisted M3 TimePickerState, confirm/dismiss button slots, and a FormaUI-provided dial-to-input mode toggle (M3's TimePicker has none of its own). Mirrors FormaDatePickerSheet's structure.
+
+**`FormaTimePickerSheet`** — Hosts M3's TimePicker/TimeInput in a FormaBottomSheet above a button row: an optional FormaUI mode toggle at the start and end-aligned dismiss/confirm slots. State is the caller's TimePickerState and the component wires nothing to the button slots — the confirm slot reads state.hour / state.minute itself. The default colors make the picker's own container transparent so it sits directly on the sheet surface.
+
+```kotlin
+fun FormaTimePickerSheet(
+    onDismissRequest: () -> Unit,
+    state: TimePickerState,
+    confirmButton: @Composable () -> Unit,
+    modifier: Modifier = Modifier,
+    dismissButton: (@Composable () -> Unit)? = null,
+    showModeToggle: Boolean = true,
+    skipPartiallyExpanded: Boolean = true,
+    shape: Shape? = null,
+    colors: TimePickerColors? = null,
+)
+```
+
+- `onDismissRequest` — called when the sheet is dismissed (scrim tap, back press, or swipe down) — hide the sheet by no longer composing it. There is no separate cancel callback; treat a dismiss as closed-without-confirming.
+- `state` — the hoisted Material 3 state; create it with rememberTimePickerState. Read state.hour (0-23) and state.minute (0-59) in the confirm slot's click handler. The 12h/24h format and locale are captured when the state is created (Material 3 behavior).
+- `confirmButton` — the primary action slot (required), typically a FormaButton. The component attaches no click handling or label — the slot owns both.
+- `modifier` — the Modifier applied to the sheet.
+- `dismissButton` — the optional secondary/cancel action slot, shown before confirmButton.
+- `showModeToggle` — whether to show the FormaUI-provided toggle that swaps the picker between the clock dial and text input. When false, only the clock dial is shown. (Material 3's TimePicker has no built-in toggle, unlike DatePicker.)
+- `skipPartiallyExpanded` — whether the sheet skips the half-expanded state and opens fully. Defaults to true — deliberately unlike FormaBottomSheet — because the half-expanded state clips the clock dial.
+- `shape` — the sheet container shape. When null, Material 3's top-rounded default is used.
+- `colors` — the TimePickerColors applied to both the dial and text-input modes. When null, Material 3's defaults are used with a transparent picker container so the picker sits directly on the sheet surface (avoiding a container-on-container seam). A supplied value is passed through untouched.
+
+**Supporting API:**
+- `rememberTimePickerState` (function (Material 3)) — The component defines no state type of its own — callers create and own the picker state via Material 3's rememberTimePickerState (initialHour, initialMinute, is24Hour) and read hour / minute from it.
+
+**Variants:** Clock dial mode, Text-input mode (via the toggle), With dismiss button, Mode toggle hidden, Custom colors
+
+**Example:**
+
+```kotlin
+val state = rememberTimePickerState(initialHour = 9, initialMinute = 30)
+if (open) {
+    FormaTimePickerSheet(
+        onDismissRequest = { open = false },
+        state = state,
+        confirmButton = {
+            FormaButton(onClick = { onPicked(state.hour, state.minute); open = false }) { Text("OK") }
+        },
+    )
+}
+```
+
+**Accessibility:** Inherits Material 3's TimePicker/TimeInput semantics — the dial and the hour/minute selectors are labeled and the AM/PM toggle is announced — plus ModalBottomSheet's back-press and scrim dismiss handling; the FormaUI mode toggle carries a mode-dependent contentDescription ('Switch to text input' / 'Switch to clock dial'). The button slots are caller-supplied (typically FormaButtons with M3's 48dp minimum touch target).
+
+---
+
+## Carousel
+
+`dev.formaui.components.carousel` · tier: extra
+
+A FormaUI carousel — a horizontally scrolling, snapping strip of items — one entry point covering both Material 3 horizontal carousel families (multi-browse and uncontained) via a variant enum, with hoisted M3 CarouselState and an indexed item slot.
+
+**`FormaCarousel`** — One entry point for both M3 horizontal carousels; a single itemWidth maps to preferredItemWidth (MultiBrowse) or the exact itemWidth (Uncontained), with an opinionated default item spacing and per-variant default fling.
+
+```kotlin
+fun FormaCarousel(
+    state: CarouselState,
+    itemWidth: Dp,
+    modifier: Modifier = Modifier,
+    variant: FormaCarouselVariant = FormaCarouselVariant.MultiBrowse,
+    itemSpacing: Dp = FormaCarouselDefaults.itemSpacing,
+    contentPadding: PaddingValues = PaddingValues(0.dp),
+    flingBehavior: TargetedFlingBehavior? = null,
+    userScrollEnabled: Boolean = true,
+    content: @Composable CarouselItemScope.(index: Int) -> Unit,
+)
+```
+
+- `state` — the hoisted CarouselState; create it with Material 3's rememberCarouselState(itemCount = { ... }).
+- `itemWidth` — the item width — the preferred (flexing) width for FormaCarouselVariant.MultiBrowse, the exact width for FormaCarouselVariant.Uncontained.
+- `modifier` — the Modifier applied to the carousel (typically sets its height).
+- `variant` — the layout strategy (defaults to FormaCarouselVariant.MultiBrowse).
+- `itemSpacing` — the gap between items (defaults to FormaCarouselDefaults.itemSpacing, an opinionated small gap; pass 0.dp for Material 3's flush default).
+- `contentPadding` — padding around the whole content strip (defaults to none).
+- `flingBehavior` — the post-scroll fling behavior. When null, the Material 3 default for the variant is used (a single-advance snap for MultiBrowse, a no-snap fling for Uncontained).
+- `userScrollEnabled` — whether the user can scroll the carousel by gesture.
+- `content` — the item slot, invoked per item with its index, in a CarouselItemScope (use its mask modifiers, e.g. Modifier.maskClip, to shape items).
+
+**Supporting API:**
+- `FormaCarouselVariant` (enum) — Layout strategy of a FormaCarousel: MultiBrowse (default; flexing large/medium/small items), Uncontained (every item keeps the exact width).
+- `FormaCarouselDefaults` (object) — Defaults for FormaCarousel: itemSpacing (FormaTheme.spacing.xs — a small opinionated gap, vs Material 3's 0.dp).
+- `rememberCarouselState` (function (Material 3)) — The component defines no state type of its own — callers create and own the state via Material 3's rememberCarouselState(initialItem, itemCount).
+
+**Variants:** MultiBrowse, Uncontained
+
+**Example:**
+
+```kotlin
+val state = rememberCarouselState(itemCount = { photos.size })
+FormaCarousel(
+    state = state,
+    itemWidth = 220.dp,
+    modifier = Modifier.height(200.dp),
+) { index ->
+    Image(
+        painter = photos[index].painter,
+        contentDescription = photos[index].description,
+        modifier = Modifier.fillMaxSize().maskClip(FormaTheme.shapes.lg),
+        contentScale = ContentScale.Crop,
+    )
+}
+```
+
+**Accessibility:** The carousel is a horizontally scrollable container; supply a meaningful contentDescription on each item's own content (e.g. the Image inside the slot). Material 3 handles the scroll/snap semantics.
+
+---
+
+## ExposedDropdownMenu
+
+`dev.formaui.components.autocomplete` · tier: extra
+
+A FormaUI exposed dropdown menu (autocomplete) — a FormaTextField anchor that drops a menu of options below it, delegating to Material 3's ExposedDropdownMenuBox. Fully hoisted (query text, expanded state, and the already-filtered options are the caller's); FormaUI provides the wiring, the rotating chevron, and the option rows. Generic over the option type via optionLabel.
+
+**`FormaExposedDropdownMenu`** — Generic <T> autocomplete: caller owns value/onValueChange, expanded/onExpandedChange, and the pre-filtered options; editable=true is a type-to-filter field (PrimaryEditable), editable=false is a read-only tap-to-select field (PrimaryNotEditable). Empty options while expanded shows a disabled 'No matches' row.
+
+```kotlin
+fun FormaExposedDropdownMenu(
+    expanded: Boolean,
+    onExpandedChange: (Boolean) -> Unit,
+    value: String,
+    onValueChange: (String) -> Unit,
+    options: List<T>,
+    onOptionSelected: (T) -> Unit,
+    optionLabel: (T) -> String,
+    modifier: Modifier = Modifier,
+    variant: FormaTextFieldVariant = FormaTextFieldVariant.Outlined,
+    editable: Boolean = true,
+    enabled: Boolean = true,
+    label: String? = null,
+    placeholder: String? = null,
+    isError: Boolean = false,
+    helperText: String? = null,
+    errorText: String? = null,
+    leadingIcon: @Composable (() -> Unit)? = null,
+    colors: TextFieldColors? = null,
+    noMatchesText: String = FormaExposedDropdownMenuDefaults.NoMatchesText,
+)
+```
+
+- `expanded` — whether the menu is currently open.
+- `onExpandedChange` — called when the menu requests to open or close (anchor tap, dismiss).
+- `value` — the current query / selected text shown in the anchor field.
+- `onValueChange` — called as the user edits the query. Only fires while editable is true.
+- `options` — the options to show, already filtered by the caller for the current value.
+- `onOptionSelected` — called with the chosen option when a row is tapped; the menu then collapses. The caller reflects the choice into value (e.g. value = optionLabel(it)).
+- `optionLabel` — maps an option to its display (and menu-row) text.
+- `modifier` — the Modifier applied to the ExposedDropdownMenuBox.
+- `variant` — the anchor field's container style (defaults to FormaTextFieldVariant.Outlined).
+- `editable` — whether the field is a type-to-filter autocomplete (true) or a read-only tap-to-select field (false).
+- `enabled` — whether the control is interactive (disables both the field and the menu anchor).
+- `label` — optional floating label on the anchor field.
+- `placeholder` — optional placeholder shown while the field is empty.
+- `isError` — whether the anchor field is in the error state.
+- `helperText` — optional supporting text shown below the field when not in error.
+- `errorText` — optional supporting text shown below the field while isError is true.
+- `leadingIcon` — optional slot at the start of the anchor field.
+- `colors` — the anchor field colors. When null, the M3 defaults for the variant are used.
+- `noMatchesText` — the label of the single disabled row shown when options is empty while expanded (defaults to FormaExposedDropdownMenuDefaults.NoMatchesText, "No matches").
+
+**Supporting API:**
+- `FormaExposedDropdownMenuDefaults` (object) — Defaults for FormaExposedDropdownMenu: NoMatchesText ("No matches") — the label of the disabled empty-options row.
+
+**Variants:** Editable (type-to-filter), Non-editable (tap-to-select), Empty (No matches)
+
+**Example:**
+
+```kotlin
+var text by remember { mutableStateOf("") }
+var expanded by remember { mutableStateOf(false) }
+val matches = countries.filter { it.contains(text, ignoreCase = true) }
+FormaExposedDropdownMenu(
+    expanded = expanded,
+    onExpandedChange = { expanded = it },
+    value = text,
+    onValueChange = { text = it },
+    options = matches,
+    onOptionSelected = { text = it },
+    optionLabel = { it },
+    label = "Country",
+)
+```
+
+**Accessibility:** The rotating chevron trailing icon and the anchor's expand/collapse + option semantics are handled by Material 3's ExposedDropdownMenuBox / menuAnchor; the trailing icon is the standard M3 ExposedDropdownMenuDefaults.TrailingIcon. The field's error state is surfaced to accessibility services by the underlying FormaTextField.
 
 ---
