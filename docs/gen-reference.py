@@ -5,11 +5,20 @@ A consumer-facing catalog for projects that depend on the published FormaUI
 artifacts (e.g. the fintech app repo). Regenerate whenever the inventory changes.
 """
 import json
+import re
 import sys
 from pathlib import Path
 
 repo = Path(sys.argv[1]) if len(sys.argv) > 1 else Path.cwd()
 inv = json.loads((repo / "docs/component-inventory.json").read_text())
+
+# Read the version from the root build script so the header can't drift from the artifacts.
+version_match = re.search(
+    r'^version = "(.+)"', (repo / "build.gradle.kts").read_text(), re.M
+)
+if not version_match:
+    sys.exit("could not read `version = \"…\"` from build.gradle.kts")
+version = version_match.group(1)
 
 out = []
 w = out.append
@@ -19,7 +28,17 @@ w("")
 w("> Generated from `docs/component-inventory.json` in the forma-ui repo — regenerate there")
 w("> when the library version is bumped. Do not edit by hand.")
 w("")
-w("**Artifacts** (Maven Central): `io.github.devsnackio:core` and `io.github.devsnackio:components`.")
+w(f"**Artifacts** (Maven Central): `io.github.devsnackio:core` and `io.github.devsnackio:components`, version `{version}`.")
+w("")
+w("```kotlin")
+w("dependencies {")
+w(f"    implementation(\"io.github.devsnackio:components:{version}\") // brings :core transitively")
+w("}")
+w("```")
+w("")
+w(f"> **Not yet on Maven Central.** `{version}` is the intended coordinate set for the pending")
+w("> first release; stable `0.1.0` follows once the beta has proven itself.")
+w("")
 w("Code packages are `dev.formaui.*` — the group/package mismatch is intentional (the Maven group")
 w("is namespace-verified as `io.github.devsnackio`); import from `dev.formaui.*`, never \"correct\" it.")
 w("")

@@ -918,7 +918,7 @@
       "Full-screen"
     ],
     "codeSample": "var showDialog by remember { mutableStateOf(true) }\nif (showDialog) {\n    FormaAlertDialog(\n        onDismissRequest = { showDialog = false },\n        title = \"Delete payment?\",\n        text = \"This action can't be undone.\",\n        confirmButton = {\n            FormaButton(onClick = {}) { Text(\"Delete\") }\n        },\n        dismissButton = {\n            FormaButton(onClick = { showDialog = false }, variant = FormaButtonVariant.Text) { Text(\"Cancel\") }\n        },\n    )\n}",
-    "accessibility": null
+    "accessibility": "Both variants delegate dismissal to the underlying Dialog, so an outside tap or back press routes to onDismissRequest; FormaFullScreenDialog's Close control is a text FormaButton, so it announces its label without needing a contentDescription. Pass contentDescription = null on FormaAlertDialog's icon when the title already conveys the same meaning."
   },
   {
     "id": "bottom-sheet",
@@ -990,7 +990,7 @@
       "Modal (skipPartiallyExpanded)"
     ],
     "codeSample": "var open by remember { mutableStateOf(false) }\nFormaButton(onClick = { open = true }) { Text(\"Show sheet\") }\nif (open) {\n    FormaBottomSheet(onDismissRequest = { open = false }) {\n        Text(\"Payment options\", style = MaterialTheme.typography.titleMedium)\n        Text(\"Choose how you'd like to pay.\")\n        FormaButton(onClick = {}, modifier = Modifier.fillMaxWidth()) { Text(\"Continue\") }\n    }\n}",
-    "accessibility": null
+    "accessibility": "Delegates to Material 3's ModalBottomSheet, which holds focus above the scrim and routes a scrim tap, back press, or swipe-down to onDismissRequest; the default M3 drag handle (and its semantics) comes with the sheet. The sheet itself carries no title semantics — give its content a heading Text of its own."
   },
   {
     "id": "navigation-bar",
@@ -1179,6 +1179,24 @@
             "type": "ListItemColors?",
             "default": "null",
             "description": "the row colors (defaults to the M3 defaults, themed by FormaTheme)."
+          },
+          {
+            "name": "headlineTextStyle",
+            "type": "TextStyle?",
+            "default": "null",
+            "description": "optional TextStyle override for headline, merged on top of the M3 headline style so a partial override (e.g. only fontWeight) keeps the M3 defaults for everything else."
+          },
+          {
+            "name": "overlineTextStyle",
+            "type": "TextStyle?",
+            "default": "null",
+            "description": "optional TextStyle override for overline, merged on top of the M3 overline style."
+          },
+          {
+            "name": "supportingTextStyle",
+            "type": "TextStyle?",
+            "default": "null",
+            "description": "optional TextStyle override for supporting, merged on top of the M3 supporting style."
           }
         ]
       }
@@ -1480,7 +1498,7 @@
       "With action"
     ],
     "codeSample": "FormaEmptyState(\n    title = \"No transactions yet\",\n    description = \"Your transactions will appear here once you make your first payment.\",\n    icon = { Icon(Icons.Outlined.Receipt, contentDescription = null) },\n    action = { FormaButton(onClick = { /* add payment */ }) { Text(\"Add payment\") } },\n)",
-    "accessibility": null
+    "accessibility": "title and description render as real Text, so both are announced in order; the icon slot is decorative — pass contentDescription = null on it — and any action should be a labelled control such as a FormaButton."
   },
   {
     "id": "snackbar",
@@ -1588,7 +1606,7 @@
       "Action"
     ],
     "codeSample": "FormaSnackbar(\n    message = \"Message deleted.\",\n    actionLabel = \"Undo\",\n    onAction = { /* undo */ },\n)\n\n// To surface transient messages, host queued snackbars:\nval hostState = remember { SnackbarHostState() }\nScaffold(snackbarHost = { FormaSnackbarHost(hostState) }) { /* ... */ }\n// elsewhere: scope.launch { hostState.showSnackbar(\"Saved.\", actionLabel = \"Undo\") }",
-    "accessibility": null
+    "accessibility": "message and actionLabel render as real Text, so both are announced, and the action becomes a focusable button only when actionLabel and onAction are both supplied. Prefer queueing through SnackbarHostState + FormaSnackbarHost so Material 3 owns the show/dismiss timing, rather than composing FormaSnackbar directly."
   },
   {
     "id": "slider",
@@ -1720,7 +1738,7 @@
       "with embedded FAB"
     ],
     "codeSample": "FormaBottomAppBar(\n    actions = {\n        FormaIconButton(onClick = { }) { Text(\"🔍\") }\n        FormaIconButton(onClick = { }) { Text(\"⋮\") }\n    },\n    floatingActionButton = {\n        FormaFloatingActionButton(onClick = { }) { Text(\"+\") }\n    },\n)",
-    "accessibility": null
+    "accessibility": "The bar is icon-only, so supply a contentDescription on every icon in actions (and on the embedded floatingActionButton's) — without one they announce as unlabelled buttons. Touch targets come from the Material 3 icon buttons placed in actions."
   },
   {
     "id": "dropdown-menu",
@@ -1811,7 +1829,7 @@
       "disabled item"
     ],
     "codeSample": "var expanded by remember { mutableStateOf(false) }\nBox {\n    FormaIconButton(onClick = { expanded = true }) { Text(\"⋮\") }\n    FormaDropdownMenu(expanded = expanded, onDismissRequest = { expanded = false }) {\n        FormaDropdownMenuItem(text = \"Share\", onClick = { expanded = false })\n        FormaDropdownMenuItem(text = \"Delete\", onClick = { expanded = false })\n    }\n}",
-    "accessibility": null
+    "accessibility": "The menu renders in its own popup and routes an outside tap or the back gesture to onDismissRequest. FormaDropdownMenuItem's text is a real Text, so each item announces its own label; treat leadingIcon/trailingIcon as decorative (contentDescription = null) since they repeat it."
   },
   {
     "id": "floating-action-button",
@@ -1980,7 +1998,7 @@
       "Extended"
     ],
     "codeSample": "FormaFloatingActionButton(onClick = { /* create */ }) {\n    Icon(Icons.Default.Add, contentDescription = \"Add\")\n}\n\n// Extended FAB with a label that can collapse on scroll:\nvar expanded by remember { mutableStateOf(true) }\nFormaExtendedFloatingActionButton(\n    text = \"Compose\",\n    icon = { Icon(Icons.Default.Add, contentDescription = null) },\n    onClick = { /* compose */ },\n    expanded = expanded,\n)",
-    "accessibility": null
+    "accessibility": "A FAB is icon-only, so its content Icon must carry a contentDescription naming the action — as must FormaExtendedFloatingActionButton's icon, whose text label is hidden while expanded is false. Role.Button semantics and the touch target come from Material 3; the press-scale is a graphicsLayer effect only, so it never shrinks the touch target."
   },
   {
     "id": "icon-button",
@@ -2466,7 +2484,7 @@
       "FullScreen"
     ],
     "codeSample": "var query by remember { mutableStateOf(\"\") }\nvar expanded by remember { mutableStateOf(false) }\nFormaSearchBar(\n    query = query,\n    onQueryChange = { query = it },\n    onSearch = { expanded = false },\n    expanded = expanded,\n    onExpandedChange = { expanded = it },\n    variant = FormaSearchBarVariant.Docked,\n    placeholder = { Text(\"Search contacts\") },\n    leadingIcon = { Text(\"🔍\") },\n) {\n    Text(\"Ada Lovelace\")\n}",
-    "accessibility": null
+    "accessibility": "The input field carries Material 3's text-field semantics, and expansion stays hoisted — onExpandedChange fires both when the field gains focus and on back navigation, so the caller owns the collapse. A search-glyph leadingIcon is decorative (contentDescription = null); give trailingIcon a description when it is an action such as clear."
   },
   {
     "id": "segmented-button",
@@ -2744,7 +2762,7 @@
       "scrollable"
     ],
     "codeSample": "var selectedTab by remember { mutableStateOf(0) }\nFormaTabRow(selectedTabIndex = selectedTab) {\n    FormaTab(selected = selectedTab == 0, onClick = { selectedTab = 0 }, text = { Text(\"Chat\") })\n    FormaTab(selected = selectedTab == 1, onClick = { selectedTab = 1 }, text = { Text(\"Calls\") })\n}",
-    "accessibility": null
+    "accessibility": "Role.Tab selection semantics and the 48dp touch target come from Material 3's PrimaryTabRow/SecondaryTabRow (and their scrollable equivalents). A FormaTab given only an icon and no text has no accessible label — supply a contentDescription on the icon in that case."
   },
   {
     "id": "tooltip",
@@ -2943,7 +2961,7 @@
       "Large"
     ],
     "codeSample": "FormaTopAppBar(\n    title = \"Inbox\",\n    variant = FormaTopAppBarVariant.Small,\n    navigationIcon = {\n        FormaIconButton(onClick = { /* back */ }) {\n            Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = \"Back\")\n        }\n    },\n)",
-    "accessibility": null
+    "accessibility": "title is a real Text and is announced as the bar's label; navigationIcon and actions are icon slots, so supply a contentDescription on each (e.g. \"Back\", \"More options\"). Touch targets come from the Material 3 icon buttons placed in those slots."
   },
   {
     "id": "bar-chart",
