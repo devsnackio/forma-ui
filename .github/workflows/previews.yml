@@ -52,7 +52,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v5
+        uses: actions/checkout@v7
 
       # Resolve the version once: from the tag on a tag push, from the input on
       # dispatch. TAG is always "v${VERSION}".
