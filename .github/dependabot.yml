@@ -1,0 +1,16 @@
+# Dependabot keeps the GitHub Actions pinned in .github/workflows/* current.
+#
+# Gradle dependencies are deliberately NOT managed here. The Kotlin / Compose Multiplatform / AGP
+# versions in gradle/libs.versions.toml are a co-ordinated, pinned toolchain — Compose Multiplatform
+# is compatible with a specific Kotlin compiler, and material3 is intentionally version-decoupled as
+# `composeMaterial3`. Automated single-dependency bumps would break that set and produce noisy,
+# non-mergeable PRs. Bump the toolchain deliberately instead; docs/BACKLOG.md tracks the components
+# waiting on a `composeMaterial3` bump past 1.9.0.
+version: 2
+updates:
+  - package-ecosystem: github-actions
+    directory: "/"
+    schedule:
+      interval: weekly
+    commit-message:
+      prefix: "ci"

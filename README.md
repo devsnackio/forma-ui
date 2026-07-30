@@ -9,7 +9,7 @@
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](LICENSE)
 [![Maven Central](https://img.shields.io/badge/Maven%20Central-unreleased-lightgrey.svg)](https://central.sonatype.com/)
 
-[Documentation (coming soon)](https://formaui.dev) · [Components](#components) · [Theming](#theming)
+[Documentation (coming soon)](https://formaui.dev) · [Components](#components) · [Theming](#theming) · [Changelog](CHANGELOG.md) · [Contributing](CONTRIBUTING.md)
 
 </div>
 
@@ -73,7 +73,7 @@ fun App() {
             )
 
             FormaCard(variant = FormaCardVariant.Elevated) {
-                Text("Cards, chips, sheets, and 26 more — all themed to match.")
+                Text("Cards, chips, sheets, and 37 more — all themed to match.")
             }
         }
     }
@@ -105,7 +105,7 @@ Read tokens anywhere inside the theme via `FormaTheme.colorScheme`, `FormaTheme.
 
 ## Components
 
-All 29 Phase 1 components, each with variants/states, KDoc, `@Preview`s, and UI tests:
+All 40 components (the 18 in the original Phase 1 scope, plus 22 extras), each with variants/states, KDoc, `@Preview`s, and UI tests:
 
 | | | |
 |---|---|---|
@@ -118,7 +118,11 @@ All 29 Phase 1 components, each with variants/states, KDoc, `@Preview`s, and UI 
 | **TopAppBar** — small/center-aligned/medium/large | **FloatingActionButton** — small/regular/large + extended | **IconButton** — standard/filled/tonal/outlined |
 | **BottomAppBar** — actions + optional FAB | **DropdownMenu** — items with leading/trailing icons | **NavigationDrawer** — modal, slot-based items |
 | **NavigationRail** — with badges + optional header | **SearchBar** — docked + full-screen | **SegmentedButton** — single/multi-select |
-| **TabRow** — primary/secondary, fixed/scrollable | **Tooltip** — plain + rich | |
+| **TabRow** — primary/secondary, fixed/scrollable | **Tooltip** — plain + rich | **ExposedDropdownMenu** — autocomplete, editable/tap-to-select |
+| **DatePickerSheet** — calendar + text-input, in a sheet | **DateRangePickerSheet** — start/end range, in a sheet | **TimePickerSheet** — clock dial + text input, in a sheet |
+| **RangeSlider** — two-thumb, continuous/stepped | **Carousel** — multi-browse/uncontained, snapping | **PullToRefresh** — swipe-down refresh, indicator slot |
+| **SwipeToDismiss** — per-direction, background slot | **BarChart** — gridlines, value labels, entry animation | **DonutChart** — arc segments, center slot, legend |
+| **LineChart** — smooth/straight, area fill, markers | | |
 
 ## Try it — sample app
 
@@ -134,12 +138,12 @@ Or open the project in Android Studio and run the **`sample`** configuration. Th
 
 ```
 core/          # Theming engine: FormaTheme, color/typography/spacing/shape tokens (zero FormaUI deps)
-components/    # The 29 components (depends on :core)
+components/    # The 40 components (depends on :core)
 sample/        # Runnable Android showcase app
 build-logic/   # Gradle convention plugins
 ```
 
-Targets: **Android** (the published artifact) and **`wasmJs`** (compiled for future embedded web previews).
+Targets: **Android** (the published artifact) and **`wasmJs`** (compiled for the live component previews embedded in the docs site).
 
 ## License
 
