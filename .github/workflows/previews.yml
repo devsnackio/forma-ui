@@ -132,7 +132,7 @@ jobs:
       # Also keep it as a workflow artifact: useful for inspecting a bundle from a
       # dispatch run without touching a release.
       - name: Upload as workflow artifact
-        uses: actions/upload-artifact@v6
+        uses: actions/upload-artifact@v7
         with:
           name: previews-${{ steps.v.outputs.version }}
           path: ${{ steps.pack.outputs.asset }}
