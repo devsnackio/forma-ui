@@ -10,7 +10,11 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material.icons.filled.Share
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
@@ -165,7 +169,7 @@ internal fun ColumnScope.DropdownMenuPreview() {
                     lastAction = "Share"
                     expanded = false
                 },
-                leadingIcon = { Text("🔗") },
+                leadingIcon = { Icon(Icons.Default.Share, contentDescription = null) },
             )
             FormaDropdownMenuItem(
                 text = "Rename",
@@ -181,7 +185,7 @@ internal fun ColumnScope.DropdownMenuPreview() {
                     lastAction = "Delete"
                     expanded = false
                 },
-                leadingIcon = { Text("🗑") },
+                leadingIcon = { Icon(Icons.Default.Delete, contentDescription = null) },
             )
         }
     }

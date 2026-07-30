@@ -5,6 +5,10 @@ agp = "9.3.0"
 composeMultiplatform = "1.11.1"
 # Compose Multiplatform Material 3 is versioned independently of the core CMP version.
 composeMaterial3 = "1.9.0"
+# Multiplatform Material icons — versioned independently too, and NOT bumped in lockstep with CMP:
+# the CMP 1.11.1 Gradle plugin's own `compose.materialIconsExtended` accessor still resolves 1.7.3,
+# so that is the version validated against this toolchain. Don't raise it past what the plugin pins.
+composeMaterialIcons = "1.7.3"
 
 # Android SDK levels
 android-minSdk = "24"
@@ -41,6 +45,11 @@ compose-foundation = { group = "org.jetbrains.compose.foundation", name = "found
 compose-ui = { group = "org.jetbrains.compose.ui", name = "ui", version.ref = "composeMultiplatform" }
 compose-material3 = { group = "org.jetbrains.compose.material3", name = "material3", version.ref = "composeMaterial3" }
 compose-components-resources = { group = "org.jetbrains.compose.components", name = "components-resources", version.ref = "composeMultiplatform" }
+# Core Material icons as real vector paths — :preview-wasm only. Required because Skiko has no
+# system-font emoji fallback, so emoji-as-text renders as tofu (▯) in the browser. This is the
+# MULTIPLATFORM artifact (has a wasmJs variant); `androidx-material-icons-extended` above is
+# Android-only. `-core` (not `-extended`) keeps the wasm bundle small — stick to the curated set.
+compose-material-icons-core = { group = "org.jetbrains.compose.material", name = "material-icons-core", version.ref = "composeMaterialIcons" }
 # @Preview annotation — the modern `org.jetbrains.compose.ui:ui-tooling-preview` (provides
 # androidx.compose.ui.tooling.preview.Preview), replacing the deprecated components-ui-tooling-preview.
 compose-ui-toolingPreview = { group = "org.jetbrains.compose.ui", name = "ui-tooling-preview", version.ref = "composeMultiplatform" }

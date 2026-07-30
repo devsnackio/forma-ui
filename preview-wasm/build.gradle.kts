@@ -31,6 +31,9 @@ kotlin {
                 implementation(libs.compose.runtime)
                 implementation(libs.compose.foundation)
                 implementation(libs.compose.material3)
+                // Real vector icons for the previews — Skiko has no emoji font fallback, so
+                // emoji-as-text would render as tofu boxes in the browser. Core set only.
+                implementation(libs.compose.material.icons.core)
                 implementation(libs.compose.ui)
             }
         }

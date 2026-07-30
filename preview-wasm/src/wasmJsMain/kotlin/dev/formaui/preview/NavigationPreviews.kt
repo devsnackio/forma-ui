@@ -13,8 +13,20 @@ import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.List
+import androidx.compose.material.icons.automirrored.filled.Send
+import androidx.compose.material.icons.filled.Email
+import androidx.compose.material.icons.filled.Favorite
+import androidx.compose.material.icons.filled.Home
+import androidx.compose.material.icons.filled.Menu
+import androidx.compose.material.icons.filled.MoreVert
+import androidx.compose.material.icons.filled.Notifications
+import androidx.compose.material.icons.filled.Person
+import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberDrawerState
@@ -57,20 +69,20 @@ internal fun ColumnScope.NavigationBarPreview() {
         FormaNavigationBarItem(
             selected = selected == 0,
             onClick = { selected = 0 },
-            icon = { Text("🏠") },
+            icon = { Icon(Icons.Default.Home, contentDescription = null) },
             label = "Home",
         )
         FormaNavigationBarItem(
             selected = selected == 1,
             onClick = { selected = 1 },
-            icon = { Text("🔔") },
+            icon = { Icon(Icons.Default.Notifications, contentDescription = null) },
             label = "Alerts",
             badgeCount = 3,
         )
         FormaNavigationBarItem(
             selected = selected == 2,
             onClick = { selected = 2 },
-            icon = { Text("👤") },
+            icon = { Icon(Icons.Default.Person, contentDescription = null) },
             label = "Profile",
             showBadgeDot = true,
         )
@@ -96,20 +108,20 @@ internal fun ColumnScope.NavigationRailPreview() {
             FormaNavigationRailItem(
                 selected = selected == 0,
                 onClick = { selected = 0 },
-                icon = { Text("🏠") },
+                icon = { Icon(Icons.Default.Home, contentDescription = null) },
                 label = "Home",
             )
             FormaNavigationRailItem(
                 selected = selected == 1,
                 onClick = { selected = 1 },
-                icon = { Text("🔔") },
+                icon = { Icon(Icons.Default.Notifications, contentDescription = null) },
                 label = "Alerts",
                 badgeCount = 12,
             )
             FormaNavigationRailItem(
                 selected = selected == 2,
                 onClick = { selected = 2 },
-                icon = { Text("👤") },
+                icon = { Icon(Icons.Default.Person, contentDescription = null) },
                 label = "Profile",
                 showBadgeDot = true,
             )
@@ -141,7 +153,7 @@ internal fun ColumnScope.NavigationDrawerPreview() {
                         selected = 0
                         scope.launch { drawerState.close() }
                     },
-                    icon = { Text("📥") },
+                    icon = { Icon(Icons.Default.Email, contentDescription = null) },
                     badge = "24",
                 )
                 FormaNavigationDrawerItem(
@@ -151,7 +163,7 @@ internal fun ColumnScope.NavigationDrawerPreview() {
                         selected = 1
                         scope.launch { drawerState.close() }
                     },
-                    icon = { Text("📤") },
+                    icon = { Icon(Icons.AutoMirrored.Default.Send, contentDescription = null) },
                 )
                 FormaNavigationDrawerItem(
                     label = "Archive",
@@ -160,7 +172,7 @@ internal fun ColumnScope.NavigationDrawerPreview() {
                         selected = 2
                         scope.launch { drawerState.close() }
                     },
-                    icon = { Text("🗂") },
+                    icon = { Icon(Icons.AutoMirrored.Default.List, contentDescription = null) },
                 )
             },
         ) {
@@ -246,11 +258,11 @@ internal fun ColumnScope.TopAppBarPreview() {
         title = "Inbox",
         variant = variant,
         navigationIcon = {
-            FormaIconButton(onClick = {}) { Text("☰") }
+            FormaIconButton(onClick = {}) { Icon(Icons.Default.Menu, contentDescription = "Open menu") }
         },
         actions = {
-            FormaIconButton(onClick = {}) { Text("🔍") }
-            FormaIconButton(onClick = {}) { Text("⋮") }
+            FormaIconButton(onClick = {}) { Icon(Icons.Default.Search, contentDescription = "Search") }
+            FormaIconButton(onClick = {}) { Icon(Icons.Default.MoreVert, contentDescription = "More options") }
         },
     )
 }
@@ -262,9 +274,15 @@ internal fun ColumnScope.BottomAppBarPreview() {
 
     FormaBottomAppBar(
         actions = {
-            FormaIconButton(onClick = { lastAction = "Search" }) { Text("🔍") }
-            FormaIconButton(onClick = { lastAction = "Favorite" }) { Text("❤") }
-            FormaIconButton(onClick = { lastAction = "More" }) { Text("⋮") }
+            FormaIconButton(onClick = { lastAction = "Search" }) {
+                Icon(Icons.Default.Search, contentDescription = "Search")
+            }
+            FormaIconButton(onClick = { lastAction = "Favorite" }) {
+                Icon(Icons.Default.Favorite, contentDescription = "Favorite")
+            }
+            FormaIconButton(onClick = { lastAction = "More" }) {
+                Icon(Icons.Default.MoreVert, contentDescription = "More options")
+            }
         },
         floatingActionButton = {
             FormaFloatingActionButton(onClick = { lastAction = "Add" }) { Text("+") }

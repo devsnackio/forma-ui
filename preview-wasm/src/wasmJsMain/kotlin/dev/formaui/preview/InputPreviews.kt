@@ -11,7 +11,10 @@ import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.selection.selectableGroup
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -185,7 +188,7 @@ internal fun ColumnScope.SearchBarPreview() {
         expanded = expanded,
         onExpandedChange = { expanded = it },
         placeholder = { Text("Search contacts") },
-        leadingIcon = { Text("🔍") },
+        leadingIcon = { Icon(Icons.Default.Search, contentDescription = null) },
     ) {
         contacts.filter { it.contains(query, ignoreCase = true) }.forEach { contact ->
             FormaListItem(

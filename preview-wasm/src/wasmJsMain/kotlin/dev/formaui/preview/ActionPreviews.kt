@@ -10,7 +10,11 @@ import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Row
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Close
+import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -72,7 +76,7 @@ internal fun ColumnScope.IconButtonPreview() {
     ) {
         FormaIconButtonVariant.entries.forEach { variant ->
             FormaIconButton(onClick = { clicks++ }, variant = variant) {
-                Text("🔍")
+                Icon(Icons.Default.Search, contentDescription = "Search")
             }
         }
     }
@@ -138,7 +142,7 @@ internal fun ColumnScope.ChipPreview() {
             onClick = { inputSelected = !inputSelected },
             variant = FormaChipVariant.Input,
             selected = inputSelected,
-            trailingIcon = { Text("×") },
+            trailingIcon = { Icon(Icons.Default.Close, contentDescription = null) },
         )
         FormaChip(label = "Suggestion", onClick = {}, variant = FormaChipVariant.Suggestion)
     }

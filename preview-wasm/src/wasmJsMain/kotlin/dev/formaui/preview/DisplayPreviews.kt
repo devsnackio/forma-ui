@@ -18,9 +18,15 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.KeyboardArrowRight
+import androidx.compose.material.icons.filled.Info
+import androidx.compose.material.icons.filled.Person
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.carousel.rememberCarouselState
@@ -129,7 +135,7 @@ internal fun ColumnScope.AvatarPreview() {
         FormaAvatar(initials = "AB", size = FormaAvatarSize.Small)
         FormaAvatar(initials = "CD")
         FormaAvatar(initials = "EF", size = FormaAvatarSize.Large)
-        FormaAvatar(size = FormaAvatarSize.Large) { Text("🙂") }
+        FormaAvatar(size = FormaAvatarSize.Large) { Icon(Icons.Default.Person, contentDescription = null) }
     }
 
     Text(
@@ -165,7 +171,7 @@ internal fun ColumnScope.ListItemPreview() {
     Column {
         FormaListItem(
             headline = "Single line",
-            trailing = { Text("›") },
+            trailing = { Icon(Icons.AutoMirrored.Default.KeyboardArrowRight, contentDescription = null) },
             onClick = { lastClicked = "Single line" },
         )
         FormaDivider()
@@ -230,7 +236,7 @@ internal fun ColumnScope.EmptyStatePreview() {
     FormaEmptyState(
         title = "No transactions yet",
         description = "Your transactions will appear here once you make your first payment.",
-        icon = { Text("🧾", style = MaterialTheme.typography.headlineLarge) },
+        icon = { Icon(Icons.Default.Info, contentDescription = null, modifier = Modifier.size(48.dp)) },
         action = { FormaButton(onClick = { actionClicks++ }) { Text("Add payment") } },
     )
 
