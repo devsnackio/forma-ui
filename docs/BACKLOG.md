@@ -32,9 +32,17 @@ present in the pinned material3. **Revisit when `composeMaterial3` is bumped pas
 - **Floating toolbars**
 - **Toggle button**
 
-## Scope question to resolve with the user
+## Resolved decisions
 
-- **Charts** — `FormaBarChart`, `FormaDonutChart`, and `FormaLineChart` currently ship in the free
-  `:components` module, but the PRD says charts belong in a **paid vertical kit**. This is a
-  positioning/packaging decision, not a code cleanup — **flag for the user to decide**; do not move
-  anything until that ruling lands.
+- **Charts stay in the free `:components` module.** `FormaBarChart`, `FormaDonutChart`, and
+  `FormaLineChart` are drawn with pure Compose `Canvas` and pull in **zero third-party
+  dependencies**, so the "keep `core`/`components` lean — no heavy deps" rule is not actually
+  violated by keeping them; the PRD's assignment of charting to a paid vertical kit was a
+  positioning call, not a technical one. They are already built, tested, and previewed, and moving
+  them after `0.1.0` would be a breaking change for consumers. Ruled on 2026-07-30 — do not revisit
+  without a deliberate packaging change.
+
+## Scope questions still open
+
+- **Scaffold** — see the note under "deferred by choice" above; whether a structural layout
+  primitive belongs in a component library is still undecided.

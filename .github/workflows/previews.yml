@@ -24,7 +24,7 @@
 #
 # This ships the DEVELOPMENT executable (~39 MB raw, far less gzipped). The
 # optimized production build needs Binaryen's wasm-opt and is tracked as a later
-# optimization in docs/WASM_PREVIEW_PIPELINE.md — switching is a task-name change
+# optimization in docs/SITE_HANDOFF.md — switching is a task-name change
 # here plus the same directory contract, so it does not affect the site.
 name: Publish preview bundle
 
