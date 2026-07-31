@@ -9,6 +9,7 @@ import androidx.compose.animation.core.FiniteAnimationSpec
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.material3.AssistChip
 import androidx.compose.material3.FilterChip
+import androidx.compose.material3.FilterChipDefaults
 import androidx.compose.material3.InputChip
 import androidx.compose.material3.SuggestionChip
 import androidx.compose.material3.Text
@@ -17,6 +18,7 @@ import androidx.compose.runtime.ReadOnlyComposable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Shape
+import androidx.compose.ui.unit.dp
 import dev.formaui.components.interaction.FormaPressScaleDefaults
 import dev.formaui.components.interaction.formaPressScale
 import dev.formaui.core.annotation.ExperimentalFormaUiApi
@@ -129,6 +131,17 @@ fun FormaChip(
             trailingIcon = trailingIcon,
             shape = chipShape,
             interactionSource = interactionSource,
+            // An unselected flat filter chip has a Color.Transparent container, so a
+            // shadow beneath it is not occluded — Skia paints the umbra across the
+            // whole footprint and it reads as a heavy dark block, not a soft edge.
+            // Material 3 walks into this: FilterChipTokens defines
+            // FlatUnselectedHoverContainerElevation = Level0 but never reads it, so
+            // filterChipElevation() hands the *selected* 1dp hover elevation to both
+            // states. Keep the lift only where the container is opaque enough to hide
+            // it (selected -> secondaryContainer).
+            elevation = FilterChipDefaults.filterChipElevation(
+                hoveredElevation = if (selected) 1.dp else 0.dp,
+            ),
         )
 
         FormaChipVariant.Input -> InputChip(
