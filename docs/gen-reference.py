@@ -10,15 +10,26 @@ import sys
 from pathlib import Path
 
 repo = Path(sys.argv[1]) if len(sys.argv) > 1 else Path.cwd()
-inv = json.loads((repo / "docs/component-inventory.json").read_text())
+# Encoding is explicit everywhere: Python defaults to the locale codec, which is cp1252 on the
+# Windows dev box and blows up on the UTF-8 punctuation in these files.
+inv = json.loads((repo / "docs/component-inventory.json").read_text(encoding="utf-8"))
 
-# Read the version from the root build script so the header can't drift from the artifacts.
-version_match = re.search(
-    r'^version = "(.+)"', (repo / "build.gradle.kts").read_text(), re.M
-)
+# Read the group and version from the root build script so the header can't drift from the
+# artifacts. The group was hardcoded here once and silently went stale through a namespace move.
+root_build = (repo / "build.gradle.kts").read_text(encoding="utf-8")
+
+version_match = re.search(r'^version = "(.+)"', root_build, re.M)
 if not version_match:
     sys.exit("could not read `version = \"…\"` from build.gradle.kts")
 version = version_match.group(1)
+
+group_match = re.search(r'^group = "(.+)"', root_build, re.M)
+if not group_match:
+    sys.exit("could not read `group = \"…\"` from build.gradle.kts")
+GROUP = group_match.group(1)
+
+# The retired namespace, kept only to explain the move. Nothing new ships here.
+OLD_GROUP = "io.github.devsnackio"
 
 out = []
 w = out.append
@@ -28,19 +39,19 @@ w("")
 w("> Generated from `docs/component-inventory.json` in the forma-ui repo — regenerate there")
 w("> when the library version is bumped. Do not edit by hand.")
 w("")
-w(f"**Artifacts** (Maven Central): `io.github.devsnackio:core` and `io.github.devsnackio:components`, version `{version}`.")
+w(f"**Artifacts** (Maven Central): `{GROUP}:core` and `{GROUP}:components`, version `{version}`.")
 w("")
 w("```kotlin")
 w("dependencies {")
-w(f"    implementation(\"io.github.devsnackio:components:{version}\") // brings :core transitively")
+w(f"    implementation(\"{GROUP}:components:{version}\") // brings :core transitively")
 w("}")
 w("```")
 w("")
-w(f"> **Not yet on Maven Central.** `{version}` is the intended coordinate set for the pending")
-w("> first release; stable `0.1.0` follows once the beta has proven itself.")
+w(f"> Released through `0.1.0` under the retired `{OLD_GROUP}` group; `{GROUP}` since `0.2.0`.")
+w("> Old coordinates still resolve via relocation POMs, but get no further releases.")
 w("")
-w("Code packages are `dev.formaui.*` — the group/package mismatch is intentional (the Maven group")
-w("is namespace-verified as `io.github.devsnackio`); import from `dev.formaui.*`, never \"correct\" it.")
+w(f"Code packages are `dev.formaui.*`, matching the Maven group `{GROUP}` since `0.2.0`.")
+w("Import from `dev.formaui.*`.")
 w("")
 w("**Setup rules:**")
 w("- Wrap every screen (or the app root) in `FormaTheme { ... }` (from `dev.formaui.core.theme`).")
@@ -121,5 +132,5 @@ for e in inv:
     w("")
 
 dest = repo / "docs/formaui-reference.md"
-dest.write_text("\n".join(out))
+dest.write_text("\n".join(out), encoding="utf-8")
 print(f"wrote {dest} ({len(out)} lines, {dest.stat().st_size // 1024} KB)")

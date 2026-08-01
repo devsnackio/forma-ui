@@ -7,9 +7,9 @@
 [![Kotlin](https://img.shields.io/badge/Kotlin-2.4.10-7F52FF.svg?logo=kotlin)](https://kotlinlang.org)
 [![Compose Multiplatform](https://img.shields.io/badge/Compose%20Multiplatform-1.11.1-4285F4.svg)](https://www.jetbrains.com/lp/compose-multiplatform/)
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](LICENSE)
-[![Maven Central](https://img.shields.io/badge/Maven%20Central-unreleased-lightgrey.svg)](https://central.sonatype.com/)
+[![Maven Central](https://img.shields.io/maven-central/v/dev.formaui/components?label=Maven%20Central)](https://central.sonatype.com/artifact/dev.formaui/components)
 
-[Documentation (coming soon)](https://formaui.dev) · [Components](#components) · [Theming](#theming) · [Changelog](CHANGELOG.md) · [Contributing](CONTRIBUTING.md)
+[Documentation](https://formaui.dev) · [Components](#components) · [Theming](#theming) · [Changelog](CHANGELOG.md) · [Contributing](CONTRIBUTING.md)
 
 </div>
 
@@ -31,17 +31,17 @@ FormaUI is a [Compose Multiplatform](https://www.jetbrains.com/lp/compose-multip
 
 ## Install
 
-FormaUI will publish to Maven Central under the `io.github.devsnackio` group (`0.1.0-beta04` release pending; the `dev.formaui` namespace may be adopted at release time once the domain is verified). Add it to your version catalog / Gradle build:
+FormaUI publishes to Maven Central under the `dev.formaui` group. Add it to your version catalog / Gradle build:
 
 ```kotlin
 dependencies {
-    implementation("io.github.devsnackio:components:0.1.0-beta04") // components transitively brings in :core
+    implementation("dev.formaui:components:0.2.0") // components transitively brings in :core
     // or depend on the theming engine alone:
-    // implementation("io.github.devsnackio:core:0.1.0-beta04")
+    // implementation("dev.formaui:core:0.2.0")
 }
 ```
 
-> **Not yet published.** The `0.1.0-beta04` artifacts aren't on Maven Central yet — these are the intended coordinates for the pending first release. Stable `0.1.0` follows once the beta has proven itself.
+> **Moved from `io.github.devsnackio` in `0.2.0`.** Releases up to `0.1.0` shipped under that group, before the `formaui.dev` domain was owned. Only the coordinate changed — imports were always `dev.formaui.*`, so migrating is a one-line edit to your dependency. Relocation POMs keep old builds resolving, but the retired group gets no further releases.
 
 **Requirements:** Android `minSdk 24`+, Kotlin 2.4.x, Compose Multiplatform 1.11.x (or AndroidX Compose with a compatible Material 3).
 
@@ -152,5 +152,5 @@ FormaUI `core` and `components` are licensed under the [Apache License 2.0](LICE
 ---
 
 <div align="center">
-Built by <a href="https://formaui.dev">DevSnack</a> · Docs & live previews at <a href="https://formaui.dev">formaui.dev</a> (coming soon)
+Built by <a href="https://github.com/devsnackio">DevSnack</a> · Docs & live previews at <a href="https://formaui.dev">formaui.dev</a>
 </div>

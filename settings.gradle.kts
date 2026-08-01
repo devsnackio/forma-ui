@@ -51,3 +51,6 @@ include(":sample")
 // Wasm live-preview harness (spike). Not published — renders real components in the browser
 // to de-risk the docs-site live-preview pipeline. Depends on :core + :components.
 include(":preview-wasm")
+// Relocation POMs redirecting the retired `io.github.devsnackio` coordinates to `dev.formaui`.
+// Publishes on its own task into its own bundle — never part of a normal release. See its KDoc.
+include(":relocation")

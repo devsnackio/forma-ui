@@ -36,8 +36,8 @@ plugins {
     id("signing")
 }
 
-group = "io.github.devsnackio"
-version = "0.1.0-beta04"
+group = "dev.formaui"
+version = "0.2.0"
 
 val javadocJar = tasks.register<Jar>("javadocJar") {
     archiveClassifier.set("javadoc")
@@ -52,7 +52,9 @@ publishing {
                 "FormaUI — opinionated, Material You-native Compose Multiplatform UI components, " +
                         "built as a themed layer on Material 3.",
             )
-            url.set("https://github.com/devsnackio/forma-ui")
+            // The project's home page — the docs site. `scm` below stays on GitHub, which is
+            // where the source actually lives; the two are deliberately different.
+            url.set("https://formaui.dev")
             licenses {
                 license {
                     name.set("The Apache License, Version 2.0")

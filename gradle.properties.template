@@ -24,5 +24,6 @@
 
 # --- Central Portal account ---
 # No Gradle-level credentials are needed for the manual bundle upload above — you authenticate
-# in the browser at central.sonatype.com. (A user token is only needed if you later automate the
-# upload via the Central Portal Publisher API.)
+# in the browser at central.sonatype.com. The Central Portal user token is needed only by the
+# CI route (.github/workflows/release.yml), which holds it as the CENTRAL_TOKEN_USERNAME /
+# CENTRAL_TOKEN_PASSWORD repository secrets — not here.

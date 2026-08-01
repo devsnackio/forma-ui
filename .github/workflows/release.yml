@@ -84,10 +84,13 @@ jobs:
           fi
           ./gradlew publishAllPublicationsToCentralBundleRepository
 
-      # The group directory (io/ today, dev/ after a namespace switch) must sit
-      # at the ZIP ROOT — the most common Portal upload rejection (runbook).
+      # The group directory (dev/ since the dev.formaui switch; io/ for anything
+      # published before it) must sit at the ZIP ROOT — the most common Portal
+      # upload rejection (runbook). Gradle also emits maven-metadata.xml into the
+      # repo tree, which the Portal rejects; strip it before zipping.
       - name: Zip bundle
         run: |
+          find build/central-bundle -name 'maven-metadata*' -delete
           (cd build/central-bundle && zip -qr "../formaui-${VERSION}-bundle.zip" .)
           echo "Bundle root entries:"
           unzip -l "build/formaui-${VERSION}-bundle.zip" | head -15

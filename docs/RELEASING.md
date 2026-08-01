@@ -3,20 +3,48 @@
 The single publishing doc: one-time setup, the per-version runbook, and the background on why the
 pipeline is shaped this way.
 
-Two artifacts ship, under the `io.github.devsnackio` group:
+Two artifacts ship, under the `dev.formaui` group:
 
 | Artifact | Coordinates | Depends on |
 |----------|-------------|------------|
-| Theming core | `io.github.devsnackio:core:<version>` | — |
-| Components | `io.github.devsnackio:components:<version>` | `core` (transitive) |
+| Theming core | `dev.formaui:core:<version>` | — |
+| Components | `dev.formaui:components:<version>` | `core` (transitive) |
 
-Current version: **`0.1.0-beta04`**.
+Current version: **`0.2.0`**.
 
 > The Kotlin package is always `dev.formaui.*` regardless of the Maven coordinate — see
 > [Group ID vs. Kotlin package](#group-id-vs-kotlin-package).
 
-> **Nothing has shipped yet.** There are no git tags and no GitHub releases; Central returns no
-> results for the group. `0.1.0-beta04` will be the first.
+### Release history
+
+`0.2.0` is the first release under `dev.formaui`. Everything before it shipped under the retired
+`io.github.devsnackio` group and **still exists on Central permanently** — those coordinates can
+never be withdrawn:
+
+| Version | Group | Note |
+|---|---|---|
+| `0.1.0-beta01` … `0.1.0-beta04` | `io.github.devsnackio` | betas |
+| `0.1.0` | `io.github.devsnackio` | stable; published 2026-07-27 |
+| `0.2.0` | `dev.formaui` | first release on the owned-domain namespace |
+
+Old coordinates redirect via the relocation POMs in [`relocation/`](../relocation/build.gradle.kts)
+— see [Appendix → The `dev.formaui` migration](#the-devformaui-migration).
+
+> ⚠ **Checking what's published: use `repo1.maven.org`, never `search.maven.org`.** The solrsearch
+> index lags publishes by a long way and happily returns `numFound: 0` for coordinates that already
+> resolve. It reported zero for `io.github.devsnackio` for days *after* `0.1.0` went live, and this
+> runbook, `README.md` and `CHANGELOG.md` all carried "nothing has shipped yet" as a
+> result. `repo1` **is** the repository; the index is a cache of it.
+>
+> ```bash
+> curl -sI https://repo1.maven.org/maven2/dev/formaui/components/0.2.0/components-0.2.0.pom | head -1
+> ```
+
+> ⚠ **`0.1.0` is not reproducible from any commit.** No commit ever bumped the build files to
+> `0.1.0` — they read `0.1.0-beta04` throughout, so it was cut via Route B from an uncommitted local
+> version edit, and there is no `v0.1.0` tag. Don't retro-tag a commit that doesn't build it. The
+> rule that prevents a repeat: **never release a version that isn't committed in both build files.**
+> Route A's version guard enforces this automatically; Route B has no such guard, so check by hand.
 
 Two routes reach the same outcome:
 
@@ -56,15 +84,20 @@ is deliberately excluded.
 
 ### Account-level (shared by every route)
 
-- **Namespace** `io.github.devsnackio` verified in the Central Portal. `io.github.<username>`
-  namespaces are verified by GitHub ownership: the portal gives you a code, you create a temporary
-  **public repo** named with that code, then click *Verify*. No domain, no DNS, no cost.
-- **Group ID + POM** wired to `io.github.devsnackio` / `github.com/devsnackio/forma-ui`, in two
-  places: `build.gradle.kts` (root) and
+- **Namespace** `dev.formaui` verified in the Central Portal, by proving control of the
+  `formaui.dev` domain. The portal issues a **Verification Key**; publish it as a **TXT record on
+  the apex** (`@`) of `formaui.dev`, wait for it to resolve, *then* click **Verify**. Central checks
+  the exact domain — `formaui.dev`, not `maven-central.formaui.dev` or any other variant — and once
+  verified, every subgroup (`dev.formaui.*`) is covered too.
+  ⚠ Don't click Verify before `nslookup -type=TXT formaui.dev` shows the key: a premature check
+  caches an NXDOMAIN and stalls verification. Leave the TXT record in place afterward.
+  (The retired `io.github.devsnackio` namespace remains verified via GitHub account ownership —
+  needed only to publish the relocation POMs.)
+- **Group ID + POM** wired to `dev.formaui`, in two places: `build.gradle.kts` (root) and
   `build-logic/src/main/kotlin/formaui.publishing.gradle.kts`.
-  ⚠ The POM's `url`/`scm` must **resolve** — confirm the repository actually lives at
-  `github.com/devsnackio/forma-ui` before the first upload. A dead SCM URL in a published POM is
-  permanent.
+  ⚠ The POM's `url` (`https://formaui.dev`) and `scm` (`github.com/devsnackio/forma-ui`) must both
+  **resolve** — a dead URL in a published POM is permanent. They deliberately differ: `url` is the
+  docs site, `scm` is where the source lives.
 - **GPG key** `EDA3EDC9AD612D91` generated **and published** to `keyserver.ubuntu.com`. Back up the
   **private key + passphrase** offline.
 
@@ -114,9 +147,10 @@ Equivalent env vars: `SIGNING_KEY` and `SIGNING_PASSWORD`. No Central Portal cre
 at the Gradle level for a manual upload — you authenticate in the browser at upload time.
 
 Also required locally: **`local.properties`** in the repo root with `sdk.dir=…` (gitignored), and
-`JAVA_HOME` on a JetBrains Runtime — JBR 21 from Android Studio on the Windows box
-(`C:\Users\User\AppData\Local\Programs\Android Studio\jbr`), JBR 17 on macOS
-(`~/Library/Java/JavaVirtualMachines/jbr-17.0.14/Contents/Home`).
+`JAVA_HOME` on a JetBrains Runtime — the Android Studio JBR on the Windows box
+(`C:\Users\User\AppData\Local\Programs\Android Studio\jbr`, currently JBR 25), JBR 17 on macOS
+(`~/Library/Java/JavaVirtualMachines/jbr-17.0.14/Contents/Home`). Don't hardcode the JBR *version*
+anywhere — Android Studio bumps it, and the path is what stays stable.
 
 > **Releasing from a second machine?** The signing key and `~/.gradle/gradle.properties` exist only
 > where they were created. Either import the private key and recreate that file, or skip Route B
@@ -140,11 +174,12 @@ Route A's guard will reject a mismatch:
 Before going further:
 
 - [ ] **Green build gate** — unit tests + `wasmJs` compile + `sample` assemble all pass.
-- [ ] **README accuracy.** The artifact is about to be public. Check the badges still match
+- [ ] **README accuracy.** Check the badges still match
       [`gradle/libs.versions.toml`](../gradle/libs.versions.toml), the component count still matches
-      `docs/component-inventory.json`, and — once the first version actually lands on Central — that
-      the "not yet published" caveat is **removed**.
+      `docs/component-inventory.json`, and the install snippet shows the version you're releasing.
 - [ ] **`CHANGELOG.md`** has an entry for this version.
+- [ ] **`formaui-site`** — bump `MAVEN_VERSION` in `src/lib/constants.ts` *after* the release lands,
+      since its Vercel build downloads the matching `previews-<version>.tar.gz` release asset.
 
 Examples below release `0.2.0` — substitute your version.
 
@@ -153,7 +188,7 @@ Examples below release `0.2.0` — substitute your version.
 ## Route A — release via CI (preferred)
 
 Trigger [`release.yml`](../.github/workflows/release.yml) from the Actions tab → **Release to Maven
-Central** → *Run workflow*, with the `version` input (e.g. `0.1.0-beta04`).
+Central** → *Run workflow*, with the `version` input (e.g. `0.2.0`).
 
 It runs a **version guard** (the input must equal the version in both build files — a typo aborts
 before anything irreversible), the full test gate, the signed bundle build (it refuses to proceed
@@ -163,11 +198,14 @@ to the Central Publisher API as `USER_MANAGED`, polling status for up to 10 minu
 It deliberately **does not tag and does not press Publish** — both stay with you; continue at
 [Post-release](#post-release).
 
-> ⚠ **This workflow has never been run.** Its header comment flags that the Publisher API
-> endpoint/auth shape should be re-verified against
-> <https://central.sonatype.org/publish/publish-portal-api/> before the first release. If the API
-> step fails, download the `central-bundle-<version>` workflow artifact and continue from
-> [step B4](#b4-upload) — the manual path always remains available.
+> ⚠ **A green run is not a publish.** The workflow uploads as `USER_MANAGED`, which parks the
+> deployment in the Portal awaiting your click — the "Upload" and "Wait for Portal validation" steps
+> both pass without anything reaching consumers. Treating green as done is exactly how this repo's
+> docs came to claim nothing had shipped. Finish the job at
+> <https://central.sonatype.com/publishing/deployments>.
+>
+> If the API step itself fails, download the `central-bundle-<version>` workflow artifact and
+> continue from [step B4](#b4-upload) — the manual path always remains available.
 
 ---
 
@@ -181,7 +219,7 @@ No signing key needed for this:
 ./gradlew publishToMavenLocal --console=plain
 ```
 
-Confirm the artifacts landed under `~/.m2/repository/io/github/devsnackio/{core,components}/<version>/`.
+Confirm the artifacts landed under `~/.m2/repository/dev/formaui/{core,components}/<version>/`.
 Each should contain the main `.aar`/`.jar` (per target), a `-sources.jar`, a `-javadoc.jar`, and a
 `.pom`. Also run the full gates: unit tests + `wasmJs` compile + `sample` assemble.
 
@@ -209,14 +247,14 @@ and checksums, in one shared directory so `core` and `components` ship as a sing
 > find build/central-bundle -name 'maven-metadata*' -delete
 > ```
 
-### B3. Zip with `io/` at the root
+### B3. Zip with `dev/` at the root
 
-Zip the *contents* of `build/central-bundle/` so `io/github/devsnackio/...` sits at the zip root —
+Zip the *contents* of `build/central-bundle/` so `dev/formaui/...` sits at the zip root —
 **not** the `central-bundle/` folder itself. Git Bash has no `zip`, so use the JDK's `jar` (it
 produces clean forward-slash entries):
 
 ```bash
-cd build/central-bundle && "$JAVA_HOME/bin/jar" -cMf ../formaui-0.2.0-bundle.zip io
+cd build/central-bundle && "$JAVA_HOME/bin/jar" -cMf ../formaui-0.2.0-bundle.zip dev
 ```
 
 > A wrong zip root is the most common upload rejection. Verify the first entries:
@@ -264,7 +302,7 @@ lags longer):
 ```bash
 for a in components core; do
   curl -sS -o /dev/null -w "%{http_code}  $a\n" \
-    "https://repo1.maven.org/maven2/io/github/devsnackio/$a/0.2.0/$a-0.2.0.pom"
+    "https://repo1.maven.org/maven2/dev/formaui/$a/0.2.0/$a-0.2.0.pom"
 done
 # 200 = live, 404 = still propagating
 ```
@@ -272,8 +310,13 @@ done
 Consumer sanity check — in a throwaway project with `mavenCentral()`:
 
 ```kotlin
-dependencies { implementation("io.github.devsnackio:components:0.2.0") }
+dependencies { implementation("dev.formaui:components:0.2.0") }
 ```
+
+> **Only after this returns 200** — if the retired `io.github.devsnackio` coordinates still need to
+> redirect, publish the relocation bundle now. See
+> [Publishing the relocation bundle](#publishing-the-relocation-bundle). Doing it earlier points
+> consumers at an artifact that isn't live yet.
 
 ```kotlin
 @OptIn(ExperimentalFormaUiApi::class)
@@ -303,26 +346,23 @@ the **Kotlin package** (`dev.formaui.*`), which is compiled into the source and 
 `import dev.formaui.components.button.FormaButton` is identical whether the artifact is
 `io.github.devsnackio:components` or `dev.formaui:components`.
 
-The split is deliberate: `io.github.devsnackio` is verified via GitHub account ownership (no domain,
-no cost), while `dev.formaui` would require owning `formaui.dev`.
+For most of the project's life these differed: the group was `io.github.devsnackio` (verified via
+GitHub account ownership — no domain, no cost) because `formaui.dev` wasn't owned yet. Since `0.2.0`
+they match.
 
-### Migrating to `dev.formaui` later — the caveats
+### The `dev.formaui` migration
 
-Registering the custom-domain namespace `dev.formaui` requires proving control of `formaui.dev`: the
-portal issues a verification key that you publish as a **DNS TXT record**, then click *Verify*.
-Uploads are rejected until it shows **Verified**.
+**Done — this section is a record, not a to-do.** `formaui.dev` was acquired on 2026-08-01 and the
+group moved to `dev.formaui` for `0.2.0`.
 
-Published coordinates are **permanent and immutable**, so switching group is not a rename — it mints
-a new artifact:
+Published coordinates are permanent, so a group switch is not a rename — it mints a new artifact:
 
-- `io.github.devsnackio:components:0.1.0` exists forever.
-- `dev.formaui:components:0.2.0` is a *different* artifact. When consumers upgrade they must edit
-  their dependency line from the old group to the new one — it is not a transparent version bump.
+- `io.github.devsnackio:components:0.1.0` exists forever and can never be withdrawn.
+- `dev.formaui:components:0.2.0` is a *different* artifact. Consumers must edit their dependency
+  line; it is not a transparent version bump.
 
-The migration itself:
-
-1. Change the group in the two build files, and point the POM `url` at `https://formaui.dev`.
-2. Publish a one-time **relocation POM** under the old coordinates so tools redirect:
+The relocation POMs bridge that gap. [`relocation/`](../relocation/build.gradle.kts) publishes
+nothing but `.pom` files under the **old** group at `0.2.0`, each carrying:
 
 ```xml
 <distributionManagement>
@@ -335,5 +375,24 @@ The migration itself:
 </distributionManagement>
 ```
 
-Because the cost of this migration grows with every release and every consumer, prefer securing
-`formaui.dev` and publishing under `dev.formaui` as early as you reasonably can.
+Gradle and Maven both follow it: a build still asking for `io.github.devsnackio:components:0.2.0`
+resolves through to the new coordinates and prints a warning naming the replacement.
+
+#### Publishing the relocation bundle
+
+**Order matters: do this only after the real release resolves on `repo1.maven.org`.** A relocation
+POM pointing at an artifact that isn't live yet advertises a redirect to a 404.
+
+```bash
+./gradlew :relocation:publishAllPublicationsToRelocationBundleRepository --console=plain
+find build/relocation-bundle -name 'maven-metadata*' -delete
+cd build/relocation-bundle && "$JAVA_HOME/bin/jar" -cMf ../formaui-0.2.0-relocation.zip io
+```
+
+Note the **`io`** at the end — this bundle's root is the *old* group. Upload it as a second, separate
+deployment at [central.sonatype.com](https://central.sonatype.com) → **Publish Component**. It writes
+to `build/relocation-bundle/`, and its task name deliberately differs from the release task, so a
+normal release run never picks it up.
+
+This is a one-shot. Don't republish it every release — one relocation POM per retired artifact is
+enough, and the module can be deleted once consumers have moved.

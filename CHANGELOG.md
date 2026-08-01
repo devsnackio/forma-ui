@@ -7,13 +7,39 @@ adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html) — with t
 **every public API is annotated `@ExperimentalFormaUiApi` and may change in any release** until the
 surface is proven.
 
-Artifacts are `io.github.devsnackio:core` and `io.github.devsnackio:components`. The Kotlin package
-is `dev.formaui.*` in both — the group/package split is intentional.
+Artifacts are `dev.formaui:core` and `dev.formaui:components`, matching the `dev.formaui.*` Kotlin
+package. Releases up to and including `0.1.0` shipped under the old `io.github.devsnackio` group —
+see [0.2.0](#020--unreleased).
 
-## [0.1.0-beta04] — unreleased
+## [0.2.0] — unreleased
 
-The first public release. Nothing prior to this was published to Maven Central, so everything below
-is new to consumers; earlier `beta01`–`beta03` version numbers were internal-only bumps.
+### Changed
+
+- **Breaking: the Maven group is now `dev.formaui`.** With the `formaui.dev` domain acquired, the
+  coordinates finally match the Kotlin package. Update your dependency:
+
+  ```diff
+  - implementation("io.github.devsnackio:components:0.1.0")
+  + implementation("dev.formaui:components:0.2.0")
+  ```
+
+  **No code changes are required** — imports were always `dev.formaui.*` and are untouched. Only the
+  coordinate string moves.
+
+  Relocation POMs are published under `io.github.devsnackio:*:0.2.0`, so an un-migrated build still
+  resolves and warns rather than silently pinning to `0.1.0`. They are a migration aid, not a
+  supported channel: the old group receives no further releases.
+
+- The published POM's `url` now points at `https://formaui.dev` (the docs site). `scm` continues to
+  point at `github.com/devsnackio/forma-ui`.
+
+## [0.1.0] — 2026-07-27
+
+First stable release, published to Maven Central as `io.github.devsnackio:{core,components}:0.1.0`.
+Preceded by `0.1.0-beta01`–`beta04` under the same group.
+
+> Not reproducible from a tag: no commit bumped the build files to `0.1.0`, and none was tagged
+> `v0.1.0`. Recorded here for accuracy — see `docs/RELEASING.md`.
 
 ### Added
 
@@ -35,13 +61,14 @@ is new to consumers; earlier `beta01`–`beta03` version numbers were internal-o
 - **Material You dynamic color** as an opt-in (`FormaTheme(dynamicColor = true)`) on Android 12+,
   with a static brand-palette fallback on older Android and on `wasmJs`.
 - **`wasmJs` target** for `:core` and `:components`, compiled so the docs site can embed live
-  previews of the real components. Only Android artifacts are published.
+  previews of the real components. Android is the supported consumer target; `*-wasm-js` klibs were
+  published at this version by accident and should not be depended on. `0.2.0` onward excludes them.
 
 ### Changed
 
-- **Breaking (pre-release): warm-editorial rebrand.** Design tokens were renamed as part of the
-  visual language defined in [`docs/DESIGN.md`](docs/DESIGN.md). Typography remains Public Sans — no
-  serif or Inter was adopted. Since nothing was ever published, no consumer migration is required.
+- **Breaking (beta): warm-editorial rebrand.** Design tokens were renamed as part of the visual
+  language defined in [`docs/DESIGN.md`](docs/DESIGN.md). Typography remains Public Sans — no serif
+  or Inter was adopted. Landed during the beta line, so only `0.1.0-beta0x` consumers were affected.
 
 ### Notes
 
@@ -49,4 +76,5 @@ is new to consumers; earlier `beta01`–`beta03` version numbers were internal-o
 - Built with Kotlin 2.4.10, Compose Multiplatform 1.11.1, Material 3 1.9.0, AGP 9.3.0, Gradle 9.6.
 - Opt in at every use site: `@OptIn(ExperimentalFormaUiApi::class)`.
 
-[0.1.0-beta04]: https://github.com/devsnackio/forma-ui/releases/tag/v0.1.0-beta04
+[0.2.0]: https://github.com/devsnackio/forma-ui/releases/tag/v0.2.0
+[0.1.0]: https://central.sonatype.com/artifact/io.github.devsnackio/components/0.1.0

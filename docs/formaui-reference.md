@@ -3,19 +3,19 @@
 > Generated from `docs/component-inventory.json` in the forma-ui repo — regenerate there
 > when the library version is bumped. Do not edit by hand.
 
-**Artifacts** (Maven Central): `io.github.devsnackio:core` and `io.github.devsnackio:components`, version `0.1.0-beta04`.
+**Artifacts** (Maven Central): `dev.formaui:core` and `dev.formaui:components`, version `0.2.0`.
 
 ```kotlin
 dependencies {
-    implementation("io.github.devsnackio:components:0.1.0-beta04") // brings :core transitively
+    implementation("dev.formaui:components:0.2.0") // brings :core transitively
 }
 ```
 
-> **Not yet on Maven Central.** `0.1.0-beta04` is the intended coordinate set for the pending
-> first release; stable `0.1.0` follows once the beta has proven itself.
+> Released through `0.1.0` under the retired `io.github.devsnackio` group; `dev.formaui` since `0.2.0`.
+> Old coordinates still resolve via relocation POMs, but get no further releases.
 
-Code packages are `dev.formaui.*` — the group/package mismatch is intentional (the Maven group
-is namespace-verified as `io.github.devsnackio`); import from `dev.formaui.*`, never "correct" it.
+Code packages are `dev.formaui.*`, matching the Maven group `dev.formaui` since `0.2.0`.
+Import from `dev.formaui.*`.
 
 **Setup rules:**
 - Wrap every screen (or the app root) in `FormaTheme { ... }` (from `dev.formaui.core.theme`).
