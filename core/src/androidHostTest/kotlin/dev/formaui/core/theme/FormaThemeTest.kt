@@ -260,7 +260,7 @@ class FormaThemeTest {
     @Test
     fun defaultColorScheme_resolvesWarmEditorialBrandHexes() {
         // Direct hex checks (not just self-referential comparisons against defaultColorScheme())
-        // for the rebrand's defining tokens, per docs/DESIGN.md: cream canvas, coral primary
+        // for the rebrand's defining tokens: cream canvas, coral primary
         // shared by both schemes, the dark-navy dark surface, and the hairline outline-variant.
         val scheme = FormaTheme.defaultColorScheme()
 
@@ -303,7 +303,7 @@ class FormaThemeTest {
 
     @Test
     fun defaultTypography_matchesEditorialDisplayAndLabelSmallSpec() {
-        // Spot-checks two more docs/DESIGN.md anchors beyond labelLarge's weight: the 64sp
+        // Spot-checks two more brand anchors beyond labelLarge's weight: the 64sp
         // editorial display size and labelSmall's 1.5sp uppercase-caption tracking.
         var displayLargeFontSize: TextUnit? = null
         var labelSmallLetterSpacing: TextUnit? = null

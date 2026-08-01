@@ -1,8 +1,8 @@
 # Publish the wasm live-preview bundle as a GitHub release asset.
 #
 # WHY THIS EXISTS: the docs site (formaui-site, separate repo) embeds real
-# components compiled to wasm. Those bundles are built HERE (docs/SITE_HANDOFF.md
-# §"Live preview embed contract" step 1) and were historically copied by hand from
+# components compiled to wasm. Those bundles are built HERE, per the live-preview
+# embed contract, and were historically copied by hand from
 # a sibling checkout — which meant a Vercel build of the site, which only has the
 # site repo, had no bundle and rendered the "not available in this deployment"
 # card on every component page. This workflow is the cross-repo delivery step:
@@ -24,8 +24,8 @@
 #
 # This ships the DEVELOPMENT executable (~39 MB raw, far less gzipped). The
 # optimized production build needs Binaryen's wasm-opt and is tracked as a later
-# optimization in docs/SITE_HANDOFF.md — switching is a task-name change
-# here plus the same directory contract, so it does not affect the site.
+# optimization — switching is a task-name change here plus the same directory
+# contract, so it does not affect the site.
 name: Publish preview bundle
 
 on:
@@ -152,7 +152,7 @@ jobs:
             echo "Release ${TAG} does not exist — creating it."
             gh release create "${TAG}" \
               --title "FormaUI ${VERSION}" \
-              --notes "Wasm live-preview bundle for the docs site. See docs/SITE_HANDOFF.md." \
+              --notes "Wasm live-preview bundle for the docs site." \
               --prerelease
           fi
           gh release upload "${TAG}" "${ASSET}" --clobber

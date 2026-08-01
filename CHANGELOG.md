@@ -66,8 +66,8 @@ Preceded by `0.1.0-beta01`–`beta04` under the same group.
 
 ### Changed
 
-- **Breaking (beta): warm-editorial rebrand.** Design tokens were renamed as part of the visual
-  language defined in [`docs/DESIGN.md`](docs/DESIGN.md). Typography remains Public Sans — no serif
+- **Breaking (beta): warm-editorial rebrand.** Design tokens were renamed as part of the move to
+  the warm editorial visual language. Typography remains Public Sans — no serif
   or Inter was adopted. Landed during the beta line, so only `0.1.0-beta0x` consumers were affected.
 
 ### Notes

@@ -40,10 +40,10 @@ class FormaColorScheme(
 // dark scheme reads as "the same brand at night," not a desaturated inversion.
 //
 // Deliberate deviations from stock Material 3 neutrals — every surface/outline/inverse role below
-// is spec'd explicitly (docs/DESIGN.md) so no default M3 gray leaks in:
+// is spec'd explicitly so no default M3 gray leaks in:
 //
 // 1. White-on-coral (`onPrimary` #FFFFFF on `primary` #CC785C) is ~3.3:1 contrast — below AA for
-//    small text. This is brand-mandated (docs/DESIGN.md `button-primary`); mitigated by using it
+//    small text. This is brand-mandated for the primary button; mitigated by using it
 //    only at 14sp/500 label weight, never for long-form body text.
 // 2. `onSecondary`/`onTertiary` are warm ink (#141413), not white — white fails contrast on the
 //    teal secondary and amber tertiary containers.
