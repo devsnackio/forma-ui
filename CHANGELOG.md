@@ -11,6 +11,15 @@ Artifacts are `dev.formaui:core` and `dev.formaui:components`, matching the `dev
 package. Releases up to and including `0.1.0` shipped under the old `io.github.devsnackio` group —
 see [0.2.0](#020--unreleased).
 
+## [0.2.0-beta01] — unreleased
+
+First artifact published under `dev.formaui`. It exists to verify the new namespace resolves
+end-to-end on Maven Central before `0.2.0` stable is cut. Library content is identical to
+[0.2.0](#020--unreleased) below — no component, API, or token differs between the two.
+
+Relocation POMs for the retired `io.github.devsnackio` coordinates are **not** part of this
+release; they point at stable `0.2.0` and ship only once it resolves.
+
 ## [0.2.0] — unreleased
 
 ### Changed
