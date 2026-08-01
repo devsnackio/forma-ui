@@ -11,6 +11,7 @@ import androidx.compose.material3.AssistChip
 import androidx.compose.material3.FilterChip
 import androidx.compose.material3.FilterChipDefaults
 import androidx.compose.material3.InputChip
+import androidx.compose.material3.InputChipDefaults
 import androidx.compose.material3.SuggestionChip
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -18,7 +19,6 @@ import androidx.compose.runtime.ReadOnlyComposable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Shape
-import androidx.compose.ui.unit.dp
 import dev.formaui.components.interaction.FormaPressScaleDefaults
 import dev.formaui.components.interaction.formaPressScale
 import dev.formaui.core.annotation.ExperimentalFormaUiApi
@@ -62,6 +62,18 @@ enum class FormaChipVariant {
  * is on by default, layered on top of the Material ripple: the chip dips to [pressedScale] while
  * held and springs back on release, uniformly across all four variants. The dip always completes,
  * even on the quickest tap. Pass `pressAnimationSpec = null` to disable it.
+ *
+ * **Shadows.** A flat chip's container is `Color.Transparent`, so a shadow cast beneath it is not
+ * occluded by anything: the umbra is painted straight across the chip's own footprint and reads as
+ * a heavy dark block rather than a soft edge. FormaUI therefore drops elevation to zero in exactly
+ * those states — [FormaChipVariant.Assist] and [FormaChipVariant.Suggestion] always, and
+ * [FormaChipVariant.Filter] / [FormaChipVariant.Input] while unselected. Selected chips keep
+ * Material 3's stock elevation, since their container is opaque enough to hide the umbra.
+ * This corrects two upstream defaults: `FilterChipTokens` declares
+ * `FlatUnselectedHoverContainerElevation = Level0` but never reads it, so a hovered *unselected*
+ * filter chip inherits the selected chip's 1dp lift; and all four chip types default
+ * `draggedElevation` to 8dp, which produces the same artifact — eight times larger — for anyone
+ * driving a chip from a drag-aware [interactionSource].
  *
  * @param label the chip's text label.
  * @param onClick called when the chip is clicked. For selectable variants, toggle [selected] in
@@ -109,6 +121,10 @@ fun FormaChip(
     val chipShape = shape ?: FormaChipDefaults.shape
     val labelSlot: @Composable () -> Unit = { Text(label) }
 
+    // Elevation is deliberately suppressed wherever the chip's container is
+    // Color.Transparent — see the note on "Shadows" in the KDoc above. A chip's
+    // `elevation` feeds exactly one thing, Surface's shadowElevation, so passing
+    // `null` costs nothing beyond the shadow itself.
     when (variant) {
         FormaChipVariant.Assist -> AssistChip(
             onClick = onClick,
@@ -119,6 +135,7 @@ fun FormaChip(
             trailingIcon = trailingIcon,
             shape = chipShape,
             interactionSource = interactionSource,
+            elevation = null,
         )
 
         FormaChipVariant.Filter -> FilterChip(
@@ -131,17 +148,7 @@ fun FormaChip(
             trailingIcon = trailingIcon,
             shape = chipShape,
             interactionSource = interactionSource,
-            // An unselected flat filter chip has a Color.Transparent container, so a
-            // shadow beneath it is not occluded — Skia paints the umbra across the
-            // whole footprint and it reads as a heavy dark block, not a soft edge.
-            // Material 3 walks into this: FilterChipTokens defines
-            // FlatUnselectedHoverContainerElevation = Level0 but never reads it, so
-            // filterChipElevation() hands the *selected* 1dp hover elevation to both
-            // states. Keep the lift only where the container is opaque enough to hide
-            // it (selected -> secondaryContainer).
-            elevation = FilterChipDefaults.filterChipElevation(
-                hoveredElevation = if (selected) 1.dp else 0.dp,
-            ),
+            elevation = if (selected) FilterChipDefaults.filterChipElevation() else null,
         )
 
         FormaChipVariant.Input -> InputChip(
@@ -154,6 +161,7 @@ fun FormaChip(
             trailingIcon = trailingIcon,
             shape = chipShape,
             interactionSource = interactionSource,
+            elevation = if (selected) InputChipDefaults.inputChipElevation() else null,
         )
 
         FormaChipVariant.Suggestion -> SuggestionChip(
@@ -164,6 +172,7 @@ fun FormaChip(
             icon = leadingIcon,
             shape = chipShape,
             interactionSource = interactionSource,
+            elevation = null,
         )
     }
 }
