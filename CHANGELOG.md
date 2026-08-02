@@ -82,7 +82,7 @@ Preceded by `0.1.0-beta01`–`beta04` under the same group.
 ### Notes
 
 - Requires Android `minSdk 24`; built against compile/target SDK 37.
-- Built with Kotlin 2.4.10, Compose Multiplatform 1.11.1, Material 3 1.9.0, AGP 9.3.0, Gradle 9.6.
+- Built with Kotlin 2.4.10, Compose Multiplatform 1.11.1, Material 3 1.9.0, AGP 9.3.1, Gradle 9.6.
 - Opt in at every use site: `@OptIn(ExperimentalFormaUiApi::class)`.
 
 [0.2.0]: https://github.com/devsnackio/forma-ui/releases/tag/v0.2.0

@@ -34,7 +34,7 @@ is mergeable; CI runs exactly this set on every pull request:
 ```
 
 Toolchain, all pinned in `gradle/libs.versions.toml`: Gradle 9.6 · Kotlin 2.4.10 · Compose
-Multiplatform 1.11.1 · AGP 9.3.0 · Material 3 1.9.0 (version-decoupled as `composeMaterial3`).
+Multiplatform 1.11.1 · AGP 9.3.1 · Material 3 1.9.0 (version-decoupled as `composeMaterial3`).
 `minSdk 24`, compile/target SDK 37.
 
 ## Module layout
