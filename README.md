@@ -35,11 +35,15 @@ FormaUI publishes to Maven Central under the `dev.formaui` group. Add it to your
 
 ```kotlin
 dependencies {
-    implementation("dev.formaui:components:0.2.0") // components transitively brings in :core
+    implementation("dev.formaui:components:0.2.0-beta01") // components transitively brings in :core
     // or depend on the theming engine alone:
-    // implementation("dev.formaui:core:0.2.0")
+    // implementation("dev.formaui:core:0.2.0-beta01")
 }
 ```
+
+> `0.2.0-beta01` is the current release — it verifies the `dev.formaui` namespace end-to-end on
+> Central. `0.2.0` stable follows from the same code; until it lands, a bare `0.2.0` will not
+> resolve. The Maven Central badge above always shows what is actually published.
 
 > **Moved from `io.github.devsnackio` in `0.2.0`.** Releases up to `0.1.0` shipped under that group, before the `formaui.dev` domain was owned. Only the coordinate changed — imports were always `dev.formaui.*`, so migrating is a one-line edit to your dependency. Relocation POMs keep old builds resolving, but the retired group gets no further releases.
 
