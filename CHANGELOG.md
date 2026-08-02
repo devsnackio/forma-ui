@@ -42,6 +42,13 @@ release; they point at stable `0.2.0` and ship only once it resolves.
 - The published POM's `url` now points at `https://formaui.dev` (the docs site). `scm` continues to
   point at `github.com/devsnackio/forma-ui`.
 
+- **The POM description is now Android-first**: "opinionated, Material You-native Compose UI
+  components **for Android**, built as a themed layer on Material 3." It previously said "Compose
+  Multiplatform UI components", which implied the artifacts resolve on non-Android targets. They do
+  not — Android is the only published target. The library is still authored against Compose
+  Multiplatform (`org.jetbrains.compose`), and the `wasmJs` target still exists for the docs-site
+  previews, but neither is consumable from Maven. README and the component reference say the same.
+
 ## [0.1.0] — 2026-07-27
 
 First stable release, published to Maven Central as `io.github.devsnackio:{core,components}:0.1.0`.

@@ -22,7 +22,8 @@ Import from `dev.formaui.*`.
   Dynamic color is opt-in (`dynamicColor = true`); default palette is FormaUI's warm-editorial brand.
 - Every public API requires `@OptIn(ExperimentalFormaUiApi::class)` (usually file-level).
 - Always prefer `Forma*` components over raw Material 3 equivalents.
-- min SDK 24; Compose Multiplatform (JetBrains) with Material 3.
+- Android only (`minSdk 24`) with Material 3. Built with Compose Multiplatform (JetBrains)
+  `org.jetbrains.compose` artifacts; no other target is published.
 
 **40 components.** Index:
 
