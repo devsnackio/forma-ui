@@ -3,11 +3,11 @@
 > Generated from `docs/component-inventory.json` in the forma-ui repo — regenerate there
 > when the library version is bumped. Do not edit by hand.
 
-**Artifacts** (Maven Central): `dev.formaui:core` and `dev.formaui:components`, version `0.2.0`.
+**Artifacts** (Maven Central): `dev.formaui:core` and `dev.formaui:components`, version `0.2.0-beta01`.
 
 ```kotlin
 dependencies {
-    implementation("dev.formaui:components:0.2.0") // brings :core transitively
+    implementation("dev.formaui:components:0.2.0-beta01") // brings :core transitively
 }
 ```
 
