@@ -49,7 +49,9 @@ publishing {
         pom {
             name.set("FormaUI :${project.name}")
             description.set(
-                "FormaUI — opinionated, Material You-native Compose Multiplatform UI components, " +
+                // Android is the only published target — say so here, because this string is what
+                // Maven Central and every dependency browser shows, and it is immutable per version.
+                "FormaUI — opinionated, Material You-native Compose UI components for Android, " +
                         "built as a themed layer on Material 3.",
             )
             // The project's home page — the docs site. `scm` below stays on GitHub, which is
