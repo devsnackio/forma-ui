@@ -10,9 +10,9 @@ Two artifacts ship, under the `dev.formaui` group:
 | Theming core | `dev.formaui:core:<version>` | — |
 | Components | `dev.formaui:components:<version>` | `core` (transitive) |
 
-Current version: **`0.2.0-beta01`** — a namespace-verification beta. It exists to prove the
-`dev.formaui` coordinates resolve end-to-end on Central before `0.2.0` stable is cut from the same
-tree. Nothing about the library differs between them.
+Current version: **`0.2.0`** — the first stable release under the `dev.formaui` group. It is cut
+from the same tree as the `0.2.0-beta01` namespace-verification beta that preceded it; nothing about
+the library differs between them.
 
 > The Kotlin package is always `dev.formaui.*` regardless of the Maven coordinate — see
 > [Group ID vs. Kotlin package](#group-id-vs-kotlin-package).
@@ -27,8 +27,8 @@ can never be withdrawn:
 |---|---|---|
 | `0.1.0-beta01` … `0.1.0-beta04` | `io.github.devsnackio` | betas |
 | `0.1.0` | `io.github.devsnackio` | stable; published 2026-07-27 |
-| `0.2.0-beta01` | `dev.formaui` | namespace verification on the owned-domain group |
-| `0.2.0` | `dev.formaui` | stable; cut once the beta resolves on `repo1` |
+| `0.2.0-beta01` | `dev.formaui` | namespace verification on the owned-domain group; published 2026-08-01 |
+| `0.2.0` | `dev.formaui` | stable; current version in the build files |
 
 Old coordinates redirect via the relocation POMs in [`relocation/`](../relocation/build.gradle.kts)
 — see [Appendix → The `dev.formaui` migration](#the-devformaui-migration).
@@ -170,8 +170,8 @@ Route A's guard will reject a mismatch:
 
 | File | Field |
 |------|-------|
-| `build.gradle.kts` (root) | `version = "0.2.0-beta01"` |
-| `build-logic/src/main/kotlin/formaui.publishing.gradle.kts` | `version = "0.2.0-beta01"` — **authoritative for the published artifact** |
+| `build.gradle.kts` (root) | `version = "0.2.0"` |
+| `build-logic/src/main/kotlin/formaui.publishing.gradle.kts` | `version = "0.2.0"` — **authoritative for the published artifact** |
 | `sample/build.gradle.kts` | `versionName` (cosmetic; keep aligned) |
 
 `relocation/build.gradle.kts` carries its own `relocationVersion` and is **deliberately not** part

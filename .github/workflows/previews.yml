@@ -36,7 +36,7 @@ on:
   workflow_dispatch:
     inputs:
       version:
-        description: "Version to publish previews for (e.g. 0.1.0-beta04) — a v-prefixed tag/release is created if absent"
+        description: "Version to publish previews for (e.g. 0.2.0) — a v-prefixed tag/release is created if absent"
         required: true
         type: string
 
