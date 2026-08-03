@@ -37,7 +37,7 @@ plugins {
 }
 
 group = "dev.formaui"
-version = "0.2.0-beta01"
+version = "0.2.0"
 
 val javadocJar = tasks.register<Jar>("javadocJar") {
     archiveClassifier.set("javadoc")

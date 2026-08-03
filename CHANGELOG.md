@@ -9,18 +9,9 @@ surface is proven.
 
 Artifacts are `dev.formaui:core` and `dev.formaui:components`, matching the `dev.formaui.*` Kotlin
 package. Releases up to and including `0.1.0` shipped under the old `io.github.devsnackio` group —
-see [0.2.0](#020--unreleased).
+see [0.2.0](#020--2026-08-03).
 
-## [0.2.0-beta01] — unreleased
-
-First artifact published under `dev.formaui`. It exists to verify the new namespace resolves
-end-to-end on Maven Central before `0.2.0` stable is cut. Library content is identical to
-[0.2.0](#020--unreleased) below — no component, API, or token differs between the two.
-
-Relocation POMs for the retired `io.github.devsnackio` coordinates are **not** part of this
-release; they point at stable `0.2.0` and ship only once it resolves.
-
-## [0.2.0] — unreleased
+## [0.2.0] — 2026-08-03
 
 ### Changed
 
@@ -48,6 +39,16 @@ release; they point at stable `0.2.0` and ship only once it resolves.
   not — Android is the only published target. The library is still authored against Compose
   Multiplatform (`org.jetbrains.compose`), and the `wasmJs` target still exists for the docs-site
   previews, but neither is consumable from Maven. README and the component reference say the same.
+
+## [0.2.0-beta01] — 2026-08-01
+
+First artifact published under `dev.formaui`, cut to verify that the new namespace resolves
+end-to-end on Maven Central before `0.2.0` stable. Library content is identical to
+[0.2.0](#020--2026-08-03) — no component, API, or token differs between the two, so there is no
+reason to depend on it over `0.2.0`. It stays on Central permanently, as every release does.
+
+Relocation POMs for the retired `io.github.devsnackio` coordinates were **not** part of this
+release; they point at stable `0.2.0` and ship only once it resolves.
 
 ## [0.1.0] — 2026-07-27
 
@@ -93,4 +94,5 @@ Preceded by `0.1.0-beta01`–`beta04` under the same group.
 - Opt in at every use site: `@OptIn(ExperimentalFormaUiApi::class)`.
 
 [0.2.0]: https://github.com/devsnackio/forma-ui/releases/tag/v0.2.0
+[0.2.0-beta01]: https://github.com/devsnackio/forma-ui/releases/tag/v0.2.0-beta01
 [0.1.0]: https://central.sonatype.com/artifact/io.github.devsnackio/components/0.1.0

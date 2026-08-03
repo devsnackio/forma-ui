@@ -33,7 +33,7 @@ fun Repro() {
 
 | | |
 |---|---|
-| FormaUI version | e.g. `0.1.0-beta04` |
+| FormaUI version | e.g. `0.2.0` |
 | Target | Android / `wasmJs` |
 | `minSdk` / device API level | e.g. minSdk 24, running on API 34 |
 | Kotlin version | e.g. 2.4.10 |
