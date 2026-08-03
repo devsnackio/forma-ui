@@ -14,7 +14,7 @@
 **Opinionated, Material You-native Jetpack Compose components that look great with zero styling work.**
 
 [![Kotlin](https://img.shields.io/badge/Kotlin-2.4.10-7F52FF.svg?logo=kotlin)](https://kotlinlang.org)
-[![Compose Multiplatform](https://img.shields.io/badge/Compose%20Multiplatform-1.11.1-4285F4.svg)](https://www.jetbrains.com/lp/compose-multiplatform/)
+[![Android](https://img.shields.io/badge/Android-minSdk%2024-3DDC84.svg?logo=android&logoColor=white)](https://developer.android.com)
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](LICENSE)
 [![Maven Central](https://img.shields.io/maven-central/v/dev.formaui/components?label=Maven%20Central)](https://central.sonatype.com/artifact/dev.formaui/components)
 
@@ -26,7 +26,7 @@
 
 ## What is FormaUI?
 
-FormaUI is a [Compose Multiplatform](https://www.jetbrains.com/lp/compose-multiplatform/) component library built as a **themed layer on top of Material 3** — production-ready components with better defaults, so you can ship fast instead of building a design system from scratch.
+FormaUI is a [Jetpack Compose](https://developer.android.com/jetpack/compose) component library for **Android**, built as a **themed layer on top of Material 3** — production-ready components with better defaults, so you can ship fast instead of building a design system from scratch.
 
 **The positioning wedge:** Unlike headless/unstyled toolkits (e.g. Composables UI — "Compose without Material"), FormaUI is deliberately **opinionated and Material 3-native**. Components ship with a distinct brand look — Public Sans with an editorial display scale over a warm-editorial palette — yet still feel like the Material 3 you already know (and Material You dynamic color is one flag away), so anyone productive in Compose Material 3 is productive in FormaUI within minutes.
 
@@ -56,7 +56,7 @@ dependencies {
 
 > **Moved from `io.github.devsnackio` in `0.2.0`.** Releases up to `0.1.0` shipped under that group, before the `formaui.dev` domain was owned. Only the coordinate changed — imports were always `dev.formaui.*`, so migrating is a one-line edit to your dependency. Relocation POMs keep old builds resolving, but the retired group gets no further releases.
 
-**Requirements:** Android `minSdk 24`+, Kotlin 2.4.x, Compose Multiplatform 1.11.x (or AndroidX Compose with a compatible Material 3).
+**Requirements:** Android `minSdk 24`+, Kotlin 2.4.x, Material 3. **Android is the only published target.** The artifacts are built with Compose Multiplatform 1.11.x (`org.jetbrains.compose`), so they also work in a Compose Multiplatform app's Android source set; no other target is published.
 
 Because the APIs are experimental pre-1.0, opt in where you use them:
 

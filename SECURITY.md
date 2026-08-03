@@ -23,7 +23,7 @@ If private reporting is unavailable to you, open a regular issue asking for a pr
 
 Useful things to include when you do report:
 
-- the FormaUI version and target (Android or `wasmJs`),
+- the FormaUI version, and your Android API level,
 - what an attacker can achieve, and under what preconditions,
 - a minimal reproduction — a composable and the state that triggers it.
 
