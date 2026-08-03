@@ -73,14 +73,17 @@ import kotlinx.coroutines.launch
 internal fun ColumnScope.CardPreview() {
     var clicks by remember { mutableIntStateOf(0) }
 
+    val controls = LocalPreviewControls.current
+
     FlowRow(
         horizontalArrangement = Arrangement.spacedBy(FormaTheme.spacing.sm),
         verticalArrangement = Arrangement.spacedBy(FormaTheme.spacing.sm),
     ) {
-        FormaCardVariant.entries.forEach { variant ->
+        controls.shownVariants<FormaCardVariant>().forEach { variant ->
             FormaCard(
                 variant = variant,
                 onClick = { clicks++ },
+                enabled = controls.enabled,
                 header = { Text(variant.name, style = MaterialTheme.typography.titleMedium) },
             ) {
                 Text("Tap this card.", style = MaterialTheme.typography.bodyMedium)
@@ -148,18 +151,26 @@ internal fun ColumnScope.AvatarPreview() {
 /** Live preview for `divider`: a horizontal rule and a vertical rule inside an intrinsic-height row. */
 @Composable
 internal fun ColumnScope.DividerPreview() {
-    Text("Above the rule", style = MaterialTheme.typography.bodyMedium)
-    FormaDivider()
-    Text("Below the rule", style = MaterialTheme.typography.bodyMedium)
+    // Each orientation is its own labelled section, so host control just picks
+    // which sections render — the uncontrolled layout is unchanged.
+    val shown = LocalPreviewControls.current.shownVariants<FormaDividerOrientation>()
 
-    Row(
-        modifier = Modifier.height(IntrinsicSize.Min),
-        horizontalArrangement = Arrangement.spacedBy(FormaTheme.spacing.sm),
-        verticalAlignment = Alignment.CenterVertically,
-    ) {
-        Text("Left", style = MaterialTheme.typography.bodyMedium)
-        FormaDivider(orientation = FormaDividerOrientation.Vertical)
-        Text("Right", style = MaterialTheme.typography.bodyMedium)
+    if (FormaDividerOrientation.Horizontal in shown) {
+        Text("Above the rule", style = MaterialTheme.typography.bodyMedium)
+        FormaDivider()
+        Text("Below the rule", style = MaterialTheme.typography.bodyMedium)
+    }
+
+    if (FormaDividerOrientation.Vertical in shown) {
+        Row(
+            modifier = Modifier.height(IntrinsicSize.Min),
+            horizontalArrangement = Arrangement.spacedBy(FormaTheme.spacing.sm),
+            verticalAlignment = Alignment.CenterVertically,
+        ) {
+            Text("Left", style = MaterialTheme.typography.bodyMedium)
+            FormaDivider(orientation = FormaDividerOrientation.Vertical)
+            Text("Right", style = MaterialTheme.typography.bodyMedium)
+        }
     }
 }
 
@@ -262,42 +273,50 @@ internal fun ColumnScope.CarouselPreview() {
         MaterialTheme.colorScheme.surfaceVariant,
     )
 
-    Text("Multi-browse", style = MaterialTheme.typography.titleSmall)
-    val multiState = rememberCarouselState(itemCount = { colors.size })
-    FormaCarousel(
-        state = multiState,
-        itemWidth = 200.dp,
-        modifier = Modifier
-            .fillMaxWidth()
-            .height(160.dp),
-    ) { index ->
-        Box(
+    // One labelled section per variant, so host control selects sections and
+    // the uncontrolled layout is untouched.
+    val shown = LocalPreviewControls.current.shownVariants<FormaCarouselVariant>()
+
+    if (FormaCarouselVariant.MultiBrowse in shown) {
+        Text("Multi-browse", style = MaterialTheme.typography.titleSmall)
+        val multiState = rememberCarouselState(itemCount = { colors.size })
+        FormaCarousel(
+            state = multiState,
+            itemWidth = 200.dp,
             modifier = Modifier
-                .fillMaxSize()
-                .background(colors[index]),
-            contentAlignment = Alignment.Center,
-        ) {
-            Text("${index + 1}", style = MaterialTheme.typography.titleMedium)
+                .fillMaxWidth()
+                .height(160.dp),
+        ) { index ->
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .background(colors[index]),
+                contentAlignment = Alignment.Center,
+            ) {
+                Text("${index + 1}", style = MaterialTheme.typography.titleMedium)
+            }
         }
     }
 
-    Text("Uncontained", style = MaterialTheme.typography.titleSmall)
-    val uncontainedState = rememberCarouselState(itemCount = { colors.size })
-    FormaCarousel(
-        state = uncontainedState,
-        itemWidth = 140.dp,
-        variant = FormaCarouselVariant.Uncontained,
-        modifier = Modifier
-            .fillMaxWidth()
-            .height(120.dp),
-    ) { index ->
-        Box(
+    if (FormaCarouselVariant.Uncontained in shown) {
+        Text("Uncontained", style = MaterialTheme.typography.titleSmall)
+        val uncontainedState = rememberCarouselState(itemCount = { colors.size })
+        FormaCarousel(
+            state = uncontainedState,
+            itemWidth = 140.dp,
+            variant = FormaCarouselVariant.Uncontained,
             modifier = Modifier
-                .fillMaxSize()
-                .background(colors[index]),
-            contentAlignment = Alignment.Center,
-        ) {
-            Text("${index + 1}", style = MaterialTheme.typography.titleMedium)
+                .fillMaxWidth()
+                .height(120.dp),
+        ) { index ->
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .background(colors[index]),
+                contentAlignment = Alignment.Center,
+            ) {
+                Text("${index + 1}", style = MaterialTheme.typography.titleMedium)
+            }
         }
     }
 }

@@ -29,10 +29,22 @@ import dev.formaui.core.theme.FormaTheme
  * Shared chrome around every component preview: an in-canvas light/dark toggle (a real
  * [FormaSwitch] driving `FormaTheme(darkTheme = …)`, so both themes are demonstrated inside the
  * preview itself — PRD §8.4), the component name heading, then the interactive preview [content].
+ *
+ * [hostDark] is the embedding docs page's theme pill, or null when no host is driving theme (the
+ * harness opened directly, or an older site that doesn't send `set-controls`). It does two things:
+ * it wins over the in-canvas switch, and — because the host's pill is then already on screen just
+ * above this canvas — it takes the in-canvas switch's place rather than sitting beside it doing
+ * the identical job. Uncontrolled, the switch stays exactly where it was, which is what keeps the
+ * "both themes demonstrated inside the preview" bar met for anyone opening the bundle standalone.
  */
 @Composable
-internal fun PreviewScaffold(title: String, content: @Composable ColumnScope.() -> Unit) {
-    var dark by remember { mutableStateOf(false) }
+internal fun PreviewScaffold(
+    title: String,
+    hostDark: Boolean? = null,
+    content: @Composable ColumnScope.() -> Unit,
+) {
+    var localDark by remember { mutableStateOf(false) }
+    val dark = hostDark ?: localDark
 
     FormaTheme(darkTheme = dark) {
         Surface(
@@ -43,15 +55,17 @@ internal fun PreviewScaffold(title: String, content: @Composable ColumnScope.() 
                 modifier = Modifier.fillMaxSize().padding(FormaTheme.spacing.lg),
                 verticalArrangement = Arrangement.spacedBy(FormaTheme.spacing.md),
             ) {
-                Row(
-                    horizontalArrangement = Arrangement.spacedBy(FormaTheme.spacing.xs),
-                    verticalAlignment = Alignment.CenterVertically,
-                ) {
-                    FormaSwitch(checked = dark, onCheckedChange = { dark = it })
-                    Text(
-                        text = if (dark) "Dark theme" else "Light theme",
-                        style = MaterialTheme.typography.titleMedium,
-                    )
+                if (hostDark == null) {
+                    Row(
+                        horizontalArrangement = Arrangement.spacedBy(FormaTheme.spacing.xs),
+                        verticalAlignment = Alignment.CenterVertically,
+                    ) {
+                        FormaSwitch(checked = localDark, onCheckedChange = { localDark = it })
+                        Text(
+                            text = if (dark) "Dark theme" else "Light theme",
+                            style = MaterialTheme.typography.titleMedium,
+                        )
+                    }
                 }
 
                 Text(title, style = MaterialTheme.typography.headlineSmall)

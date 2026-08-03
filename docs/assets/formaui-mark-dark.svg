@@ -1,0 +1,26 @@
+<!--
+  Dark-scheme counterpart to formaui-mark.svg, for the README's <picture>
+  prefers-color-scheme source. Same geometry; only the fills differ.
+
+  Every bar carries a brand token, so this is the same mark in the dark
+  palette rather than a recoloured guess:
+
+    stem       #c84219 -> #e77755   primary,    light -> dark
+    top arm    #c9922e -> #e0a338   brand-gold, light -> dark
+    middle arm #26201d -> #f3efe8   ink,        light -> dark
+
+  These are the docs site's dark-scheme token values, and the same three the
+  site's own favicon uses — so the mark reads identically here, in the app
+  header, and in a browser tab.
+
+  The middle arm is the reason this file exists at all: #26201d is near-black
+  by design and all but disappears against GitHub's dark canvas, taking the
+  F's crossbar with it.
+-->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" width="120" height="120" role="img" aria-label="FormaUI">
+  <g transform="rotate(-9 60 60) translate(8 8)">
+    <rect x="0" y="0" width="26" height="104" rx="13" fill="#e77755"></rect>
+    <rect x="34" y="0" width="70" height="26" rx="13" fill="#e0a338"></rect>
+    <rect x="34" y="39" width="48" height="26" rx="13" fill="#f3efe8"></rect>
+  </g>
+</svg>

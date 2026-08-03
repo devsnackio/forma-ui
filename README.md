@@ -1,5 +1,14 @@
 <div align="center">
 
+<!-- alt is deliberately empty: the <h1> directly below already announces
+     "FormaUI", and captioning the mark too would read it twice on a screen
+     reader. The dark source exists because the mark's ink bar is near-black
+     (see docs/assets/formaui-mark-dark.svg). -->
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="docs/assets/formaui-mark-dark.svg">
+  <img src="docs/assets/formaui-mark.svg" width="88" height="88" alt="">
+</picture>
+
 # FormaUI
 
 **Opinionated, Material You-native Jetpack Compose components that look great with zero styling work.**

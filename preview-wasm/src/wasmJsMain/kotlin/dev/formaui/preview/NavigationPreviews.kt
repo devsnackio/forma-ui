@@ -238,19 +238,29 @@ internal fun ColumnScope.TabRowPreview() {
 /** Live preview for `top-app-bar`: chips switch between all four [FormaTopAppBarVariant]s. */
 @Composable
 internal fun ColumnScope.TopAppBarPreview() {
-    var variant by remember { mutableStateOf(FormaTopAppBarVariant.Small) }
+    var localVariant by remember { mutableStateOf(FormaTopAppBarVariant.Small) }
 
-    FlowRow(
-        horizontalArrangement = Arrangement.spacedBy(FormaTheme.spacing.xs),
-        verticalArrangement = Arrangement.spacedBy(FormaTheme.spacing.xs),
-    ) {
-        FormaTopAppBarVariant.entries.forEach { candidate ->
-            FormaChip(
-                label = candidate.name,
-                onClick = { variant = candidate },
-                variant = FormaChipVariant.Filter,
-                selected = variant == candidate,
-            )
+    // This preview shipped with its own in-canvas variant picker. When the
+    // docs site drives variant from its control bar, that picker steps aside
+    // rather than sitting under a tab row doing the same job — the same
+    // arrangement PreviewScaffold makes for the theme switch. Standalone, or
+    // against a host that doesn't drive variant, the chips stay.
+    val hostVariant = LocalPreviewControls.current.variantOf<FormaTopAppBarVariant>()
+    val variant = hostVariant ?: localVariant
+
+    if (hostVariant == null) {
+        FlowRow(
+            horizontalArrangement = Arrangement.spacedBy(FormaTheme.spacing.xs),
+            verticalArrangement = Arrangement.spacedBy(FormaTheme.spacing.xs),
+        ) {
+            FormaTopAppBarVariant.entries.forEach { candidate ->
+                FormaChip(
+                    label = candidate.name,
+                    onClick = { localVariant = candidate },
+                    variant = FormaChipVariant.Filter,
+                    selected = variant == candidate,
+                )
+            }
         }
     }
 
