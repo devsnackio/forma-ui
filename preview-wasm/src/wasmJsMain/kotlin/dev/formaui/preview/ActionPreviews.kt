@@ -39,50 +39,85 @@ import dev.formaui.components.segmentedbutton.FormaSegmentedButtonRow
 import dev.formaui.core.annotation.ExperimentalFormaUiApi
 import dev.formaui.core.theme.FormaTheme
 
-/** Live preview for `button`: every [FormaButtonVariant] plus a disabled example, counting clicks. */
+/**
+ * Live preview for `button` — the reference implementation for host-driven [PreviewControls].
+ *
+ * Two shapes, because this preview is used two ways. Embedded in a docs page whose control bar is
+ * naming a variant, it shows that one specimen and honours the `enabled = false` toggle: the tabs
+ * are the gallery, so repeating every variant beneath them would just be noise. Uncontrolled —
+ * opened standalone, or embedded by a site that doesn't drive controls — it falls back to the
+ * every-variant gallery, which is the only way the bundle is worth opening on its own.
+ */
 @Composable
 internal fun ColumnScope.ButtonPreview() {
     var clicks by remember { mutableIntStateOf(0) }
+    val controls = LocalPreviewControls.current
+    val selected = controls.variantOf<FormaButtonVariant>()
 
-    FlowRow(
-        horizontalArrangement = Arrangement.spacedBy(FormaTheme.spacing.xs),
-        verticalArrangement = Arrangement.spacedBy(FormaTheme.spacing.xs),
-    ) {
-        FormaButtonVariant.entries.forEach { variant ->
-            FormaButton(onClick = { clicks++ }, variant = variant) {
-                Text(variant.name)
+    if (selected == null) {
+        FlowRow(
+            horizontalArrangement = Arrangement.spacedBy(FormaTheme.spacing.xs),
+            verticalArrangement = Arrangement.spacedBy(FormaTheme.spacing.xs),
+        ) {
+            FormaButtonVariant.entries.forEach { variant ->
+                FormaButton(onClick = { clicks++ }, variant = variant) {
+                    Text(variant.name)
+                }
+            }
+            FormaButton(onClick = {}, enabled = false) {
+                Text("Disabled")
             }
         }
-        FormaButton(onClick = {}, enabled = false) {
-            Text("Disabled")
-        }
-    }
 
-    Text(
-        text = "Clicked $clicks times — this is the real component running in your browser.",
-        style = MaterialTheme.typography.bodyMedium,
-        color = MaterialTheme.colorScheme.onSurfaceVariant,
-    )
+        Text(
+            text = "Clicked $clicks times — this is the real component running in your browser.",
+            style = MaterialTheme.typography.bodyMedium,
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
+        )
+    } else {
+        FormaButton(onClick = { clicks++ }, variant = selected, enabled = controls.enabled) {
+            Text(selected.name)
+        }
+
+        Text(
+            text = if (controls.enabled) {
+                "${selected.name} — clicked $clicks times. This is the real component running in your browser."
+            } else {
+                "${selected.name}, disabled — clicks are ignored, which is the component's own behaviour, not a mock."
+            },
+            style = MaterialTheme.typography.bodyMedium,
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
+        )
+    }
 }
 
 /** Live preview for `icon-button`: every [FormaIconButtonVariant], counting clicks. */
 @Composable
 internal fun ColumnScope.IconButtonPreview() {
     var clicks by remember { mutableIntStateOf(0) }
+    val controls = LocalPreviewControls.current
+    val shown = controls.shownVariants<FormaIconButtonVariant>()
 
     Row(
         horizontalArrangement = Arrangement.spacedBy(FormaTheme.spacing.xs),
         verticalAlignment = Alignment.CenterVertically,
     ) {
-        FormaIconButtonVariant.entries.forEach { variant ->
-            FormaIconButton(onClick = { clicks++ }, variant = variant) {
+        shown.forEach { variant ->
+            FormaIconButton(
+                onClick = { clicks++ },
+                variant = variant,
+                enabled = controls.enabled,
+            ) {
                 Icon(Icons.Default.Search, contentDescription = "Search")
             }
         }
     }
 
+    // Built from `shown` rather than written out, so narrowing to one variant
+    // can't leave the caption naming four.
     Text(
-        text = "Standard · Filled · Tonal · Outlined — clicked $clicks times.",
+        text = shown.joinToString(" · ") { it.name } +
+            if (controls.enabled) " — clicked $clicks times." else " — disabled, so clicks do nothing.",
         style = MaterialTheme.typography.bodyMedium,
         color = MaterialTheme.colorScheme.onSurfaceVariant,
     )
@@ -94,11 +129,16 @@ internal fun ColumnScope.FloatingActionButtonPreview() {
     var clicks by remember { mutableIntStateOf(0) }
     var expanded by remember { mutableStateOf(true) }
 
+    // The inventory lists a fourth "Extended" variant, but it is a different
+    // composable rather than a FormaFabSize, so only the three real enum
+    // entries are offered as tabs; the extended FAB below always renders.
+    val shown = LocalPreviewControls.current.shownVariants<FormaFabSize>()
+
     Row(
         horizontalArrangement = Arrangement.spacedBy(FormaTheme.spacing.sm),
         verticalAlignment = Alignment.CenterVertically,
     ) {
-        FormaFabSize.entries.forEach { size ->
+        shown.forEach { size ->
             FormaFloatingActionButton(onClick = { clicks++ }, size = size) {
                 Text("+")
             }
@@ -113,7 +153,8 @@ internal fun ColumnScope.FloatingActionButtonPreview() {
     )
 
     Text(
-        text = "Small · Regular · Large ($clicks clicks) — tap the extended FAB to collapse or expand it.",
+        text = shown.joinToString(" · ") { it.name } +
+            " ($clicks clicks) — tap the extended FAB to collapse or expand it.",
         style = MaterialTheme.typography.bodyMedium,
         color = MaterialTheme.colorScheme.onSurfaceVariant,
     )

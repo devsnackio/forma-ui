@@ -204,33 +204,42 @@ internal fun ColumnScope.TooltipPreview() {
     val plainState = rememberTooltipState()
     val richState = rememberTooltipState(isPersistent = true)
 
+    // One tooltip per variant, so host control just picks which render.
+    val shown = LocalPreviewControls.current.shownVariants<FormaTooltipVariant>()
+
     Row(horizontalArrangement = Arrangement.spacedBy(FormaTheme.spacing.md)) {
-        FormaTooltip(text = "A plain tooltip.", state = plainState) {
-            FormaButton(
-                onClick = { scope.launch { plainState.show() } },
-                variant = FormaButtonVariant.Tonal,
-            ) { Text("Plain") }
+        if (FormaTooltipVariant.Plain in shown) {
+            FormaTooltip(text = "A plain tooltip.", state = plainState) {
+                FormaButton(
+                    onClick = { scope.launch { plainState.show() } },
+                    variant = FormaButtonVariant.Tonal,
+                ) { Text("Plain") }
+            }
         }
-        FormaTooltip(
-            text = "Rich tooltips take a title and an action.",
-            variant = FormaTooltipVariant.Rich,
-            state = richState,
-            title = { Text("Rich tooltip") },
-            action = {
-                FormaButton(onClick = { richState.dismiss() }, variant = FormaButtonVariant.Text) {
-                    Text("Got it")
-                }
-            },
-        ) {
-            FormaButton(
-                onClick = { scope.launch { richState.show() } },
-                variant = FormaButtonVariant.Tonal,
-            ) { Text("Rich") }
+        if (FormaTooltipVariant.Rich in shown) {
+            FormaTooltip(
+                text = "Rich tooltips take a title and an action.",
+                variant = FormaTooltipVariant.Rich,
+                state = richState,
+                title = { Text("Rich tooltip") },
+                action = {
+                    FormaButton(onClick = { richState.dismiss() }, variant = FormaButtonVariant.Text) {
+                        Text("Got it")
+                    }
+                },
+            ) {
+                FormaButton(
+                    onClick = { scope.launch { richState.show() } },
+                    variant = FormaButtonVariant.Tonal,
+                ) { Text("Rich") }
+            }
         }
     }
 
     Text(
-        text = "Hover, long-press, or click either button to show its tooltip.",
+        // Neutral phrasing: this caption now sits under either one tooltip or
+        // both, depending on whether the host is driving variant.
+        text = "Hover, long-press, or click a button to show its tooltip.",
         style = MaterialTheme.typography.bodyMedium,
         color = MaterialTheme.colorScheme.onSurfaceVariant,
     )
