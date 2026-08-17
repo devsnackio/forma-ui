@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  The FormaUI mark, as the adaptive-icon foreground layer.
+
+  Geometry is docs/assets/formaui-mark.svg re-projected onto the adaptive icon's 108x108
+  viewport: the mark's 104-unit span is scaled to 58 units and centred at (54, 54), which
+  keeps it inside the 66dp circle the launcher mask is guaranteed not to crop. The -9 degree
+  rotation is the mark's own tilt, applied here as a group transform rather than being baked
+  into the path data so the bars stay readable as plain stadium rects.
+
+  Each bar is a stadium (corner radius = half the short side), drawn as two semicircular arcs
+  joined by straight edges.
+-->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+
+    <group
+        android:pivotX="54"
+        android:pivotY="54"
+        android:rotation="-9">
+
+        <!-- Upright bar — rust. -->
+        <path
+            android:fillColor="#C84219"
+            android:pathData="M25,32.25 A7.25,7.25 0 0 1 39.5,32.25 L39.5,75.75 A7.25,7.25 0 0 1 25,75.75 Z" />
+
+        <!-- Upper arm — amber. -->
+        <path
+            android:fillColor="#C9922E"
+            android:pathData="M51.21,25 L75.75,25 A7.25,7.25 0 0 1 75.75,39.5 L51.21,39.5 A7.25,7.25 0 0 1 51.21,25 Z" />
+
+        <!-- Lower arm — ink. -->
+        <path
+            android:fillColor="#26201D"
+            android:pathData="M51.21,46.75 L63.48,46.75 A7.25,7.25 0 0 1 63.48,61.25 L51.21,61.25 A7.25,7.25 0 0 1 51.21,46.75 Z" />
+    </group>
+</vector>

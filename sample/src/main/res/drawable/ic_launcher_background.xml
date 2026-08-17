@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Adaptive-icon background: FormaUI's cream canvas, the same #FAF9F5 the light color scheme
+  uses for `background`/`surface`. Flat by design — the mark carries the identity, and a
+  launcher that applies its own mask and parallax looks better over a plain field.
+-->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+
+    <path
+        android:fillColor="#FAF9F5"
+        android:pathData="M0,0 H108 V108 H0 Z" />
+</vector>
