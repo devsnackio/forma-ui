@@ -9,4 +9,5 @@ dependencies {
     implementation(libs.build.kotlin.composeCompilerGradlePlugin)
     implementation(libs.build.android.gradlePlugin)
     implementation(libs.build.compose.gradlePlugin)
+    implementation(libs.build.dokka.gradlePlugin)
 }

@@ -6,13 +6,18 @@ import org.gradle.plugins.signing.Sign
 /**
  * Convention plugin: Maven Central publishing for FormaUI library modules.
  *
- * Uses only Gradle's built-in `maven-publish` + `signing` — no external Gradle plugin — so it
- * works in restricted network environments where the plugin portal / Maven Central cannot be
- * reached for fresh plugin downloads (e.g. behind an SSL-inspecting proxy).
+ * Publishing itself uses only Gradle's built-in `maven-publish` + `signing`; the one external
+ * plugin is Dokka, which fills the javadoc jar (see below).
  *
  * Applied by `:core` and `:components` (after `formaui.kmp.library`). It configures the full POM,
  * a javadoc jar (Kotlin Multiplatform already publishes sources jars), PGP signing, and a local
  * **Central Portal bundle** repository.
+ *
+ * ### The javadoc jar carries real API docs
+ * Central requires a `-javadoc.jar` per artifact, and it is easy to satisfy that with an empty one
+ * — which is what this module did through `0.2.0`, discarding every line of the library's KDoc.
+ * It is now packed from Dokka's HTML output, so `dev.formaui:*-javadoc.jar` is browsable and the
+ * KDoc reaches the people reading the artifact rather than only the people reading the repo.
  *
  * ### Publishing to Maven Central (Central Portal — central.sonatype.com)
  * Legacy OSSRH is decommissioned; the Central Portal does not accept a direct Gradle upload from
@@ -34,6 +39,7 @@ import org.gradle.plugins.signing.Sign
 plugins {
     id("maven-publish")
     id("signing")
+    id("org.jetbrains.dokka")
 }
 
 group = "dev.formaui"
@@ -41,6 +47,9 @@ version = "0.2.0"
 
 val javadocJar = tasks.register<Jar>("javadocJar") {
     archiveClassifier.set("javadoc")
+    // Without a `from(...)` this jar is empty — Central accepts it, but consumers get nothing.
+    // `dokkaGeneratePublicationHtml` is Dokka 2.x's aggregate HTML task for this project.
+    from(tasks.named("dokkaGeneratePublicationHtml"))
 }
 
 publishing {
