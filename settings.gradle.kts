@@ -32,16 +32,6 @@ dependencyResolutionManagement {
             }
         }
         mavenCentral()
-        // WORKAROUND (SSL-inspecting proxy blocks fresh Gradle downloads on this machine):
-        // serves ONLY the curl-fetched org.jetbrains.compose.ui:ui-tooling-preview artifacts from
-        // ~/.m2. Remove once the proxy CA is trusted by the JBR truststore and these resolve from
-        // Maven Central directly.
-        mavenLocal {
-            content {
-                includeModule("org.jetbrains.compose.ui", "ui-tooling-preview")
-                includeModule("org.jetbrains.compose.ui", "ui-tooling-preview-wasm-js")
-            }
-        }
     }
 }
 

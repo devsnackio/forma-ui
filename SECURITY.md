@@ -7,7 +7,7 @@ branches, and patches are not backported to older `0.x` versions.
 
 | Version | Supported |
 |---|---|
-| Latest `0.1.x` release | ✅ |
+| Latest `0.2.x` release | ✅ |
 | Anything older | ❌ — upgrade to the latest |
 
 ## Reporting a vulnerability
