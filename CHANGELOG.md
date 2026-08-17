@@ -11,6 +11,36 @@ Artifacts are `dev.formaui:core` and `dev.formaui:components`, matching the `dev
 package. Releases up to and including `0.1.0` shipped under the old `io.github.devsnackio` group —
 see [0.2.0](#020--2026-08-03).
 
+## [Unreleased]
+
+### Added
+
+- **`FormaTheme` takes a `spacing: FormaSpacing` parameter**, defaulting to the 4dp grid, alongside
+  the existing `colorScheme` / `typography` / `shapes`. `FormaTheme.defaultSpacing()` returns the
+  default scale, matching the other three `default*()` accessors.
+
+  This closes a documented-but-absent capability rather than adding a new one: `FormaSpacing`'s
+  KDoc said "every value is overridable" and `FormaTheme`'s told you to provide
+  `LocalFormaSpacing` yourself, but that composition local is `internal` and `FormaTheme`
+  hardcoded `FormaSpacing()` over anything supplied from outside. Constructing a custom scale was
+  possible; installing one was not. The parameter is additive and source-compatible.
+
+### Fixed
+
+- The `-javadoc.jar` published for `core` and `components` was **empty** — the `Jar` task set a
+  classifier but never a source. It is now packed from Dokka's HTML output, so the library's KDoc
+  reaches Maven Central instead of being discarded at publish time. Affects every release up to and
+  including `0.2.0`, whose javadoc jars are 261-byte stubs.
+
+- `SECURITY.md` listed `0.1.x` as the supported line after `0.2.0` shipped.
+
+### Removed
+
+- The `mavenLocal()` repository from `settings.gradle.kts`. It was a workaround for an
+  SSL-inspecting proxy on one machine, scoped to `org.jetbrains.compose.ui:ui-tooling-preview`, and
+  had become dead code — those artifacts resolve from Maven Central and were not present in the
+  local `~/.m2` at all. The full gate passes with `--refresh-dependencies` without it.
+
 ## [0.2.0] — 2026-08-03
 
 ### Changed
