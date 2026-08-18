@@ -220,6 +220,35 @@ class FormaThemeTest {
     }
 
     @Test
+    fun customSpacing_passedToFormaTheme_reachesTokenAccessor() {
+        // The `spacing` parameter is the supported route in — LocalFormaSpacing is internal, so
+        // before it existed a consumer could construct a FormaSpacing but never install one, and
+        // FormaTheme hardcoded FormaSpacing() over anything provided from outside.
+        val custom = FormaSpacing(md = 20.dp, section = 120.dp)
+        var resolved: FormaSpacing? = null
+
+        composeRule.setContent {
+            FormaTheme(dynamicColor = false, spacing = custom) {
+                resolved = FormaTheme.spacing
+            }
+        }
+
+        composeRule.runOnIdle {
+            assertEquals(
+                "a custom spacing scale must reach FormaTheme.spacing, not be overwritten by the default",
+                20.dp,
+                resolved!!.md,
+            )
+            assertEquals("custom section tier should survive too", 120.dp, resolved!!.section)
+            assertEquals(
+                "tiers left at their defaults should stay on the 4dp grid",
+                4.dp,
+                resolved!!.xxs,
+            )
+        }
+    }
+
+    @Test
     fun shapes_resolveExpectedCornerRadii_andPillFullShareCircleShape() {
         // md's corner radius is measured via createOutline (rather than trusting the class's
         // default-arg literal) so a future default-arg change would actually fail this test.

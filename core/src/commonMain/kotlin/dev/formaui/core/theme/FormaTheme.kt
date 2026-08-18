@@ -44,14 +44,16 @@ internal val LocalFormaTypography = staticCompositionLocalOf { FormaTypography()
  * used — the previews on the docs site render FormaUI's warm-editorial brand palette (cream
  * canvas, coral primary, Public Sans with an editorial display scale).
  *
- * Spacing is not a parameter: FormaUI's [FormaSpacing] scale is a fixed 4dp-grid contract shared
- * by all components and is always provided. Retune it, if ever needed, by providing
- * [LocalFormaSpacing] yourself around `FormaTheme`'s content.
+ * [spacing] defaults to FormaUI's 4dp grid, which every component measures against. Pass your own
+ * [FormaSpacing] to retune that rhythm globally; the scale stays a single shared contract either
+ * way, so components remain consistent with each other whatever values you give it.
  *
  * @param colorScheme the light/dark brand color pair (defaults to [FormaTheme.defaultColorScheme]).
  * @param typography the type scale, including the tabular [numeric][FormaTypography.numeric] style
  *   (defaults to [FormaTheme.defaultTypography]).
  * @param shapes the corner-radius scale (defaults to [FormaTheme.defaultShapes]).
+ * @param spacing the spacing scale every component measures against (defaults to
+ *   [FormaTheme.defaultSpacing], a 4dp grid).
  * @param dynamicColor whether to use Material You dynamic color when available (Android 12+).
  *   Defaults to `false` so FormaUI's brand palette shows out of the box; set `true` to opt into
  *   Material You. Ignored where dynamic color is unsupported.
@@ -65,6 +67,7 @@ fun FormaTheme(
     colorScheme: FormaColorScheme = FormaTheme.defaultColorScheme(),
     typography: FormaTypography = FormaTheme.defaultTypography(),
     shapes: FormaShapes = FormaTheme.defaultShapes(),
+    spacing: FormaSpacing = FormaTheme.defaultSpacing(),
     dynamicColor: Boolean = false,
     darkTheme: Boolean = isSystemInDarkTheme(),
     content: @Composable () -> Unit,
@@ -74,7 +77,7 @@ fun FormaTheme(
         dynamicScheme ?: if (darkTheme) colorScheme.dark else colorScheme.light
 
     CompositionLocalProvider(
-        LocalFormaSpacing provides FormaSpacing(),
+        LocalFormaSpacing provides spacing,
         LocalFormaShapes provides shapes,
         LocalFormaTypography provides typography,
     ) {
@@ -92,7 +95,7 @@ fun FormaTheme(
  *
  * Mirrors the `MaterialTheme` object convention: read the active tokens inside a [FormaTheme]
  * with [colorScheme], [typography], [shapes], and [spacing]; obtain the FormaUI defaults with
- * [defaultColorScheme], [defaultTypography], and [defaultShapes].
+ * [defaultColorScheme], [defaultTypography], [defaultShapes], and [defaultSpacing].
  */
 @ExperimentalFormaUiApi
 object FormaTheme {
@@ -139,4 +142,7 @@ object FormaTheme {
 
     /** FormaUI's default [FormaShapes] corner scale. */
     fun defaultShapes(): FormaShapes = FormaShapes()
+
+    /** FormaUI's default [FormaSpacing] scale — the 4dp grid. */
+    fun defaultSpacing(): FormaSpacing = FormaSpacing()
 }

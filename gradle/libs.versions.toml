@@ -2,6 +2,8 @@
 # Toolchain
 kotlin = "2.4.10"
 agp = "9.3.1"
+# API docs for the published modules — feeds the `-javadoc.jar` that ships to Central.
+dokka = "2.2.0"
 composeMultiplatform = "1.11.1"
 # Compose Multiplatform Material 3 is versioned independently of the core CMP version.
 composeMaterial3 = "1.9.0"
@@ -59,6 +61,7 @@ build-kotlin-gradlePlugin = { group = "org.jetbrains.kotlin", name = "kotlin-gra
 build-kotlin-composeCompilerGradlePlugin = { group = "org.jetbrains.kotlin", name = "compose-compiler-gradle-plugin", version.ref = "kotlin" }
 build-android-gradlePlugin = { group = "com.android.tools.build", name = "gradle", version.ref = "agp" }
 build-compose-gradlePlugin = { group = "org.jetbrains.compose", name = "compose-gradle-plugin", version.ref = "composeMultiplatform" }
+build-dokka-gradlePlugin = { group = "org.jetbrains.dokka", name = "dokka-gradle-plugin", version.ref = "dokka" }
 
 [plugins]
 kotlinMultiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref = "kotlin" }

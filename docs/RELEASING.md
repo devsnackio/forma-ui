@@ -77,8 +77,8 @@ reviewing the validated file list and pressing **Publish**.
 
 The publishing logic lives in the `formaui.publishing` convention plugin
 ([`build-logic/src/main/kotlin/formaui.publishing.gradle.kts`](../build-logic/src/main/kotlin/formaui.publishing.gradle.kts)),
-applied to `:core` and `:components`. It configures the full POM, a javadoc jar (KMP already emits
-sources jars), PGP signing, and a shared local `central-bundle` repository. The `wasmJs` publication
+applied to `:core` and `:components`. It configures the full POM, a Dokka-packed javadoc jar (KMP
+already emits sources jars), PGP signing, and a shared local `central-bundle` repository. The `wasmJs` publication
 is deliberately excluded.
 
 ---
@@ -229,6 +229,14 @@ No signing key needed for this:
 Confirm the artifacts landed under `~/.m2/repository/dev/formaui/{core,components}/<version>/`.
 Each should contain the main `.aar`/`.jar` (per target), a `-sources.jar`, a `-javadoc.jar`, and a
 `.pom`. Also run the full gates: unit tests + `wasmJs` compile + `sample` assemble.
+
+⚠ **Check the javadoc jar's size, not just its presence.** Every release through `0.2.0` shipped a
+261-byte empty one — the `Jar` task set a classifier but never a source, and a presence-only check
+waves that through. It should now be hundreds of KB of Dokka HTML:
+
+```bash
+unzip -l ~/.m2/repository/dev/formaui/core/<version>/core-<version>-javadoc.jar | tail -1
+```
 
 ### B2. Build the signed bundle (clear the old one first)
 

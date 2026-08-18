@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Round variant. Adaptive icons are masked by the launcher, so this is the same two layers as
+  ic_launcher.xml; the separate resource exists because `android:roundIcon` in the manifest
+  needs its own reference and API 24-25 needs a genuinely circular PNG.
+-->
+<adaptive-icon xmlns:android="http://schemas.android.com/apk/res/android">
+    <background android:drawable="@drawable/ic_launcher_background" />
+    <foreground android:drawable="@drawable/ic_launcher_foreground" />
+    <monochrome android:drawable="@drawable/ic_launcher_foreground" />
+</adaptive-icon>

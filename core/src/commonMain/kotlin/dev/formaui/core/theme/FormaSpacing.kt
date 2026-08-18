@@ -28,7 +28,8 @@ import dev.formaui.core.annotation.ExperimentalFormaUiApi
  * | [xxl]      | 48dp  | callout/CTA padding                           |
  * | [section]  | 96dp  | section-band rhythm                           |
  *
- * Every value is overridable; construct a custom [FormaSpacing] to retune the rhythm.
+ * Every value is overridable: construct a custom [FormaSpacing] and pass it as `FormaTheme`'s
+ * `spacing` parameter to retune the rhythm for everything inside the theme.
  *
  * @property xxs extra-extra-small spacing (default 4dp) — icon-to-label gaps.
  * @property xs extra-small spacing (default 8dp) — compact padding.
